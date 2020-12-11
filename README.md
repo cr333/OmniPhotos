@@ -87,7 +87,7 @@ Our code has been developed and tested with Microsoft Visual Studio 2015 and 201
 
 ### Included dependencies (in `/src/3rdParty/`)
 
-1. [DearImGui 1.75](https://github.com/ocornut/imgui): included automatically as a git submodule.
+1. [DearImGui 1.79](https://github.com/ocornut/imgui): included automatically as a git submodule.
 2. [GL3W](https://github.com/skaslev/gl3w)
 3. [JsonCpp 1.8.0](https://github.com/open-source-parsers/jsoncpp): [almalgamated version](https://github.com/open-source-parsers/jsoncpp/wiki/Amalgamated-(Possibly-outdated))
 4. [nlohmann/json 3.6.1](https://github.com/nlohmann/json)
