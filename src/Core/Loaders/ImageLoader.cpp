@@ -22,14 +22,15 @@
 std::vector<std::string> ImageLoader::supportedTextureFormats;
 
 
-ImageLoader::ImageLoader(std::vector<Camera*>* _cameras) :
-    Loader(_cameras)
+ImageLoader::ImageLoader(std::vector<Camera*>* _cameras, bool _enableTextureCompression) :
+    Loader(_cameras),
+    enableTextureCompression(_enableTextureCompression)
 {
 	// Query the supported compressed texture formats and store if DXT1/DXT5 is supported.
 	// Following the suggestion at https://www.khronos.org/opengl/wiki/Common_Mistakes,
 	// we do this just once, to call `glGetIntegerv` as little as possible, and store
 	// the result in the static variable `ImageLoader::supportedTextureFormats`.
-	if (supportedTextureFormats.empty())
+	if (enableTextureCompression && supportedTextureFormats.empty())
 	{
 		// Uncompressed textures are always supported.
 		supportedTextureFormats.push_back("GL_RGB");
@@ -120,6 +121,12 @@ void compressTextureInPlace(cv::Mat& image, int alphaEnable)
 
 bool ImageLoader::checkTextureFormat()
 {
+	if (enableTextureCompression == false && imageTextureFormat != "GL_RGB")
+	{
+		std::string msg = "Error: Texture compression is disabled but texture format is not GL_RGB.";
+		RUNTIME_EXCEPTION(msg);
+	}
+
 	if (imageTextureFormat != "GL_RGB" && imageTextureFormat != "DXT1" && imageTextureFormat != "DXT5")
 	{
 		std::string msg = "Error: Image texture format should be [GL_RGB|DXT1|DXT5].";

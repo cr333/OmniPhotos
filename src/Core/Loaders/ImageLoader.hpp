@@ -7,7 +7,7 @@
 class ImageLoader : public Loader
 {
 public:
-	ImageLoader(std::vector<Camera*>* _cameras);
+	ImageLoader(std::vector<Camera*>* _cameras, bool _enableTextureCompression=false);
 	~ImageLoader();
 
 
@@ -62,7 +62,7 @@ private:
 	void fillProjectionTexture(Camera* cam, int layer);
 	void updateProjectionTex();
 
-
+	bool enableTextureCompression = false;
 	GLTexture* imageTexture = nullptr;
 	GLTexture* projectionMatrixTexture = nullptr;
 	GLTexture* posViewTexture = nullptr;

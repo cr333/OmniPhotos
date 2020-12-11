@@ -450,7 +450,7 @@ void ViewerApp::loadDatasetCPU(const int dataset_idx)
 	}
 
 	// 2) Load images, flows and depth maps.
-	ImageLoader* imgLoader = new ImageLoader(datasetBack->getCameraSetup()->getCameras());
+	ImageLoader* imgLoader = new ImageLoader(datasetBack->getCameraSetup()->getCameras(), true);
 	if (imageTextureFormat.empty())
 	{
 		LOG(WARNING) << "The RGB image texture format not set. Use the default option GL_RGB." << imageTextureFormat;
