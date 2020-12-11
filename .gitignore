@@ -1,0 +1,17 @@
+## Build directory
+build-*
+build_*
+
+.vs/
+.vscode/
+
+## Python etc.
+Python/.idea/
+Python/.ipynb_checkpoints/
+Python/__pycache__/
+Python/cmake_deprecated_functions.log
+Python/Notebooks/.ipynb_checkpoints/
+
+## Other
+Screenshots/
+userSettings.json

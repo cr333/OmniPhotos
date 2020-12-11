@@ -1,0 +1,79 @@
+{
+  "default_bindings": [
+    {
+      "controller_type": "generic",
+      "binding_url": "omniphotos_bindings_generic.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/omniphotos/in/ToggleMethod",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/ToggleDisplayMode",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/NextProxy",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/PreviousProxy",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/NextDataset",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/PreviousDataset",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/RecentreHeadset",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/TriggerHaptic",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/omniphotos/in/AnalogInput",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/omniphotos/in/Hand_Right",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/omniphotos/in/Hand_Left",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/omniphotos/out/Haptic_Left",
+      "type": "vibration"
+    },
+    {
+      "name": "/actions/omniphotos/out/Haptic_Right",
+      "type": "vibration"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_US",
+      "/actions/omniphotos/in/ToggleMethod": "Toggle rendering method",
+      "/actions/omniphotos/in/ToggleDisplayMode": "Toggle display mode",
+      "/actions/omniphotos/in/RecentreHeadset": "Recentre the headset to center of camera circle",
+      "/actions/omniphotos/in/NextDataset": "Load the next dataset",
+      "/actions/omniphotos/in/PreviousDataset": "Load the previous dataset",
+      "/actions/omniphotos/in/NextProxy": "Display the next proxy",
+      "/actions/omniphotos/in/PreviousProxy": "Display the previous proxy",
+      "/actions/omniphotos/in/TriggerHaptic": "Trigger Haptic Pulse",
+      "/actions/omniphotos/in/Hand_Right": "Right Hand Pose",
+      "/actions/omniphotos/in/Hand_Left": "Left Hand Pose",
+      "/actions/omniphotos/out/Haptic_Left": "Left Haptic Feedback",
+      "/actions/omniphotos/out/Haptic_Right": "Right Haptic Feedback"
+    }
+  ]
+}

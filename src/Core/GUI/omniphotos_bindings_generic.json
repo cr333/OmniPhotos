@@ -1,0 +1,121 @@
+{
+  "bindings": {
+    "/actions/omniphotos": {
+      "poses": [
+        {
+          "output": "/actions/omniphotos/in/hand_left",
+          "path": "/user/hand/left/pose/raw"
+        },
+        {
+          "output": "/actions/omniphotos/in/hand_right",
+          "path": "/user/hand/right/pose/raw"
+        }
+      ],
+      "haptics": [
+        {
+          "output": "/actions/omniphotos/out/haptic_right",
+          "path": "/user/hand/right/output/haptic"
+        },
+        {
+          "output": "/actions/omniphotos/out/haptic_left",
+          "path": "/user/hand/left/output/haptic"
+        }
+      ],
+      "sources": [
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/ToggleMethod"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/left/input/trigger"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/ToggleDisplayMode"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/right/input/trigger"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/PreviousProxy"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/right/input/a"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/NextProxy"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/right/input/b"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/TriggerHaptic"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/right/input/grip"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/TriggerHaptic"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/left/input/grip"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/RecentreHeadset"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/left/input/grip"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/RecentreHeadset"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/right/input/grip"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/NextDataset"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/left/input/y"
+        },
+        {
+          "inputs": {
+            "click": {
+              "output": "/actions/omniphotos/in/PreviousDataset"
+            }
+          },
+          "mode": "button",
+          "path": "/user/hand/left/input/x"
+        }
+      ]
+    }
+  },
+  "controller_type": "generic",
+  "description": "Bindings for the OmniPhotos OpenVR viewer for a generic controller",
+  "name": "OmniPhotos OpenVR bindings for a generic controller"
+}

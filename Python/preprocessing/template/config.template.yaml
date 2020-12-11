@@ -1,0 +1,44 @@
+%YAML:1.0
+# OmniPhotos configuration file for dataset '$dataset_name$'
+
+General:
+    # The folder used to store precomputed optical flow, proxy geometry, etc.
+    CacheFolder: "/$cache_folder_dis$"
+    #CacheFolder: "/$cache_folder_flownet2$"
+
+Geometry:
+    SFM: "$sfm_file_name$"
+    Load3DPoints: $load_3d_points$
+    MaxNumber3DPoints: 10000000
+    # 0 means dense
+    LoadSparsePointCloud: $load_sparse_point_cloud$
+    Max3DPointError: 10.0
+    CircleRadius: $circle_radius$
+    CylinderRadius: 20.0
+
+Camera:
+    Name: "Insta360 One X"
+    Equirectangular: 1
+
+Video:
+    FirstFrame: $first_frame$
+    LastFrame: $last_frame$
+    FrameInterval: 1
+
+Preprocessing:
+    ImageFilenames: $image_filename$
+    NumberOfCameras: $cameras_number$
+    ShapeSampling: 0
+    ChangeBasis: $change_basis$
+    ShapeFit: 0
+    IntrinsicScale: $intrinsic_scale$
+    DownsampleFlow: $downsample_flow$
+    ComputeOpticalFlow: $compute_optical_flow$
+    # Optical flow method: 0 = Brox 2004 OpenCV GPU, 1 = DIS OpenCV CPU
+    OpticalFlowMethod: 1
+
+Viewer:
+    UseOpticalFlow: 1
+    UsePointCloud: $use_point_cloud$
+    LookAtDirection: 0 # in deg, range -180:180
+    LookAtDistance: 10 # in m

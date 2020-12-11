@@ -1,0 +1,115 @@
+#====================================#
+#        preprocessing               #
+#====================================#
+# There are 4 preprocessing steps:
+# 0) loading configuration from yaml file (always run);
+# 1) preprocessing the data with rotation, extraction and saving;
+# 2) reconstructing camera trajectory;
+# 3) generate config file for OmniPhotos;
+# 4) computing optical flow for the input images.
+
+#========= Global Config =========#
+# the root directory of working folder, to storage the cache files, output images, \
+# reconstructing result etc. is same as the root folder of the configuration file
+#=================================#
+# the first step (including this step) of preprocessing
+preprocessing.step_start: 0
+# the last step (including this step) of preprocessing, if it's -1 to process until the last step
+preprocessing.step_end: -1
+# input data type of preprocessing, "video" or "image". the path specify by preprocessing.input_path
+preprocessing.input_type: video
+# if type if video the path is the video file, if the "input_type" is images the path will set to "Input" folder.
+# The path is relative to the root directory of this yaml file
+preprocessing.input_path: VID_20190402_123936_00_032.mp4
+# the original images file name expression, if input is video it is the name expression of extracted image filename
+# the extracted images will as source of images in Input directory (OmniPhotos)
+preprocessing.original_filename_expression: image-%04d.jpg
+# the output images file name expression,the filename suffix should be *.jpg or *.png
+preprocessing.op_filename_expression: panoramic-%04d.jpg
+# use the Euler angle rotation to the image, format is [phi, theta] of spherical coordinates with Euler angle degree
+# the rotated output image directory is $preprocessing.root_directory$/Input
+preprocessing.image_rotation: [0.0, 0.0]
+# the first frame of reconstruction (include this frame), first frame is 0
+preprocessing.frame_index_start: 180
+# the last frame of reconstruction (include this frame), last frame of video is -1
+preprocessing.frame_index_end: 265
+# specify how much frames in the final output, extract all frames with -1
+# the number specifies the frames selected by the python script, not OmniPhotos preprocessing step.
+preprocessing.frame_fixed_number: -1
+# the camera pose reconstruction tools, "all", "openvslam" or "colmap"
+preprocessing.trajectory_tool: openvslam
+#  the thread number FFmpeg extracting frame from video
+preprocessing.ffmpeg_thread_number: 3
+
+#========== OpenVSLAM ============#
+# convention:
+# 1) the input directory storage the input image sequence, default is the rotated images outputted directory
+# 2) the output directory storage *.msg and trajectory.txt, default is $preprocessing.root_directory$/Capture/openvslam
+#=================================#
+# executable file of OpenVSLAM reconstructing trajectory and map
+preprocessing.openvslam.execution_file_path: D:/utilities/openvslam_win_x64_msvc14_share_release_1_2_bin_rc1/run_camera_pose_reconstruction.exe
+# circle repeat times of openvslam mapping
+preprocessing.openvslam.mapping_repeat_times: 8
+# path of *.dbow2 file
+preprocessing.openvslam.dbow2_file_path: D:/utilities/openvslam_win_x64_msvc14_share_release_1_2_bin_rc1/data/orb_vocab/orb_vocab.dbow2
+
+#============ COLMAP =============#
+# convention:
+# 1) the input folder storage the input image sequence, default is rotated images outputted directory
+# 2) the output folder storage *.msg and trajectory.txt, default is the directory of $preprocessing.root_directory$/Capture/COLMAP
+# 3) The aspect ratio of an image is the proportional difference between width and height. aspect ratio = perspective_resolution_width/perspective_resolution_height
+#=================================#
+# executable file of COLMAP reconstructing trajectory of camera pose
+preprocessing.colmap.execution_file_path: D:/utilities/COLMAP/COLMAP-3.6-dev.3-windows/COLMAP.bat
+# specify the camera type should be 'panoramic' or 'perspective'
+preprocessing.colmap.input_camera_type: panoramic
+# the central of perspective image in spherical coordinate of panoramic image [phi, theta], it should be [0.0, 0.0]
+preprocessing.colmap.perspective_forward:  [0.0, 0.0]
+# the frame interval for sparse reconstruction (1st step of 2-step reconstruction) of COLMAP
+preprocessing.colmap.frame_interval: 5
+# vertical field of view of extracted perspective image
+preprocessing.colmap.perspective_fov_vertical: 120.0
+# height (pixels) of extracted perspective image
+preprocessing.colmap.perspective_resolution_height: 1200
+# width (pixels) of extracted perspective image
+preprocessing.colmap.perspective_resolution_width: 1200
+# the path of colmap vocab file
+preprocessing.colmap.vocab_file_path: D:/utilities/COLMAP/COLMAP_vocabulary_trees/vocab_tree_flickr100K_words1M.bin
+
+#============ OmniPhotos =============#
+# The configuration for OmniPhotos preprocessing
+#=======================================#
+# the path of OmniPhotos executable file, used for stabilized images
+preprocessing.omniphotos.execution_file_path: D:/utilities/OmniPhotos/Preprocessing.exe
+# pre-define OmniPhotos preprocessing configuration file path,
+# if set the yaml file of OmniPhotos to empty, the preprocessor will generate a default configuration file
+preprocessing.omniphotos.yaml_config_path: None
+# the path of omniphotos executable file, used for stabilized images
+preprocessing.omniphotos.stable_enable: False
+# weather generate the downsample input images, [row_scalar, column_scalar], do not downsample if it set to [-1.0, -1.0]
+preprocessing.omniphotos.downsample_scalar: [-1.0, -1.0]
+# the radius of the camera circle path, the unit is metres
+preprocessing.omniphotos.circle_radius: 1.0
+# cache folder naming, if it doesn't set the name will auto-generate by the image resolution info
+# if specify the cache folder name, the folder name will be postfixed with corresponding optical flow method.
+#preprocessing.cache_folder_name: "cache_xxx"
+
+
+#============ Optical Flow =============#
+#
+#=======================================#
+# the optical flow method should be one of  "flownet2"
+preprocessing.of.method: flownet2
+# weather save the optical flow visualization result to images
+preprocessing.of.save_visualization: True
+# scalar of downsample optical flow, [row_scalar, column_scalar], do not downsample if it set to [-1.0, -1.0]
+# the of downsampling scalar is related to the OmniPhotos Input Images, 
+# the output optical flow resolution = input_image_resolution * preprocessing.of.downsample_scalar
+preprocessing.of.downsample_scalar: [0.5,0.5]
+# --------options for Flownet2--------
+# specify the GPU device index, -1 is default gpu
+preprocessing.of.flownet2.device_idx: -1
+# flownet2 model name "FlowNet2", "FlowNet2C", "FlowNet2S", "FlowNet2SD", "FlowNet2CS", "FlowNet2CSS"
+preprocessing.of.flownet2.model_name: FlowNet2
+# flownet2 model file path
+preprocessing.of.flownet2.model_path: D:/sourcecode/flownet2pytorch/models/FlowNet2_checkpoint.pth.tar

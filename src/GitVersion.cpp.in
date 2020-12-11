@@ -1,0 +1,5 @@
+// This file is updated to contain the current Git commit hash.
+// Source: https://stackoverflow.com/a/4318642/72470
+
+extern const char g_GIT_SHA1[] = "@GIT_SHA1@";
+extern const char g_GIT_VERSION[] = "@GIT_VERSION@";

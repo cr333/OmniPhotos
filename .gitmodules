@@ -1,0 +1,6 @@
+[submodule "src/3rdParty/imgui"]
+	path = src/3rdParty/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "Python/LPIPS"]
+	path = Python/LPIPS
+	url = https://github.com/richzhang/PerceptualSimilarity.git
