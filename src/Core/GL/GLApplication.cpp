@@ -107,7 +107,7 @@ void GLApplication::postRender()
 void GLApplication::render()
 {
 #ifdef WITH_OPENVR
-	if (settings->enableVR) // use OpenVR for VR rendering
+	if (enableVR) // use OpenVR for VR rendering
 	{
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -409,7 +409,7 @@ void GLApplication::sharedUserInput()
 
 #ifdef WITH_OPENVR
 	// VR-specific keys.
-	if (settings->enableVR)
+	if (enableVR)
 	{
 		// Reset the HMD pose to the current pose.
 		if (inputHandler->s_key_pressed)

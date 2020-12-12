@@ -41,6 +41,9 @@ public:
 	 */
 	VRInterface* hmd = nullptr;
 
+	// Whether or not VR rendering with a head-mounted display is enabled.
+	bool enableVR = false;
+
 	/**
 	 * This needs to be used in GLApplications. Each program is registered with a
 	 * render model initially. GLPrograms can be re-used by just exchanging the used rendermodel.

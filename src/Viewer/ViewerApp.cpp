@@ -40,7 +40,7 @@ ViewerApp::~ViewerApp()
 {
 	// We don't use GUI in VR, so only clean it up if not in VR.
 #ifdef WITH_OPENVR
-	if (settings->enableVR == true)
+	if (enableVR)
 	{
 		delete hmd;
 		hmd = nullptr;
@@ -175,7 +175,7 @@ int ViewerApp::init()
 	GLApplication::init();
 
 #ifdef WITH_OPENVR
-	if (settings->enableVR)
+	if (enableVR)
 	{
 		Eigen::Matrix4f initRot = createRotationTransform44(Eigen::Vector3f::UnitY(), settings->lookAtDirection);
 		hmd = new VRInterface(0.1f, 1000.0f, initRot, this); // near/far clip distance [m]
@@ -199,7 +199,7 @@ int ViewerApp::init()
 
 	// GUI is only used outside the HMD.
 #ifdef WITH_OPENVR
-	if (settings->enableVR == false)
+	if (enableVR == false)
 #endif
 	{
 		if (!guiInit)
@@ -233,7 +233,7 @@ int ViewerApp::initPrograms()
 	VLOG(1) << "ViewerApp::initPrograms()";
 
 #ifdef WITH_OPENVR
-	if (settings->enableVR)
+	if (enableVR)
 	{
 		hmd->initGLPrograms(&app_gl_programs);
 
@@ -306,7 +306,7 @@ int ViewerApp::initPrograms()
 
 	// Ignore the plane in VR.
 	// TODO: update the plane pose in VR.
-	if (settings->enableVR == false)
+	if (enableVR == false)
 	{
 		proxies_str.push_back("Plane");
 		proxies.push_back(std::pair<int, GLRenderModel*>(_proxy_id++, getGLCamera()->getPlane()->getRenderModel()));
@@ -428,7 +428,6 @@ void ViewerApp::loadDatasetCPU(const int dataset_idx)
 	// 0-2) Load new dataset and settings from disk.
 	CameraSetupDataset& dataset = datasetInfoList[dataset_idx];
 	datasetBackSetting.configFile = dataset.pathToConfigYAML;
-	datasetBackSetting.enableVR = enableVR;
 	LOG(INFO) << "Loading the dataset from:\n"
 	          << datasetBackSetting.configFile;
 	datasetBack->loadFromCache(&datasetBackSetting);
@@ -570,12 +569,12 @@ void ViewerApp::run()
 	GLApplication::render();
 
 #ifdef WITH_OPENVR
-	if (settings->enableVR)
+	if (enableVR)
 		hmd->handleInput(&app_gl_programs);
 	///////////////////////////////////////////////////////////
 	//This belongs all to rendering...
 
-	if (settings->enableVR == false)
+	if (enableVR == false)
 #endif
 	{
 		if (showImGui)

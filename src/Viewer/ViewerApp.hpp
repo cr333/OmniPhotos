@@ -136,7 +136,6 @@ private:
 	bool checkForDatasets();
 	void updateCamPhiDirTexture();
 
-	bool enableVR = false;
 	ViewerGUI* gui = nullptr;
 	CameraSetupDataset* appDataset = nullptr;
 	CameraSetupVisualization* appVisualization = nullptr;

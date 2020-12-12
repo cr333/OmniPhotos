@@ -28,9 +28,6 @@ struct DisplaySettings
 	// Size of the window.
 	Eigen::Vector2i windowDims = Eigen::Vector2i(1280, 720);
 
-	// Whether or not VR rendering with a head-mounted display is enabled.
-	bool enableVR = false;
-
 	int switchGLProgram = 1;
 
 	// RenderModel = 0 -> render black screen
