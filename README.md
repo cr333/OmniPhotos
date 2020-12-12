@@ -14,9 +14,9 @@ _ACM Transactions on Graphics (SIGGRAPH Asia 2020)_
 
 ## Demo 
 
-The quickest way to try out OmniPhotos is via our [precompiled demo (TODO MB)](TODO/LINK).
+The quickest way to try out OmniPhotos is via our [precompiled demo (610 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-Demo-v1.0-win10-x64.zip).
 Download and unzip to get started.
-Documentation for the precompiled binaries can be found [here](TODO/read/the/docs/demo/tab) or in the downloaded demo directory.
+Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0-win10-x64.zip), can be found in the downloaded demo directory.
 
 For the demo to run smoothly, we recommend a recently updated Windows 10 machine with a discrete GPU.
 
