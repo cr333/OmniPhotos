@@ -28,8 +28,8 @@ jobs:
         name: Choco install
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv
-          #args: install opencv --params=/InstallationPath:%GITHUB_WORKSPACE% --yes 
+          #args: install opencv
+          args: install opencv --params=/InstallationPath:%GITHUB_WORKSPACE% --yes --execution-timeout=30
           #args: --help
 # Runs a single command using the runners shell
 #       - name: Run a one-line script
