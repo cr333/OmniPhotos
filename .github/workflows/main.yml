@@ -28,7 +28,7 @@ jobs:
         name: Choco install opencv
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv --params=/InstallationPath:%GITHUB_WORKSPACE% --yes --execution-timeout=30
+          args: install opencv --yes #--execution-timeout=30
 
       # Runs a set of commands using the runners shell
       - name: Download and extract eigen
