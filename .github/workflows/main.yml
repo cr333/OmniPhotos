@@ -24,16 +24,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      -
-        name: Choco install opencv
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: install opencv --yes #--execution-timeout=30
-
+########################### OPENCV ##############################
+# This works!
+#       -
+#         name: Choco install opencv
+#         uses: crazy-max/ghaction-chocolatey@v1
+#         with:
+#           args: install opencv --yes #--execution-timeout=30
+################################################################
       # Runs a set of commands using the runners shell
       - name: Download and extract eigen
-        run: |
-           curl https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.zip
-           tar -xf eigen-3.3.9.zip .
+        run: git clone https://gitlab.com/libeigen/eigen.git
 
 
