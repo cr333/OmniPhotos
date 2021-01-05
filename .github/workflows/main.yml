@@ -33,7 +33,10 @@ jobs:
 #           args: install opencv --yes #--execution-timeout=30
 ################################################################
       # Runs a set of commands using the runners shell
-      - name: Download and extract eigen
+      - name: Clone eigen
         run: git clone https://gitlab.com/libeigen/eigen.git
-
+      - name: Download and extract GLFW
+        run: |
+          curl https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip -o glfw-3.3.2.bin.WIN64.zip
+          tar -xf glfw-3.3.2.bin.WIN64.zip
 
