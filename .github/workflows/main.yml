@@ -37,6 +37,6 @@ jobs:
         run: git clone https://gitlab.com/libeigen/eigen.git
       - name: Download and extract GLFW
         run: |
-          explorer https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip
+          curl -L https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip
           tar -xf glfw-3.3.2.bin.WIN64.zip
 
