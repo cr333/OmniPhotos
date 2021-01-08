@@ -35,8 +35,10 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Clone eigen
         run: git clone https://gitlab.com/libeigen/eigen.git
-      - name: Download and extract GLFW
+      - name: Clone GLFW
         run: |
-          curl -L https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip -o glfw-3.3.2.bin.WIN64.zip
-          tar -xf glfw-3.3.2.bin.WIN64.zip
+          git clone https://github.com/glfw/glfw.git
+          cd glfw
+          git fetch --all --tags
+          git checkout 3.3.2
 
