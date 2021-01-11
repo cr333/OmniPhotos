@@ -53,6 +53,6 @@ jobs:
         working-directory: ${{github.workspace}}/glfw
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE
+          cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
           cmake --build build --target INSTALL
 
