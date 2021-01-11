@@ -9,9 +9,13 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,10 +39,20 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Clone eigen
         run: git clone https://gitlab.com/libeigen/eigen.git
+      
       - name: Clone GLFW
         run: |
           git clone https://github.com/glfw/glfw.git
           cd glfw
           git fetch --all --tags
           git checkout 3.3.2
+
+      - name: build GLFW
+      # Some projects don't allow in-source building, so create a separate build directory
+      # We'll use this as our working directory for all subsequent commands
+        working-directory: ${{github.workspace}}/build
+        run: |
+          mkdir build
+          cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE
+          cmake --build build --target INSTALL
 
