@@ -52,7 +52,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
         working-directory: ${{github.workspace}}/build
         run: |
-          mkdir build
+          cmake -E make_directory ${{github.workspace}}/build
           cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE
           cmake --build build --target INSTALL
 
