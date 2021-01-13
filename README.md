@@ -1,5 +1,5 @@
 # OmniPhotos: Casual 360° VR Photography
-### [Project Page](https://richardt.name/publications/omniphotos/) | [Video](https://vimeo.com/456866335) | [Paper](https://richardt.name/publications/omniphotos/OmniPhotos-BertelEtAl-SIGAsia2020-paper.pdf) | [Data](https://doi.org/10.15125/BATH-00922)
+### [Project Page](https://richardt.name/publications/omniphotos/) | [Video](https://vimeo.com/456866335) | [Paper](https://richardt.name/publications/omniphotos/OmniPhotos-BertelEtAl-SIGAsia2020-paper.pdf) | [Demo](#demo) | [Data](https://doi.org/10.15125/BATH-00948)
 
 
 This repository contains the source code for creating and viewing OmniPhotos – a new approach for
@@ -14,9 +14,9 @@ _ACM Transactions on Graphics (SIGGRAPH Asia 2020)_
 
 ## Demo 
 
-The quickest way to try out OmniPhotos is via our [precompiled demo (610 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-Demo-v1.0-win10-x64.zip).
+The quickest way to try out OmniPhotos is via our [precompiled demo (610 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-Demo-v1.0.1-win10-x64.zip).
 Download and unzip to get started.
-Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0-win10-x64.zip), can be found in the downloaded demo directory.
+Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0.1-win10-x64.zip), can be found in the downloaded demo directory.
 
 For the demo to run smoothly, we recommend a recently updated Windows 10 machine with a discrete GPU.
 
@@ -24,8 +24,8 @@ For the demo to run smoothly, we recommend a recently updated Windows 10 machine
 ### Additional OmniPhotos
 
 We provide 31 OmniPhotos for download:
-* [9 preprocessed datasets](https://researchdata.bath.ac.uk/922/3/Preprocessed.zip) that are ready for viewing (3.2 GB zipped, 12.8 GB uncompressed)
-* [31 unprocessed datasets](https://researchdata.bath.ac.uk/922/4/Unprocessed.zip) with their input videos, camera poses etc.; this includes the 9 preprocessed datasets (17.4 GB zipped, 17.9 GB uncompressed)
+* [9 preprocessed datasets](https://researchdata.bath.ac.uk/948/5/Preprocessed.zip) that are ready for viewing (3.2 GB zipped, 12.8 GB uncompressed)
+* [31 unprocessed datasets](https://researchdata.bath.ac.uk/948/6/Unprocessed.zip) with their input videos, camera poses etc.; this includes the 9 preprocessed datasets (17.4 GB zipped, 17.9 GB uncompressed)
 
 
 ### How to view OmniPhotos
@@ -104,7 +104,7 @@ Our code has been developed and tested with Microsoft Visual Studio 2015 and 201
 
 ## Citation
 
-Please cite our paper if you use this code or [any of our datasets](https://doi.org/10.15125/BATH-00922):
+Please cite our paper if you use this code or [any of our datasets](https://doi.org/10.15125/BATH-00948):
 
 ```bibtex
 @article{OmniPhotos,
