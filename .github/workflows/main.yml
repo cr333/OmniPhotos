@@ -19,7 +19,6 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: windows-latest
@@ -30,16 +29,14 @@ jobs:
       - uses: actions/checkout@v2
 ########################### OPENCV ##############################
 # This works!
-#       -
-#         name: Choco install opencv
-#         uses: crazy-max/ghaction-chocolatey@v1
-#         with:
-#           args: install opencv --yes #--execution-timeout=30
+      -
+        name: Choco install opencv
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install opencv --params=/InstallationPath:${{github.workspace}} --yes
 ################################################################
-      # Runs a set of commands using the runners shell
       - name: Clone eigen
         run: git clone https://gitlab.com/libeigen/eigen.git
-      
       - name: Clone GLFW
         run: |
           git clone https://github.com/glfw/glfw.git
@@ -48,11 +45,14 @@ jobs:
           git checkout 3.3.2
 
       - name: build GLFW
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
         working-directory: ${{github.workspace}}/glfw
         run: |
           cmake -E make_directory ${{github.workspace}}/glfw/build
           cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
           cmake --build build --target INSTALL
-
+      
+      - name: build Omniphotos
+        run: |
+          cmake -E make_directory ${{github.workspace}}/build
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
+          cmake --build build
