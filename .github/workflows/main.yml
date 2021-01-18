@@ -33,7 +33,9 @@ jobs:
         name: Choco install opencv
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv --yes#--params=/InstallationPath:${{github.workspace}} --yes
+          args: install opencv --yes
+          
+#--params=/InstallationPath:${{github.workspace}} --yes
 ################################################################
       - name: Clone glog
         run: git clone https://github.com/google/glog.git
