@@ -33,7 +33,7 @@ jobs:
         name: Choco install opencv
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv --yes
+          args: install ptime --yes
           
 #--params=/InstallationPath:${{github.workspace}} --yes
 ################################################################
