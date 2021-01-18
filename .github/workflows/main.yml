@@ -33,7 +33,7 @@ jobs:
         name: Choco install opencv
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv --params=/InstallationPath:${{github.workspace}} --yes
+          args: install opencv --yes#--params=/InstallationPath:${{github.workspace}} --yes
 ################################################################
       - name: Clone glog
         run: git clone https://github.com/google/glog.git
@@ -52,10 +52,10 @@ jobs:
         run: |
           cmake -E make_directory ${{github.workspace}}/glfw/build
           cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-          cmake --build build --target INSTALL
+          cmake --build build --target INSTALL --config release
       
       - name: build Omniphotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
-          cmake --build build
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=c:/tools/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
+          cmake --build build --config release
