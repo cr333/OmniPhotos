@@ -41,8 +41,8 @@ jobs:
       -
        name: Extract OpenCV
        uses: edgarrc/action-7z@v1.0.4
-       with:
-         7z x -aoa -bd -bb1 -o${{github.workspace}} -y opencv.exe
+       with: 
+        7z x -aoa -bd -bb1 -o${{github.workspace}} -y opencv.exe
       
 ################################################################
       - name: Clone glog
