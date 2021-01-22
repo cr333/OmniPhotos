@@ -29,12 +29,18 @@ jobs:
       - uses: actions/checkout@v2
 ########################### OPENCV ##############################
 # This works!
-      -
-        name: Choco install opencv
-        uses: crazy-max/ghaction-chocolatey@v1
+#       -
+#         name: Choco install opencv
+#         uses: crazy-max/ghaction-chocolatey@v1
+#         with:
+#           args: install ptime --yes
+      - 
+        name: Install OpenCV
+        uses: Dovyski/setup-opencv-action@v1
         with:
-          args: install ptime --yes
-          
+          opencv-version: '4.1.2'
+          CMAKE_INSTALL_PREFIX: ${{github.workspace}}/opencv 
+        
 #--params=/InstallationPath:${{github.workspace}} --yes
 ################################################################
       - name: Clone glog
