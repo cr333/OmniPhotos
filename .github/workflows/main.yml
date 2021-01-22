@@ -29,11 +29,21 @@ jobs:
       - uses: actions/checkout@v2
 ########################### OPENCV ##############################
 # This works!
+#       -
+#         name: Choco install opencv
+#         uses: crazy-max/ghaction-chocolatey@v1
+#         with:
+#           args: install opencv --yes --verbose --ignorechecksum --params=/InstallationPath:${{github.workspace}}
+      - 
+       name: Download OpenCV
+       run: |
+         curl https://github.com/opencv/opencv/releases/download/4.1.2/opencv-4.1.2-vc14_vc15.exe -L -o ${{github.workspace}}/opencv.exe
       -
-        name: Choco install opencv
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: install opencv --yes --verbose --ignorechecksum --params=/InstallationPath:${{github.workspace}}
+       name: Extract OpenCV
+       uses: edgarrc/action-7z@v1.0.4
+       with:
+         7z x -aoa -bd -bb1 -o${{github.workspace}} -y opencv.exe
+      
 ################################################################
       - name: Clone glog
         run: git clone https://github.com/google/glog.git
