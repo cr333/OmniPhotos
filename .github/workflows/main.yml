@@ -33,8 +33,7 @@ jobs:
         name: Choco install opencv
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install opencv --yes --verbose --ignorechecksum
-#--params=/InstallationPath:${{github.workspace}}
+          args: install opencv --yes --verbose --ignorechecksum --params=/InstallationPath:${{github.workspace}}
 ################################################################
       - name: Clone glog
         run: git clone https://github.com/google/glog.git
@@ -58,5 +57,5 @@ jobs:
       - name: build Omniphotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=c:/tools/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
           cmake --build build --config release
