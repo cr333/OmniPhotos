@@ -56,7 +56,7 @@ find_package(Eigen 3.2 REQUIRED)
 include_directories(${EIGEN_INCLUDE_DIR})
 
 ## OpenCV
-find_package(OpenCV 4.1.1 REQUIRED NO_DEFAULT_PATH)
+find_package(OpenCV 4.3.0 REQUIRED NO_DEFAULT_PATH)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 ## OpenMP (optional)
