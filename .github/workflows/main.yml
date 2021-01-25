@@ -61,5 +61,5 @@ jobs:
       - name: build Omniphotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
           cmake --build build --config release
