@@ -37,7 +37,7 @@ jobs:
        name: Download and Extract OpenCV
        run: |
          curl https://github.com/opencv/opencv/releases/download/4.5.1/opencv-4.5.1-dldt-2021.2-vc16-avx2.zip -o opencv.zip -L
-         tar -xf opencv.zip 
+         tar -xf opencv.zip -v
 #############################################
       - name: Clone glog
         run: git clone https://github.com/google/glog.git
