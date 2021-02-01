@@ -31,7 +31,7 @@ jobs:
        name: Download and Extract OpenCV
        run: |
          curl https://github.com/opencv/opencv/releases/download/4.5.1/opencv-4.5.1-dldt-2021.2-vc16-avx2.zip -o opencv.zip -L
-         tar -xf opencv.zip -v -C ${{github.workspace}}
+         tar -xf opencv.zip -C ${{github.workspace}}
       
       - name: Clone glog
         run: |
@@ -62,5 +62,5 @@ jobs:
       - name: build Omniphotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE -DWITH_GFLAGS=FALSE -DBUILD_GMOCK=FALSE -DBUILD_TESTING=FALSE 
           cmake --build build --config release
