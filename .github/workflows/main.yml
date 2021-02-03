@@ -62,5 +62,11 @@ jobs:
       - name: build Omniphotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
-          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE -DWITH_GFLAGS=FALSE -DBUILD_GMOCK=FALSE -DBUILD_TESTING=FALSE -DWITH_PCHS=TRUE 
-          cmake --build build --config release
+          cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE -DWITH_GFLAGS=FALSE -DBUILD_GMOCK=FALSE -DBUILD_TESTING=FALSE
+      
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+      
+      - name: Build
+        run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} build\Omniphotos.sln 
+        
