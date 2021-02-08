@@ -43,17 +43,19 @@ jobs:
          git clone https://github.com/glfw/glfw.git
          cd glfw
          git checkout 3.3.2
-
-      - name: Build GLFW
-        working-directory: ${{github.workspace}}/glfw
-        run: |
-          cmake -E make_directory ${{github.workspace}}/glfw/build
-          cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-          cmake --build build --target INSTALL --config Release
+         cmake -E make_directory ${{github.workspace}}/glfw/build
+         cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install-glfw -DBUILD_SHARED_LIBS=TRUE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+         cmake --build build --target INSTALL --config Release
       
       - name: Build OmniPhotos
         run: |
           cmake -E make_directory ${{github.workspace}}/build
           cmake -S . -B build -DEIGEN_INCLUDE_DIR:PATH=${{github.workspace}}/eigen -DOpenCV_DIR:PATH=${{github.workspace}}/opencv/build/cmake -Dglfw3_DIR:PATH=${{github.workspace}}/install-glfw/lib/cmake/glfw3 -DWITH_TEST=TRUE -DWITH_OPENVR=TRUE -DWITH_GFLAGS=FALSE -DBUILD_GMOCK=FALSE -DBUILD_TESTING=FALSE
           cmake --build build --config Release
-        
+      
+      - name: Download data and run tests
+        run: |
+          curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -O testDatasets.zip -L
+          tar -xf testDatasets.zip -C ${{github.workspace}}
+          build/Release/Test.exe -f ${{github.workspace}}/testDatasets/
+          
