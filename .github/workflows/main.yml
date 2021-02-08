@@ -55,7 +55,8 @@ jobs:
       
       - name: Download data and run tests
         run: |
-          curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -O testDatasets.zip -L
+          curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -o testDatasets.zip -L
           tar -xf testDatasets.zip -C ${{github.workspace}}
-          build/Release/Test.exe -f ${{github.workspace}}/testDatasets/
+          cd opencv/build/bin/
+          ${{github.workspace}}/build/Release/Test.exe -f ${{github.workspace}}/testDatasets/
           
