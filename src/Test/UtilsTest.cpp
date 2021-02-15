@@ -206,8 +206,3 @@ TEST(FlowIOTest, readFloGenFunction_2)
 	string floFile = unitTestDataDirectory + "general_sphere/undistorted-1702-FlowToNext.flo";
 	ASSERT_FALSE(readFlowFile(floFile).empty());
 }
-
-TEST(FailureCaseTest, fail)
-{
-	ASSERT_FALSE(true);
-}
