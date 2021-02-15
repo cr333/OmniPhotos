@@ -68,7 +68,11 @@ include_directories(${json_INCLUDE_DIR})
 
 ## glog -- Google logging library
 ## (actually need master newer than Nov 2019)
-find_package(glog 0.4.0 REQUIRED)
+if(EXISTS glog)
+  add_subdirectory(glog)
+else() 
+  find_package(glog 0.4.0 REQUIRED)
+endif()
 
 if(MSVC)
   ## Parallel compiling in Visual Studio and no funny min/max macros.
