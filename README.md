@@ -6,7 +6,7 @@ This repository contains the source code for creating and viewing OmniPhotos –
 casual 360° VR photography using a consumer 360° video camera.
 
 **OmniPhotos: Casual 360° VR Photography**  
-Tobias Bertel, Mingze Yuan, Reuben Lindroos, [Christian Richardt](https://richardt.name)  
+[Tobias Bertel](https://tobias-bertel.com/), [Mingze Yuan](https://yuanmingze.github.io/), Reuben Lindroos, [Christian Richardt](https://richardt.name)  
 _ACM Transactions on Graphics (SIGGRAPH Asia 2020)_
 
 <img src='docs/images/teaser.jpg'/>
@@ -16,7 +16,7 @@ _ACM Transactions on Graphics (SIGGRAPH Asia 2020)_
 
 The quickest way to try out OmniPhotos is via our [precompiled demo (610 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-Demo-v1.0.2-win10-x64.zip).
 Download and unzip to get started.
-Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0.1-win10-x64.zip), can be found in the downloaded demo directory.
+Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0.2-win10-x64.zip), can be found in the downloaded demo directory.
 
 For the demo to run smoothly, we recommend a recently updated Windows 10 machine with a discrete GPU.
 
