@@ -9,7 +9,7 @@ Secondly, you'll need to have installed the sphinx packages in the `requirements
 To do this, generate and activate a Python environment and install the requirements:
 
     python -m venv sphinxenv
-    sphinxenv/Scripts/activate (windows PS)
+    sphinxenv/Scripts/activate (windows)
     source sphinx/bin/activate (linux)
     pip install -r requirements.txt
 
@@ -37,4 +37,14 @@ If you want the standard doxygen HTML files with all the classes, then set this 
 To run the Doxygen section of the build on its own, run the following command in 
 the `build/docs` directory once you've run CMake:
 
-    doxygen.exe ./Doxyfile
+    doxygen ..build/docs/doxygen/Doxyfile
+
+In order to run the sphinx build step independently (once you've run the doxygen step successfully), run the following command from the `docs` directory:
+    
+    sphinx-build -E -b html -Dbreathe_projects.OmniPhotos=../build/docs/doxygen/xml . ../build/docs/sphinx
+
+**NOTE:**
+- `-E` here tells sphinx to rebuild everything, no matter what (i.e does not do an incremental build)
+- `-D` overrides the specified value in `conf.py` for var `breathe_projects.OmniPhotos`
+- the last two arguments are positional for source and build dir respectively.
+
