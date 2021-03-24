@@ -22,7 +22,7 @@ copyright = '2020, Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richar
 author = 'Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt'
 
 import subprocess
-subprocess.call("doxygen")
+subprocess.call("doxygen docs/Doxyfile")
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
