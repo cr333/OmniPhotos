@@ -27,6 +27,7 @@ We provide 31 OmniPhotos for download:
 * [9 preprocessed datasets](https://researchdata.bath.ac.uk/948/5/Preprocessed.zip) that are ready for viewing (3.2 GB zipped, 12.8 GB uncompressed)
 * [31 unprocessed datasets](https://researchdata.bath.ac.uk/948/6/Unprocessed.zip) with their input videos, camera poses etc.; this includes the 9 preprocessed datasets (17.4 GB zipped, 17.9 GB uncompressed)
 
+**Note:** A few of the .insv files are missing for the 5.7k datasets. If you need to process these from scratch (using the insv files) these files can be found [here](https://www.dropbox.com/sh/uz6lh0e0fbguir9/AABcWBGFy6fdLejOmS0zQioqa?dl=0). 
 
 ### How to view OmniPhotos
 
