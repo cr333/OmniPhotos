@@ -22,7 +22,7 @@ copyright = '2020, Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richar
 author = 'Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt'
 
 import subprocess
-subprocess.call("doxygen docs/Doxyfile")
+subprocess.call("doxygen")
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -51,7 +51,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
 
-html_extra_path = ['../build/docs/doxygen/html']
+html_extra_path = ['../build/html']
 
 # html_context = {
 #     'css_files': [
