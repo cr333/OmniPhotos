@@ -6,7 +6,7 @@
 
 #include <memory>
 
-
+/** class to generate cylinders */
 class Cylinder : public Shape, public GLRenderable
 {
 public:

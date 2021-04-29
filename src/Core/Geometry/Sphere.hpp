@@ -3,7 +3,9 @@
 #include "Core/GL/GLRenderable.hpp"
 #include "Core/Geometry/Shape.hpp"
 
-
+/**
+ * @brief class to generate sphere.
+ */
 class Sphere : public Shape, public GLRenderable
 {
 public:

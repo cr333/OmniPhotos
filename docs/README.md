@@ -5,46 +5,32 @@ To check this, run this command and make sure it does not return an error:
     
     doxygen --version
 
-Secondly, you'll need to have installed the sphinx packages in the `requirements.txt` file in this directory.
-To do this, generate and activate a Python environment and install the requirements:
+Then simply run the command 
+	
+	doxygen
 
-    python -m venv sphinxenv
-    sphinxenv/Scripts/activate (windows)
-    source sphinx/bin/activate (linux)
-    pip install -r requirements.txt
+or 
 
-Then run the CMake GUI from the terminal, with the Python env activated:
+    doxygen Doxyfile
 
-    cmake-gui
+in the `docs/` directory.
 
-Set the `WITH_DOCS` flag to true in the CMake GUI, then hit configure + generate.
-Build, successively, the doxygen project and then the sphinx project.
+## Read the docs 
 
-**NOTE:** The sphinx project will fail its build if doxygen isn't built first.
-If you do not, the Docs section (that uses doxygen) will display a warning of the form:
+RTD virtual machines read the sphinx `conf.py` file and generate the documentation using this. We've injected the call to doxygen into this file. The doxygen
+binary is then executed in the docs directory and generates files in the `docs/html/` directory, replacing the generated sphinx html files with those build by doxygen.
 
-```
-!Warning
-oxygenclass: breathe_default_project value ‘OmniPhotos’ does not seem to be a valid key for the breathe_projects dictionary
-```
+## Doxygen Conventions
 
-The Doxyfile.in is where you want to make your modifications to the html/xml output from Doxygen.
-This will be copied over and filled in by CMake at build time.
-To switch this on or off the html generation for doxygen set the `GENERATE_HTML` flag in `Doxyfile.in` and run the configure + generate pipeline again.
-There is also a `HIDE_UNDOC_CLASSES` that will reduce the build time if set to "yes".
-If you want the standard doxygen HTML files with all the classes, then set this flag to "no" as well as the `GENERATE_HTML` flag to "yes".
+Documentation convention (mostly) used can be found [here](https://docs.google.com/document/d/1k36F2nqbyxrLlpo3hOp900BCNME3f3hcAU1IHuv_dSE/edit?usp=sharing)
 
-To run the Doxygen section of the build on its own, run the following command in 
-the `build/docs` directory once you've run CMake:
+Note that for a class to appear as "documented" in the "Classe Index" list and "Class Hiearchy" lists in doxygen, you'll need to add a `@brief` descriptor in the line directly before the class declaration (in the hpp). 
 
-    doxygen ..build/docs/doxygen/Doxyfile
+	/**
+	 * @brief this is a class
+	 */
+	 class MyClass
+	 {
 
-In order to run the sphinx build step independently (once you've run the doxygen step successfully), run the following command from the `docs` directory:
-    
-    sphinx-build -E -b html -Dbreathe_projects.OmniPhotos=../build/docs/doxygen/xml . ../build/docs/sphinx
-
-**NOTE:**
-- `-E` here tells sphinx to rebuild everything, no matter what (i.e does not do an incremental build)
-- `-D` overrides the specified value in `conf.py` for var `breathe_projects.OmniPhotos`
-- the last two arguments are positional for source and build dir respectively.
-
+	 }
+The `@brief` notation is not strictly necessary, only important for clarity.

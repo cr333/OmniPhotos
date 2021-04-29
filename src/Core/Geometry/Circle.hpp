@@ -7,15 +7,14 @@
 #include <vector>
 
 
-/*
-@brief A circle
-@param normal of the plane in which the circle lies;
-@param radius of the circle
-@param x left vector of normal tangent space
-@param z forward vector of normal tangent space
-@method createVertices() used to create line segments for rendering.
-@method sampleCircle is used to sample vertices along the circle
-*/
+/** 
+ * @brief A circle
+ * @param normal of the plane in which the circle lies;
+ * @param radius of the circle
+ * @param x left vector of normal tangent space
+ * @param z forward vector of normal tangent space
+ * @method sampleCircle is used to sample vertices along the circle
+ */
 class Circle : public Shape
 {
 public:
@@ -44,9 +43,20 @@ public:
 
 	//step in radians
 	Eigen::Point3f generateVertex(float step);
-
+	/**
+	 * @brief createVertices() used to create line segments for rendering..
+	 * 
+	 * @param _vertices
+	 * @param numberOfPoints
+	 */
 	void createVertices(std::vector<float>* _vertices, int numberOfPoints);
-
+	
+	/**
+	 * @brief used to sample vertices along the circle.
+	 * 
+	 * @param points
+	 * @param numberOfPoints
+	 */
 	void sampleCircle(std::vector<Eigen::Point3f>* points, int numberOfPoints);
 
 private:

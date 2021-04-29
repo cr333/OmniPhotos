@@ -6,7 +6,7 @@
 
 class GLRenderModel;
 
-
+/** @brief class to generate plane */
 class Plane : public Shape, public GLRenderable
 {
 public:

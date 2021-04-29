@@ -1,7 +1,5 @@
 /**************************************************************************
  * @file   GLApplication.hpp
- * @brief  The parent class to ViewerApp, acts as an interface
- *         for certain classes (e.g. VRInterface).
  * 
  * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
  **************************************************************************/
@@ -20,7 +18,10 @@
 #include <GLFW/glfw3.h>
 
 class VRInterface;
-
+/**
+ * @brief  The parent class to ViewerApp, acts as an interface
+ *         for certain classes (e.g. VRInterface)..
+ */
 class GLApplication : public Application
 {
 public:

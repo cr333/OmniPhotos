@@ -3,12 +3,12 @@
 #include "3rdParty/Eigen.hpp"
 
 
-/*
-@brief Used to model 3D positions, points or vertices.
-@param pos 3D Euclidean coordinate
-@param colour RGB colour value
-@param error Stores reconstruction error when reading in sparse point clouds via COLMAP. Undefined for OpenVSLAM.
-*/
+/** 
+ * @brief Used to model 3D positions, points or vertices.
+ * @param pos 3D Euclidean coordinate
+ * @param colour RGB colour value
+ * @param error Stores reconstruction error when reading in sparse point clouds via COLMAP. Undefined for OpenVSLAM.
+ */
 struct Point3D
 {
 	Point3D();
@@ -25,10 +25,14 @@ struct Point3D
 	// Per-vertex colour
 	Eigen::Vector3f colour;
 
-	// Per-vertex normal
+	/**
+	 * Per-vertex normal.
+	 */
 	Eigen::Vector3f normal;
 
-	// Texture coordinates
+	/**
+	 * Texture coordinates.
+	 */
 	Eigen::Vector2f tex;
 
 	// Point ID

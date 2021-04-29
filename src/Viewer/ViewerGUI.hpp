@@ -1,6 +1,5 @@
 /***************************************************************************
  * @file   ViewerGUI.hpp
- * @brief  Generates a Graphical User Interface for the Viewer application.
  *
  * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
  ***************************************************************************/
@@ -17,7 +16,9 @@
 
 class ViewerApp; // forward declaration to break circular dependency
 
-
+/**
+ * @brief  Generates a Graphical User Interface for the Viewer application..
+ */
 class ViewerGUI
 {
 public:

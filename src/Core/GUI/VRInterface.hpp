@@ -1,12 +1,5 @@
 /**************************************************************************
- * @file   VRInterface.hpp
- * @brief  VRI - Virtual Reality Interface. 
- * 
- * This file acts as the layer between the ViewerApp, OpenGL and OpenVR. 
- * Its functionality includes: 
- *	- Initialising the OpenVR environment. 
- *	- handling the user interface in the VR environment. 
- *	- Implementing OpenGL specifically for OpenVR.   
+ * @file   VRInterface.hpp 
  * 
  * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
  **************************************************************************/
@@ -49,7 +42,6 @@ static const char* getTextForControllerEnum(int enumVal)
 	return controller_enum_strings[enumVal];
 }
 
-
 struct ControllerInfo_t
 {
 	~ControllerInfo_t();
@@ -80,8 +72,15 @@ struct FramebufferDesc
 	GLuint m_nResolveTextureId;
 	GLuint m_nResolveFramebufferId;
 };
-
-
+/**
+ * @brief  VRI - Virtual Reality Interface. 
+ * 
+ * This file acts as the layer between the ViewerApp, OpenGL and OpenVR. 
+ * Its functionality includes: 
+ *	- Initialising the OpenVR environment. 
+ *	- handling the user interface in the VR environment. 
+ *	- Implementing OpenGL specifically for OpenVR.   .
+ */
 class VRInterface
 {
 public:
@@ -138,7 +137,7 @@ public:
 	 * @brief initialises the controller programs + models
 	 * The models will be initialised as spheres. if spheres
 	 * are displayed in the HMD, something has gone wrong in 
-	 * @fn handleInput().
+	 * handleInput().
 	 */
 	void initDefaultControllerPrograms(std::vector<GLProgram*>* _programs);
 	void initRiftControllerPrograms(std::vector<GLProgram*>* _programs);
