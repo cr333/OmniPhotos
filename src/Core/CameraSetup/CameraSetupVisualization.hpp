@@ -28,11 +28,10 @@ NOTE : It feels very intriguing to look into 360 video captured within small vol
 	then multi - layers.->One SIGGRAPH or two IEEE VR / Eurographics papers.
 */
 
-/*
-@brief Visualizes a CameraSetup
-@method setDataset A circular camera setup should be just one out of many. 
-@method updateCameraPositions A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel.
-*/
+/**
+ * @brief Visualizes a CameraSetup
+ * @method updateCameraPositions A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel.
+ */
 class CameraSetupVisualization
 {
 public:
@@ -40,11 +39,14 @@ public:
 	virtual ~CameraSetupVisualization();
 
 	void initPrograms(GLWindow* gl_window, std::vector<GLProgram*>* _programs);
-
-	//A Visualization holds exactly 1 dataset at a time which the Visualization itself, should never be able to change.
-	//Changes are made "to the dataset" which lives next to the Visualization in the GLApplication.
-	//Updating the visualization requires "Visualization::setDataset(_dataset);"
-	//
+	/**
+	 * @brief A circular camera setup should be just one out of many.
+	 * 
+	 * A Visualization holds exactly 1 dataset at a time which the Visualization itself, should never be able to change.
+	 * Changes are made "to the dataset" which lives next to the Visualization in the GLApplication.
+	 * Updating the visualization requires "Visualization::setDataset(_dataset);
+	 */
+	
 	void setDataset(CameraSetupDataset* _dataset);
 
 	//TODO: Do I like that?

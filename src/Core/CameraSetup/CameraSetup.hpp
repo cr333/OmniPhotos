@@ -8,13 +8,15 @@
 #include <vector>
 
 
-/*
-@brief			Model input viewpoints (calibration and input image per viewpoint)
-@description	Used to model the viewpoints (or input images) of a dataset using some camera model, i.e. pinhole or equirectangular.
-				CameraSetup could be specialized according to camera path, but we use solely circular paths.
-@param cameras	Stores all viewpoints
-@param settings Provides options that can be changed for preprocessing or during viewing
-*/
+/**
+ * @brief			Model input viewpoints (calibration and input image per viewpoint)
+ * 
+ * Used to model the viewpoints (or input images) of a dataset using some camera model, i.e. pinhole or equirectangular.
+ * CameraSetup could be specialized according to camera path, but we use solely circular paths.
+ * 
+ * @param cameras	Stores all viewpoints
+ * @param settings Provides options that can be changed for preprocessing or during viewing
+ */
 class CameraSetup
 {
 public:
