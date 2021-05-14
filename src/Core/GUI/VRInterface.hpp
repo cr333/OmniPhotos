@@ -219,10 +219,10 @@ private:
 	void setupCompanionWindow(const std::string& title, const Eigen::Vector2i& windowDims, GLProgramMaintenance* maintenancePtr, GLFWwindow* parentContext = nullptr);
 
 	/**
-	 * @defgroup hmdControls
+	 * hmdControls
 	 * 
 	 * These are the controls being used by 
-	 * the HMD to toggle settings in the CCSVA.
+	 * the HMD to toggle settings in the ViewerApp.
 	 * 
 	 * @{
 	 */
