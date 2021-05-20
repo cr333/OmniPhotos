@@ -30,7 +30,6 @@ NOTE : It feels very intriguing to look into 360 video captured within small vol
 
 /**
  * @brief Visualizes a CameraSetup
- * @method updateCameraPositions A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel.
  */
 class CameraSetupVisualization
 {
@@ -51,7 +50,7 @@ public:
 
 	//TODO: Do I like that?
 	void setSettings(DisplaySettings* _settings);
-
+	
 	void updateProgramDisplay();
 
 	void updateModels();
@@ -83,6 +82,9 @@ private:
 	void updateCircleModel(int circleResolution);
 	bool pointCloudLoaded = false;
 	void updateWorldPointCloudModel();
+	/**
+	 *  @brief A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel..
+	 */
 	void updateCameraPositionsModel();
 	void updateCameraOrientationsModel();
 	void updateRadialLinesModel();
