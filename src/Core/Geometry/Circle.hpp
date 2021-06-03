@@ -47,7 +47,7 @@ public:
 	void createVertices(std::vector<float>* _vertices, int numberOfPoints);
 	
 	/**
-	 * @brief used to sample vertices along the circle.
+	 * @brief Sample vertices along the circle.
 	 * 
 	 * @param points
 	 * @param numberOfPoints
