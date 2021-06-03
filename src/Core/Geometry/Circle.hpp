@@ -9,11 +9,6 @@
 
 /** 
  * @brief A circle
- * @param normal of the plane in which the circle lies;
- * @param radius of the circle
- * @param x left vector of normal tangent space
- * @param z forward vector of normal tangent space
- * @method sampleCircle is used to sample vertices along the circle
  */
 class Circle : public Shape
 {
@@ -60,10 +55,15 @@ public:
 	void sampleCircle(std::vector<Eigen::Point3f>* points, int numberOfPoints);
 
 private:
+	/** normal of the plane in which the circle lies; */
 	Eigen::Vector3f normal;
+
+	/** radius of the circle */
 	float radius = 0;
 
 	// tangent plane of the normal
-	Eigen::Vector3f x; // left
-	Eigen::Vector3f z; // forward
+	/** left vector of normal tangent space */
+	Eigen::Vector3f x;
+	/** forward vector of normal tangent space */
+	Eigen::Vector3f z;
 };
