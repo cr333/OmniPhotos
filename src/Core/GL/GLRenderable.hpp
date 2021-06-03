@@ -41,7 +41,7 @@ public:
 	// A mesh consists basically just out of a contiguous range of triangles
 
 	/**
-	 * Vertices stored in a linear vector, every 3 floats -> one vertex, easy geometry submission..
+	 * Vertices stored in a linear vector, every 3 floats -> one vertex, easy geometry submission.
 	 */
 	std::vector<float> vertices;
 
