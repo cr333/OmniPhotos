@@ -15,7 +15,9 @@
 #include "Viewer/ViewerGLProgram.hpp"
 #include "Viewer/ViewerGUI.hpp"
 
-
+/**
+ * @brief  Main application that displays OmniPhotos and handles user input.
+ */
 class ViewerApp : public GLApplication
 {
 public:
