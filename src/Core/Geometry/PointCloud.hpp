@@ -5,7 +5,7 @@
 #include "Core/Geometry/Shape.hpp"
 
 /**
- * @brief class to generate point cloud.
+ * @brief Class to represent a 3D point cloud.
  */
 class PointCloud : public Shape, public GLRenderable
 {
