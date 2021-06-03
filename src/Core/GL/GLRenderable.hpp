@@ -51,7 +51,7 @@ public:
 	std::vector<unsigned int> vertex_indices;
 
 	/**
-	 * Stores vertices with additional information..
+	 * Stores vertices with additional information.
 	 */
 	std::vector<Point3D*> points3D;
 
