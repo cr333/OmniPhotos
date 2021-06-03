@@ -39,7 +39,7 @@ public:
 	//step in radians
 	Eigen::Point3f generateVertex(float step);
 	/**
-	 * @brief createVertices() used to create line segments for rendering..
+	 * @brief Creates vertices for rendering.
 	 * 
 	 * @param _vertices
 	 * @param numberOfPoints
@@ -47,7 +47,7 @@ public:
 	void createVertices(std::vector<float>* _vertices, int numberOfPoints);
 	
 	/**
-	 * @brief used to sample vertices along the circle.
+	 * @brief Sample vertices along the circle.
 	 * 
 	 * @param points
 	 * @param numberOfPoints
