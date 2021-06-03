@@ -1,5 +1,7 @@
 #pragma once
-/** @brief umbrella class for applications. */
+
+
+/** Umbrella class for applications. */
 class Application
 {
 public:
