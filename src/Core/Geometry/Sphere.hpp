@@ -4,7 +4,7 @@
 #include "Core/Geometry/Shape.hpp"
 
 /**
- * @brief class to generate sphere.
+ * @brief Class to represent a sphere.
  */
 class Sphere : public Shape, public GLRenderable
 {
