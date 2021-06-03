@@ -24,7 +24,7 @@ binary is then executed in the docs directory and generates files in the `docs/h
 
 Documentation convention (mostly) used can be found [here](https://docs.google.com/document/d/1k36F2nqbyxrLlpo3hOp900BCNME3f3hcAU1IHuv_dSE/edit?usp=sharing)
 
-Note that for a class to appear as "documented" in the "Classe Index" list and "Class Hiearchy" lists in doxygen, you'll need to add a `@brief` descriptor in the line directly before the class declaration (in the hpp). 
+Note that for a class to appear as "documented" in the "Class Index" list and "Class Hiearchy" lists in Doxygen, you'll need to add a `@brief` descriptor in the line directly before the class declaration (in the hpp). 
 
 	/**
 	 * @brief this is a class
