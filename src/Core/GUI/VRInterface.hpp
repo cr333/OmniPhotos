@@ -79,7 +79,7 @@ struct FramebufferDesc
  * Its functionality includes: 
  *	- Initialising the OpenVR environment. 
  *	- handling the user interface in the VR environment. 
- *	- Implementing OpenGL specifically for OpenVR.   .
+ *	- Implementing OpenGL specifically for OpenVR.
  */
 class VRInterface
 {
