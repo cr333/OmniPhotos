@@ -29,7 +29,7 @@ NOTE : It feels very intriguing to look into 360 video captured within small vol
 */
 
 /**
- * @brief Visualizes a CameraSetup
+ * @brief Visualizes a CameraSetup.
  */
 class CameraSetupVisualization
 {
