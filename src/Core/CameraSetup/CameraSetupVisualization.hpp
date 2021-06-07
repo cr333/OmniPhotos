@@ -40,10 +40,6 @@ public:
 	void initPrograms(GLWindow* gl_window, std::vector<GLProgram*>* _programs);
 	/**
 	 * @brief A circular camera setup should be just one out of many.
-	 * 
-	 * A Visualization holds exactly 1 dataset at a time which the Visualization itself, should never be able to change.
-	 * Changes are made "to the dataset" which lives next to the Visualization in the GLApplication.
-	 * Updating the visualization requires "Visualization::setDataset(_dataset);
 	 */
 	
 	void setDataset(CameraSetupDataset* _dataset);
