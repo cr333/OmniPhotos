@@ -78,9 +78,6 @@ private:
 	void updateCircleModel(int circleResolution);
 	bool pointCloudLoaded = false;
 	void updateWorldPointCloudModel();
-	/**
-	 *  @brief A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel..
-	 */
 	void updateCameraPositionsModel();
 	void updateCameraOrientationsModel();
 	void updateRadialLinesModel();
