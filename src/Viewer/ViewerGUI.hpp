@@ -17,7 +17,7 @@
 class ViewerApp; // forward declaration to break circular dependency
 
 /**
- * @brief  Generates a Graphical User Interface for the Viewer application..
+ * @brief  Generates a Graphical User Interface for the Viewer application.
  */
 class ViewerGUI
 {

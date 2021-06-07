@@ -47,7 +47,7 @@ struct MeshData
 	}
 };
 
-/**  class to generate mesh */
+/** Class to represent a triangle mesh. */
 class Mesh : public Shape, public GLRenderable
 {
 public:
