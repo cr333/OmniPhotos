@@ -23,9 +23,7 @@ public:
 	virtual ~GLRenderable() = default;
 
 	/**
-	 * @brief Needs to be implemented by every child, e.g.Plane, Sphere, Mesh...
-	 * 
-	 * Every class that inherits needs to define how it is rendered here.
+	 * Every class that inherits (e.g. Plane, Sphere, Mesh), needs to define how it is rendered here.
 	 */
 	virtual void createRenderModel(const std::string& _name) = 0;
 

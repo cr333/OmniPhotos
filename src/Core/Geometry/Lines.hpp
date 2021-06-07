@@ -3,7 +3,7 @@
 #include "Core/GL/GLRenderable.hpp"
 #include "Core/Geometry/Shape.hpp"
 
-/** class to generate lines */
+/** Class to represent lines. */
 class Lines : public Shape, public GLRenderable
 {
 public:

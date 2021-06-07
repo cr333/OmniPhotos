@@ -11,8 +11,7 @@
 class MultiViewDataLoader;
 
 /**
- * @brief library that generates optical flow and other steps necessary
- * before ViewerApp (Viewer.exe) can be launched.
+ * @brief Preprocessing application that prepares a dataset before it can be viewed in the ViewerApp (Viewer.exe).
  */
 class PreprocessingApp : public Application
 {
@@ -49,7 +48,6 @@ public:
 	 */
 	int init() override;
 	void run() override {};
-	
 	void initDataset();
 	void rescalePointCloud();
 	void rescaleDataset();
