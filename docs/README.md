@@ -84,6 +84,11 @@ At the top of the header file, the following documentation stump can be created,
 	 * @author authors
 	 ********************************************************************/
 
+2. Python
+
+The convention of coding is based on the Google Python Style Guide (https://google.github.io/styleguide/pyguide.html).
+
+If you use Visual code as the coding editor, please reference the official guide to config the automatically linting functionality. (https://code.visualstudio.com/docs/python/linting)
 
 
 
