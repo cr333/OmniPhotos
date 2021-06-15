@@ -47,6 +47,7 @@ struct MeshData
 	}
 };
 
+
 /** Class to represent a triangle mesh. */
 class Mesh : public Shape, public GLRenderable
 {

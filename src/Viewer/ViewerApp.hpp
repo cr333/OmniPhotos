@@ -1,8 +1,3 @@
-/******************************************************************************
-* @file   ViewerApp.hpp
-*
-* @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
-******************************************************************************/
 #pragma once
 
 #include "Core/CameraSetup/CameraSetupDataset.hpp"
@@ -14,6 +9,7 @@
 
 #include "Viewer/ViewerGLProgram.hpp"
 #include "Viewer/ViewerGUI.hpp"
+
 
 /**
  * @brief  Main application that displays OmniPhotos and handles user input.
@@ -41,12 +37,12 @@ public:
 	~ViewerApp();
 
 	/**
-	 * This function does the following: 
-	 * 		- loads the dataset
-	 * 		- initialises the glfw Window (and thereby an OpenGL context), 
-	 * 		- initialises the GUI/VR rendering
-	 * 		- loads textures/images
-	 * 		- loads geometries/point clouds
+	 * This function does the following:
+	 *   - loads the dataset
+	 *   - initialises the glfw Window (and thereby an OpenGL context),
+	 *   - initialises the GUI/VR rendering
+	 *   - loads textures/images
+	 *   - loads geometries/point clouds
 	 *
 	 * @returns	error code. 
 	 */
@@ -146,8 +142,7 @@ private:
 
 	/** List of all found proxy meshes. */
 	std::vector<Mesh*> loaded_meshes;
-	//used for asynchronuous loading
-	std::vector<Mesh*> loaded_meshes_back;
+	std::vector<Mesh*> loaded_meshes_back; // used for asynchronuous loading
 
 	CameraSetupSettings appSettings;
 
@@ -162,8 +157,8 @@ private:
 	CameraSetupDataset* datasetBack = nullptr;
 	CameraSetupSettings datasetBackSetting;
 
-	//TODO: We should re-use the texture loader, but update its buffers!
-	//I think it's fine to "back" it, the important bit is to "update" the render models in the Visualization
+	// TODO: We should re-use the texture loader, but update its buffers!
+	// I think it's fine to "back" it, the important bit is to "update" the render models in the Visualization
 	TextureLoader* textureLoaderBack = nullptr;
 
 	ViewerGLProgram* megastereo_prog = nullptr;

@@ -1,8 +1,3 @@
-/**************************************************************************
- * @file   GLApplication.hpp
- * 
- * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
- **************************************************************************/
 #pragma once
 
 #include "Core/Application.hpp"
@@ -20,8 +15,8 @@
 class VRInterface;
 
 /**
- * @brief  The parent class to ViewerApp.
-  * @description Acts as an interface for certain classes (e.g. VRInterface).
+ * @brief       Base class for ViewerApp.
+ * @description Acts as an interface for certain classes (e.g. VRInterface).
  */
 class GLApplication : public Application
 {

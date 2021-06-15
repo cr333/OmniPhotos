@@ -6,9 +6,8 @@
 
 #include <memory>
 
-/**
- * Class to represent cylinders.
- */
+
+/** Class to represent cylinders. */
 class Cylinder : public Shape, public GLRenderable
 {
 public:

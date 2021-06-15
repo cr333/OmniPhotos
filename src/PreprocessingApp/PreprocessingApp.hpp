@@ -10,8 +10,9 @@
 
 class MultiViewDataLoader;
 
+
 /**
- * @brief Preprocessing application that prepares a dataset before it can be viewed in the ViewerApp (Viewer.exe).
+ * Preprocessing application that prepares a dataset before it can be viewed in the ViewerApp (Viewer.exe).
  */
 class PreprocessingApp : public Application
 {
@@ -19,9 +20,9 @@ public:
 	/**
 	 * @brief Construct a new PreprocessingApp object
 	 * 
-	 * This string is passed to appDataset in oder to encapsulate both the 
+	 * This string is passed to appDataset in oder to encapsulate both the
 	 * dataset on which the preprocessing is going to be performed, as well
-	 * as the config.yaml file where the user inputs are stored. 
+	 * as the config.yaml file where the user inputs are stored.
 	 * 
 	 * @param pathToConfigYaml used to set appDataset->pathToconfigYaml
 	 */
@@ -31,23 +32,22 @@ public:
 	/**
 	 * @brief init() initialises the PreprocessingApp
 	 * 
-	 * After construction with app = new PreprocessingApp(pathToYaml) 
+	 * After construction with app = new PreprocessingApp(pathToYaml),
 	 * the initialization now takes the path and passes it to appDataset
 	 * (initialized as null pointer in the constructor) as well as appSettings.
 	 * 
-	 * initDataset is then called from where appDataset loads the data using 
-	 * appSettings.
+	 * initDataset is then called from where appDataset loads the data using appSettings.
 	 *
-	 * initOpenGL is called to set appWindow. initOpenGL also calls initTextures to construct 
+	 * initOpenGL is called to set appWindow. initOpenGL also calls initTextures to construct
 	 * textureLoader (set in GLApplication.hpp).
-	 *	
-	 * Render systems (presently called initPrograms) are then initialized along with
-	 * shaders 
+	 *
+	 * Shaders are then initialized in initPrograms.
 	 * 
 	 * @return int error code when it feels like it.
 	 */
 	int init() override;
 	void run() override {};
+
 	void initDataset();
 	void rescalePointCloud();
 	void rescaleDataset();

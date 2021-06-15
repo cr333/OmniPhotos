@@ -37,7 +37,7 @@ There is a demo project (https://github.com/yuanmingze/codestyle_demo) for Doxyg
 
 ## Doxygen Conventions
 
-1. C/C++
+### 1. C/C++
 
 All documentation for classes should be located in the header files.
 
@@ -84,13 +84,9 @@ At the top of the header file, the following documentation stump can be created,
 	 * @author authors
 	 ********************************************************************/
 
-2. Python
+
+### 2. Python
 
 The convention of coding is based on the Google Python Style Guide (https://google.github.io/styleguide/pyguide.html).
 
-If you use Visual code as the coding editor, please reference the official guide to config the automatically linting functionality. (https://code.visualstudio.com/docs/python/linting)
-
-
-
-
-
+If you use Visual Studio Code as the coding editor, please reference the official guide to configure the automatic linting functionality (https://code.visualstudio.com/docs/python/linting).

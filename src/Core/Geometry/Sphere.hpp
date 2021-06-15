@@ -3,9 +3,8 @@
 #include "Core/GL/GLRenderable.hpp"
 #include "Core/Geometry/Shape.hpp"
 
-/**
- * @brief Class to represent a sphere.
- */
+
+/** Class to represent a sphere. */
 class Sphere : public Shape, public GLRenderable
 {
 public:

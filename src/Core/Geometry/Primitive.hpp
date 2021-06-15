@@ -26,9 +26,7 @@ extern const float static_colors[3][3];
 
 
 //TODO: Check whether most of the public things actually need to be public.
-/**
- * @brief Rendering primitives: points, lines, triangles.
- */
+/** Rendering primitives: points, lines, triangles etc. */
 class Primitive
 {
 public:
