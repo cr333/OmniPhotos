@@ -75,16 +75,6 @@ Note that for a class to appear as "documented" in the "Class Index" list and "C
 	 }
 The `@brief` notation is not strictly necessary, only important for explicity.
 
-At the top of the header file, the following documentation stump can be created, allthough it is not strictly necessary. 
-
-	/*********************************************************************
-	 * @file   ViewerGUI.hpp
-	 * @brief  Generates a GUI for the Viewer application. 
-	 * 
-	 * @author authors
-	 ********************************************************************/
-
-
 ### 2. Python
 
 The convention of coding is based on the Google Python Style Guide (https://google.github.io/styleguide/pyguide.html).
