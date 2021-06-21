@@ -57,11 +57,10 @@ def warp_images(img1,img2,savedir:str=None,lookatang:float=0):
     # cast image to greyscale
     prvs = cv2.cvtColor(resized1, cv2.COLOR_BGR2GRAY)
     next = cv2.cvtColor(resized2, cv2.COLOR_BGR2GRAY)
-    dis = cv2.DISOpticalFlow_create()  # what the fuck is this syntax?
+    dis = cv2.DISOpticalFlow_create()
 
     # calculate forward flow
-    flow_forward = dis.calc(prvs, next, None)  # why does this function not specify its RETURN VALUE
-    # remove padding
+    flow_forward = dis.calc(prvs, next, None)
     flow_forward = cv2.resize(flow_forward, (output_im1.shape[1], output_im1.shape[0]),
                               interpolation=cv2.INTER_LINEAR) * 2
     # calculate backward flow

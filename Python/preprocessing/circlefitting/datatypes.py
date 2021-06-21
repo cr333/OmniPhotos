@@ -97,7 +97,7 @@ class PointDict(list):
         if numpoints is None:
             numpoints = 0
             for dct in self:
-                numpoints = max((dct["interval"][0],dct['interval'][1],numpoints))
+                numpoints = max((dct["interval"][0],dct['interval'][1],numpoints)) + 1
         if errors is None:
             errors = list(self.keys)[1:]
         lst = []
