@@ -6,10 +6,6 @@ from os.path import join as pjoin
 from skimage.metrics import structural_similarity
 from matplotlib import pyplot as plt
 
-savedir = "results\\flow_remap"
-
-
-
 def resize(img,scale_percent,verbose=False):
     if verbose:
         print('Original Dimensions : ', img.shape)
@@ -153,7 +149,6 @@ def calculate_metrics_lst(point_dicts:[dict],dataset_path:str) -> [dict]:
 
 def slice_eq_unittest():
     """
-    TODO: impletement unittests
     :return:
     """
     dimx = 1920

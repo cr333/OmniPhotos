@@ -109,10 +109,13 @@ class PointDict(list):
         for enum,dct in enumerate(self):
             arr[dct["interval"][0], dct["interval"][1]] = 1 / lst[enum]
         self.arr = arr
-        coords = peak_local_max(arr, min_distance=10, indices=False,threshold_rel=0.5)
+        coords = peak_local_max(arr, min_distance=10, threshold_rel=0.5)
+        bool_arr = np.zeros(arr.shape)
+        for coord in coords:
+            bool_arr[coord[0],coord[1]] = 1
         intervals = []
         for dct in self:
-            if coords[dct["interval"][0], dct["interval"][1]]:
+            if bool_arr[dct["interval"][0], dct["interval"][1]]:
                 intervals.append(dct)
         return PointDict(intervals)
 
