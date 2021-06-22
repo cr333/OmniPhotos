@@ -263,10 +263,8 @@ class OpPreprocessor(AbsPreprocessor):
     def openvslam_select_stable_circle(self):
         points = circlefitting.loader.load_file(os.path.join(self.output_directory_path_ovslam,"frame_trajectory.txt"))
         self.show_info("Finding stable circle.")
-        # intervals = circlefitting.metrics.calc(points,errors = ["endpoint_error","perimeter_error","flatness_error",
-        #                                                    "pairwise_distribution"]).find_local_minima(len(points))
-        intervals = circlefitting.datatypes.PointDict()
-        intervals.fromJSON("lol.csv")
+        intervals = circlefitting.metrics.calc(points,errors = ["endpoint_error","perimeter_error","flatness_error",
+                                                           "pairwise_distribution"]).find_local_minima(len(points))
         if len(intervals) == 0:
             self.show_info("No intervals found.","error")
 
