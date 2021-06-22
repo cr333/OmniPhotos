@@ -1,7 +1,7 @@
 /** 
  * \mainpage OmniPhotos Documentation
  *
- * Welcome to the documentation for OmniPhotos. 
+ * Welcome to the C++ code documentation for OmniPhotos.
  * 
  * \image html teaser.jpg
  * 

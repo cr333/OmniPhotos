@@ -7,9 +7,7 @@
 #include <vector>
 
 
-/** 
- * @brief A circle
- */
+/** Class to represent circles. */
 class Circle : public Shape
 {
 public:
@@ -36,34 +34,35 @@ public:
 	void computeTangentPlane();
 	void computeTangentPlane(Eigen::Vector3f _normal, Eigen::Vector3f _forward);
 
-	//step in radians
+	// step in radians
 	Eigen::Point3f generateVertex(float step);
+
 	/**
 	 * @brief Creates vertices for rendering.
 	 * 
-	 * @param _vertices
-	 * @param numberOfPoints
+	 * @param _vertices      Output vector to which vertices will be written.
+	 * @param numberOfPoints Number of vertices on the circle.
 	 */
 	void createVertices(std::vector<float>* _vertices, int numberOfPoints);
-	
+
 	/**
 	 * @brief Sample vertices along the circle.
 	 * 
-	 * @param points
-	 * @param numberOfPoints
+	 * @param points         Output vector to which vertices will be written.
+	 * @param numberOfPoints Number of vertices on the circle.
 	 */
 	void sampleCircle(std::vector<Eigen::Point3f>* points, int numberOfPoints);
 
 private:
-	/** normal of the plane in which the circle lies; */
+	/** Normal of the plane in which the circle lies. */
 	Eigen::Vector3f normal;
 
-	/** radius of the circle */
+	/** Radius of the circle [cm]. */
 	float radius = 0;
 
-	// tangent plane of the normal
-	/** left vector of normal tangent space */
+	/** Left vector of normal tangent space. */
 	Eigen::Vector3f x;
-	/** forward vector of normal tangent space */
+
+	/** Forward vector of normal tangent space. */
 	Eigen::Vector3f z;
 };

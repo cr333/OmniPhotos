@@ -9,13 +9,10 @@
 
 
 /**
- * @brief			Model input viewpoints (calibration and input image per viewpoint)
+ * @brief   Models input viewpoints (calibration and input image per viewpoint).
  * 
  * Used to model the viewpoints (or input images) of a dataset using some camera model, i.e. pinhole or equirectangular.
- * CameraSetup could be specialized according to camera path, but we use solely circular paths.
- * 
- * @param cameras	Stores all viewpoints
- * @param settings Provides options that can be changed for preprocessing or during viewing
+ * CameraSetup could be specialised according to camera path, but we only use circular paths.
  */
 class CameraSetup
 {
@@ -25,7 +22,6 @@ public:
 	CameraSetup(CameraSetupSettings& _settings);
 	CameraSetup(const std::vector<Camera*>& _cameras, CameraSetupSettings& _settings);
 
-	//NOTE: shouldn't be needed, but I don't anybody to change the settings reference lightly.
 	CameraSetupSettings* getSettings();
 	void setSettings(CameraSetupSettings* _settings);
 
@@ -41,8 +37,9 @@ public:
 	Eigen::Vector3f getAverageLeft() const;
 
 private:
+	/** Stores all viewpoints. */
 	std::vector<Camera*> cameras;
 
-	//TODO: There should be a struct : "LoadingSettings"
+	/** Provides options that can be changed for preprocessing or during viewing. */
 	CameraSetupSettings* settings = nullptr;
 };

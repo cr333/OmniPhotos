@@ -18,30 +18,28 @@ class PreprocessingApp : public Application
 {
 public:
 	/**
-	 * @brief Construct a new PreprocessingApp object
-	 * 
-	 * This string is passed to appDataset in oder to encapsulate both the
-	 * dataset on which the preprocessing is going to be performed, as well
-	 * as the config.yaml file where the user inputs are stored.
-	 * 
-	 * @param pathToConfigYaml used to set appDataset->pathToconfigYaml
+	 * @brief Constructs a new PreprocessingApp object from a config file.
+	 *
+	 * This string is passed to appDataset to encapsulate both the dataset, on which the preprocessing
+	 * is going to be performed, as well as the config.yaml file where the user inputs are stored.
+	 *
+	 * @param pathToConfigYaml Dataset configuration file used to set appDataset->pathToconfigYaml.
 	 */
 	PreprocessingApp(const std::string& pathToConfigYaml);
 	~PreprocessingApp();
 
 	/**
-	 * @brief init() initialises the PreprocessingApp
+	 * @brief Initialises the PreprocessingApp.
 	 * 
-	 * After construction with app = new PreprocessingApp(pathToYaml),
-	 * the initialization now takes the path and passes it to appDataset
-	 * (initialized as null pointer in the constructor) as well as appSettings.
+	 * After construction with app = new PreprocessingApp(pathToYaml), the initialisation now takes
+	 * the path and passes it to appDataset as well as appSettings.
 	 * 
-	 * initDataset is then called from where appDataset loads the data using appSettings.
+	 * initDataset is then called, from where appDataset loads the data using appSettings.
 	 *
 	 * initOpenGL is called to set appWindow. initOpenGL also calls initTextures to construct
 	 * textureLoader (set in GLApplication.hpp).
 	 *
-	 * Shaders are then initialized in initPrograms.
+	 * Shaders are then initialised in initPrograms.
 	 * 
 	 * @return int error code when it feels like it.
 	 */
