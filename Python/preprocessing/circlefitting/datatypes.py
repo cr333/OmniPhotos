@@ -118,6 +118,19 @@ class PointDict(list):
             if bool_arr[dct["interval"][0], dct["interval"][1]]:
                 intervals.append(dct)
         return PointDict(intervals)
+    def find_best_interval(self) -> dict:
+        """
+        Should only be called once the cv metrics have been run.
+
+        :return: the point dict that has lowest ssim + psnr
+        """
+
+        for item in ["ssim","psnr"]:
+            if item not in self.keys:
+                raise Exception(item + " not found in keys.")
+
+        self.sort(key=lambda dct: dct["ssim"] + dct["psnr"],reverse=True)
+        return self[0]
 
 class CameraCenters(list):
     def __init__(self, *args, **kwargs):

@@ -34,7 +34,7 @@ from flownet2.utils.flow_utils import writeFlow, readFlow
 from flownet2.utils import computeColor
 
 from abs_preprocessor import AbsPreprocessor
-
+import circlefitting
 
 class OpPreprocessor(AbsPreprocessor):
     """Class to generate the config files for OmniPhotos.
@@ -189,7 +189,6 @@ class OpPreprocessor(AbsPreprocessor):
             openvslam_need_convertion = False
             for term in self.openvslam_essential_file_list:
                 openvslam_need_convertion = openvslam_need_convertion or (not (self.output_directory_path_ovslam / term).exists())
-
             # generate the configuration files for OpenVSLAM
             if openvslam_need_convertion:
                 # check the openvslam output files
@@ -262,12 +261,26 @@ class OpPreprocessor(AbsPreprocessor):
         self.omniphotos_flownet2_init()
 
     def openvslam_select_stable_circle(self):
-        """
-        if do not specify the start and end index of the single camera circle.
-        automatically select the most stable circle for openvslam result.
-        """
-        self.show_info("The automatically select stable camera circle do not implement.")
+        points = circlefitting.loader.load_file(os.path.join(self.output_directory_path_ovslam,"frame_trajectory.txt"))
+        self.show_info("Finding stable circle.")
+        # intervals = circlefitting.metrics.calc(points,errors = ["endpoint_error","perimeter_error","flatness_error",
+        #                                                    "pairwise_distribution"]).find_local_minima(len(points))
+        intervals = circlefitting.datatypes.PointDict()
+        intervals.fromJSON("lol.csv")
+        if len(intervals) == 0:
+            self.show_info("No intervals found.","error")
 
+        self.show_info(str(len(intervals)) + " valid intervals found.")
+        intervals.toJSON("lol.csv")
+        intervals = circlefitting.metrics.calc(points,
+                                               point_dcts=intervals,
+                                               errors=["ssim","psnr"],
+                                               mp=False,
+                                               dataset_path=self.root_dir)
+        stable_circle = intervals.find_best_interval()["interval"]
+        self.show_info("interval before:" + str((self.image_start_idx,self.image_end_idx)))
+        self.image_start_idx,self.image_end_idx = stable_circle[0],stable_circle[1]
+        self.show_info("interval after :" + str((self.image_start_idx,self.image_end_idx)))
     def omniphotos_generate_input_images(self):
         """
         generate the images for OmniPhotos input.

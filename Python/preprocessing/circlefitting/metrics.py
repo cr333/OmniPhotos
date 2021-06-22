@@ -1,7 +1,6 @@
 import numpy as np
 import multiprocessing as mp
 import time
-import main
 import os
 from mathutils import Quaternion
 import math
