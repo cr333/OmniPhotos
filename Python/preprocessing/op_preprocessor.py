@@ -269,7 +269,6 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info("No intervals found.","error")
 
         self.show_info(str(len(intervals)) + " valid intervals found.")
-        intervals.toJSON("lol.csv")
         intervals = circlefitting.metrics.calc(points,
                                                point_dcts=intervals,
                                                errors=["ssim","psnr"],
