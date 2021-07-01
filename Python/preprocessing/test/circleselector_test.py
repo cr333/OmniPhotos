@@ -1,5 +1,5 @@
 import unittest
-import circlefitting
+import circleselector
 import numpy as np
 import os
 class TestCircleFitting(unittest.TestCase):
@@ -12,29 +12,29 @@ class TestCircleFitting(unittest.TestCase):
     def test_loader(self):
         if not os.path.exists(self.ovslam_csv):
             self.skipTest(self.npy_dataset + " npy dataset not found")
-        self.assertIsNotNone(circlefitting.loader.load_file(self.ovslam_csv))
+        self.assertIsNotNone(circleselector.loader.load_file(self.ovslam_csv))
 
     def test_calc(self):
-        points = circlefitting.loader.load_file(self.ovslam_csv)[:100]
-        self.assertIsNotNone(circlefitting.metrics.calc(points,
-                                        errors=["endpoint_error", "flatness_error", "perimeter_error"]))
+        points = circleselector.loader.load_file(self.ovslam_csv)[:100]
+        self.assertIsNotNone(circleselector.metrics.calc(points,
+                                                         errors=["endpoint_error", "flatness_error", "perimeter_error"]))
 
     def test_sort(self):
         if not os.path.exists(self.npy_dataset):
             self.skipTest(self.npy_dataset + " npy dataset not found")
         if not os.path.exists(self.npy_result):
             self.skipTest(self.npy_dataset + " npy result not found")
-        testres = circlefitting.datatypes.PointDict(np.load(self.npy_dataset,allow_pickle=True).tolist()).find_local_minima(811)
-        compres = circlefitting.datatypes.PointDict(np.load(self.npy_result, allow_pickle=True).tolist())
+        testres = circleselector.datatypes.PointDict(np.load(self.npy_dataset, allow_pickle=True).tolist()).find_local_minima(811)
+        compres = circleselector.datatypes.PointDict(np.load(self.npy_result, allow_pickle=True).tolist())
         self.assertEqual(testres,compres)
 
     def test_cv(self):
-        points = circlefitting.loader.load_file(self.ovslam_csv)
-        intervals = circlefitting.datatypes.PointDict(np.load(self.npy_result,allow_pickle=True).tolist())
+        points = circleselector.loader.load_file(self.ovslam_csv)
+        intervals = circleselector.datatypes.PointDict(np.load(self.npy_result, allow_pickle=True).tolist())
         if not os.path.exists(self.npy_dataset):
             self.skipTest(self.npy_result_cv + " npy dataset not found")
-        old_intervals = circlefitting.datatypes.PointDict(np.load(self.npy_result_cv,allow_pickle=True).tolist())
-        intervals = circlefitting.metrics.calc(points,intervals,errors=["ssim","psnr"],dataset_path="C:\\Setup\\python_projects\\CircleFitting\\data\\BathAbbey1\\")
+        old_intervals = circleselector.datatypes.PointDict(np.load(self.npy_result_cv, allow_pickle=True).tolist())
+        intervals = circleselector.metrics.calc(points, intervals, errors=["ssim", "psnr"], dataset_path="C:\\Setup\\python_projects\\CircleFitting\\data\\BathAbbey1\\")
         ssim_diff = abs(np.array(intervals.get("ssim")) - np.array(old_intervals.get("ssim")))
         psnr_diff = abs(np.array(intervals.get("psnr")) - np.array(old_intervals.get("psnr")))
         self.assertTrue(np.sum(ssim_diff) + np.sum(psnr_diff) < 0.0001)

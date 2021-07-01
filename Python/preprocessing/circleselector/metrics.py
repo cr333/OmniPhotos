@@ -5,7 +5,7 @@ import os
 from mathutils import Quaternion
 import math
 from .datatypes import PointDict
-import circlefitting.cv_utils as cv_utils
+import circleselector.cv_utils as cv_utils
 class Metrics(object):
     """
     class that can :
@@ -30,6 +30,7 @@ class Metrics(object):
 
         self.verbose = verbose
         self.dataset_path = dataset_path
+        self.rel_input_image_path = 'Input'
         self.__save_of__ = False
 
     def run_on_interval(self, interval: tuple) -> dict:
@@ -81,14 +82,14 @@ class Metrics(object):
             os.makedirs(savedir)
         if "ssim" in self.errors:
             lookatang = self.calculate_angle(centroid,interval)
-            ssim, psnr = cv_utils.calculate_metrics(interval, self.dataset_path,savedir,lookatang)
+            ssim, psnr = cv_utils.calculate_metrics(interval, self.dataset_path,savedir,self.rel_input_image_path,lookatang)
             point_dict["ssim"] = ssim
 
         if "psnr" in self.errors:
             if lookatang is None:
                 lookatang = self.calculate_angle(centroid,interval)
             if psnr is None:
-                _, psnr = cv_utils.calculate_metrics(interval, self.dataset_path,savedir,lookatang)
+                _, psnr = cv_utils.calculate_metrics(interval, self.dataset_path, savedir,self.rel_input_image_path,lookatang)
             point_dict["psnr"] = psnr
 
         return point_dict
@@ -194,6 +195,7 @@ def decorator(Metrics):
              errors=None,
              verbose=False,
              dataset_path=None,
+             rel_input_image_path='Input',
              mp=True,
              interval=None,
              save_of = False) -> [dict]:
@@ -208,12 +210,14 @@ def decorator(Metrics):
         :param verbose:
         :param dataset_path: path to rootdir of dataset. eg. path/to/GenoaCathedral
         :param mp: calculated in parallel (using threads) or not
+        :param rel_input_image_path: path to images for cv relative to dataset_path
         :param interval: overrides all other behaviour and will calculate on given interval of points.
         :param: save_of: will save the Optical Flow results to dataset_path/CircleFittingResults
         :return: PointDict
         """
 
         metrics = Metrics(points, point_dcts, errors, verbose, dataset_path)
+        metrics.rel_input_image_path = rel_input_image_path
         if save_of and os.path.exists(str(dataset_path)):
             metrics.__save_of__ = True
         for error in ["ssim", "psnr"]:

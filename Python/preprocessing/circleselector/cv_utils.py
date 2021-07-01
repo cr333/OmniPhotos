@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import circlefitting.computeColor as computeColor
+import circleselector.computeColor as computeColor
 import os
 from os.path import join as pjoin
 from skimage.metrics import structural_similarity
@@ -102,16 +102,17 @@ def slice_eqimage(img:np.array,lookatang:float,padding:int=0):
     upper = lookatindex+hemisphere_width+padding
     return padded_img[:,lower:upper]
 
-def calculate_metrics(interval:tuple, dataset_path:str,savedir:str=None, lookatang:float = 0) -> tuple:
+def calculate_metrics(interval:tuple, dataset_path:str,savedir:str=None, rel_input_image_path='Input', lookatang:float = 0) -> tuple:
     """
 
     :param interval: tuple containing interaval metrics are being calculated for
     :param dataset_path: path to dataset folder (e.g path/to/GenoaCathedral)
+    :param rel_input_image_path: input image path relative to dataset_path
     :param savedir: will save OF output to savedir if not None
     :return: ssim, psnr
     """
 
-    input_path = pjoin(dataset_path,"Input")
+    input_path = pjoin(dataset_path,rel_input_image_path)
     images = os.listdir(input_path)
     for filename in images:
         if os.path.splitext(filename)[-1] not in [".png",".jpg"]:
