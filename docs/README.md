@@ -45,7 +45,6 @@ You can use the **1-Click Docs** extension to call `doxygen.exe` in Visual Studi
 For more information please refer to https://www.doxygen.nl/manual/starting.html.
 
 There is a demo project (https://github.com/yuanmingze/codestyle_demo) for Doxygen use.
-For a tutorial of how to use Doxygen in Visual Studio 2019, please reference the project's README.md file.
 
 
 ## Doxygen Conventions
