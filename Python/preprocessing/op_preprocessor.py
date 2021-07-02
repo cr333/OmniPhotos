@@ -173,7 +173,8 @@ class OpPreprocessor(AbsPreprocessor):
 
         # 1) select the best circle
         # do this here so we copy only the images we need to the Input image directory.
-        self.openvslam_select_stable_circle()
+        if self.find_stable_circle:
+            self.openvslam_select_stable_circle()
         # 2) move the image from trajectory directory to ready folder
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
@@ -274,7 +275,7 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info("Calculating metrics ... ")
             intervals = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
                                                                 "pairwise_distribution"]).find_local_minima(len(points))
-            intervals.toJSON(os.path.join(self.root_dir, "circlefittingresults.json"))
+
 
             self.show_info(str(len(intervals)) + " valid intervals found.")
             intervals = circleselector.metrics.calc(points,
@@ -283,6 +284,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                     mp=False,
                                                     dataset_path=self.root_dir,
                                                     rel_input_image_path='trajectory_images')
+            intervals.toJSON(os.path.join(self.root_dir, "circlefittingresults.json"))
 
         if len(intervals) == 0:
             self.show_info("No intervals found.","error")
