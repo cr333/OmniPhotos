@@ -2,7 +2,7 @@ import unittest
 import circleselector
 import numpy as np
 import os
-class TestCircleFitting(unittest.TestCase):
+class TestCircleSelector(unittest.TestCase):
     def setUp(self) -> None:
         self.ovslam_csv = "C:\\Setup\\python_projects\\CircleFitting\\data\\BathAbbey1\\openvslam_result\\BathAbbey1_traj.csv"
         self.npy_dataset = "C:\\Setup\\python_projects\\CircleFitting\\results\\metrics2.0\\BathAbbey1.npy"
