@@ -1,9 +1,3 @@
-/***************************************************************************
- * @file   ViewerGUI.hpp
- * @brief  Generates a Graphical User Interface for the Viewer application.
- *
- * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
- ***************************************************************************/
 #pragma once
 
 #include "3rdParty/imgui/examples/imgui_impl_glfw.h"
@@ -18,6 +12,9 @@
 class ViewerApp; // forward declaration to break circular dependency
 
 
+/**
+ * @brief  Generates a Graphical User Interface for the Viewer application.
+ */
 class ViewerGUI
 {
 public:

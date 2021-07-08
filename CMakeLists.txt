@@ -98,7 +98,6 @@ option(USE_CERES "Use Ceres in certain apps." OFF)
 option(USE_CUDA_IN_OPENCV "Use CUDA in OpenCV." OFF)
 
 ## Additional things that are not built by default.
-option(WITH_DOCS "Build documentation files." OFF)
 option(WITH_OPENVR "Build with OpenVR." ${OPENVR_FOUND})
 option(WITH_TEST "Build tests." OFF)
 option(WITH_TOOLS "Build with tools." OFF)
@@ -152,16 +151,6 @@ configure_file("${CMAKE_SOURCE_DIR}/src/GitVersion.cpp.in" "${CMAKE_BINARY_DIR}/
 add_subdirectory(src/Core)
 add_subdirectory(src/Utils)
 add_subdirectory(src/PreprocessingApp)
-
-
-#############################
-# DOCUMENTATION
-#############################
-
-if(WITH_DOCS)
-  add_subdirectory(docs)
-endif()
-
 
 #############################
 # EXECUTABLES

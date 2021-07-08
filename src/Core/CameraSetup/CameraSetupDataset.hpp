@@ -7,11 +7,11 @@
 #include "Core/Geometry/Sphere.hpp"
 
 
-/*
-@brief       Represents an OmniPhotos dataset. 
-@description Preprocessing creates a dataset and writes the representation into a cache directory.
-             The viewer loads the cache and passes the dataset to the visualization.
-*/
+/** 
+ * @brief       Represents an OmniPhotos dataset. 
+ * @description Preprocessing creates a dataset and writes the representation into a cache directory.
+ *              The viewer loads the cache and passes the dataset to the visualization.
+ */
 class CameraSetupDataset
 {
 public:

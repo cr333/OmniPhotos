@@ -5,6 +5,7 @@
 #include "Core/Geometry/Shape.hpp"
 
 
+/** Class to represent a 3D point cloud. */
 class PointCloud : public Shape, public GLRenderable
 {
 public:
@@ -16,7 +17,7 @@ public:
 
 	Eigen::Point3f getCentroid();
 
-	void createRenderModel(const std::string& _name) override; //GLRenderable
+	void createRenderModel(const std::string& _name) override; // from GLRenderable
 
 	std::vector<Point3D*>* getPoints();
 	void setPoints(const std::vector<Point3D*>& _points);

@@ -7,15 +7,7 @@
 #include <vector>
 
 
-/*
-@brief A circle
-@param normal of the plane in which the circle lies;
-@param radius of the circle
-@param x left vector of normal tangent space
-@param z forward vector of normal tangent space
-@method createVertices() used to create line segments for rendering.
-@method sampleCircle is used to sample vertices along the circle
-*/
+/** Class to represent circles. */
 class Circle : public Shape
 {
 public:
@@ -42,18 +34,35 @@ public:
 	void computeTangentPlane();
 	void computeTangentPlane(Eigen::Vector3f _normal, Eigen::Vector3f _forward);
 
-	//step in radians
+	// step in radians
 	Eigen::Point3f generateVertex(float step);
 
+	/**
+	 * @brief Creates vertices for rendering.
+	 * 
+	 * @param _vertices      Output vector to which vertices will be written.
+	 * @param numberOfPoints Number of vertices on the circle.
+	 */
 	void createVertices(std::vector<float>* _vertices, int numberOfPoints);
 
+	/**
+	 * @brief Sample vertices along the circle.
+	 * 
+	 * @param points         Output vector to which vertices will be written.
+	 * @param numberOfPoints Number of vertices on the circle.
+	 */
 	void sampleCircle(std::vector<Eigen::Point3f>* points, int numberOfPoints);
 
 private:
+	/** Normal of the plane in which the circle lies. */
 	Eigen::Vector3f normal;
+
+	/** Radius of the circle [cm]. */
 	float radius = 0;
 
-	// tangent plane of the normal
-	Eigen::Vector3f x; // left
-	Eigen::Vector3f z; // forward
+	/** Left vector of normal tangent space. */
+	Eigen::Vector3f x;
+
+	/** Forward vector of normal tangent space. */
+	Eigen::Vector3f z;
 };

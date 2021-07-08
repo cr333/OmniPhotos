@@ -23,7 +23,7 @@
 namespace Eigen {
 
 /**
-  * \defgroup OpenGLSUpport_Module OpenGL Support module
+  * OpenGLSUpport_Module OpenGL Support module
   *
   * This module provides wrapper functions for a couple of OpenGL functions
   * which simplify the way to pass Eigen's object to openGL.

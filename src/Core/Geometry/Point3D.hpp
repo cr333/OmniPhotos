@@ -3,12 +3,7 @@
 #include "3rdParty/Eigen.hpp"
 
 
-/*
-@brief Used to model 3D positions, points or vertices.
-@param pos 3D Euclidean coordinate
-@param colour RGB colour value
-@param error Stores reconstruction error when reading in sparse point clouds via COLMAP. Undefined for OpenVSLAM.
-*/
+/** Used to model a 3D point with optional colour, normal and texture coordinates. */
 struct Point3D
 {
 	Point3D();
@@ -16,24 +11,24 @@ struct Point3D
 	Point3D(float x, float y, float z, float r = 0.5f, float g = 0.5f, float b = 0.5f);
 	Point3D(Eigen::Vector3f p, Eigen::Vector3f c = Eigen::Vector3f { 0, 0, 0 });
 
-	// Basically vertices of texture geometry
+	/** Basically vertices of textured geometry. */
 	Point3D(Eigen::Vector3f _pos, Eigen::Vector3f _normal, Eigen::Vector2f _tex);
 
-	// Euclidean point in 3D
+	/** Euclidean point in 3D. */
 	Eigen::Vector3f pos;
 
-	// Per-vertex colour
+	/** Per-vertex colour. RGB value. */
 	Eigen::Vector3f colour;
 
-	// Per-vertex normal
+	/** Per-vertex normal. */
 	Eigen::Vector3f normal;
 
-	// Texture coordinates
+	/** Texture coordinates. */
 	Eigen::Vector2f tex;
 
-	// Point ID
+	/** Point ID. */
 	int id = -1;
 
-	// Reprojection error on tracked images
+	/** Reprojection error when reading in sparse point clouds via COLMAP. Undefined for OpenVSLAM. */
 	float error = -1;
 };

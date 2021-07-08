@@ -4,20 +4,17 @@
 #include "Core/Geometry/Shape.hpp"
 
 
+/** Class to represent lines. */
 class Lines : public Shape, public GLRenderable
 {
 public:
-	// Uniform lines
+	/** For uniform lines. */
 	Lines(const std::vector<float>& _vertices);
 
-	// Coloured lines
+	/** For coloured lines. */
 	Lines(const std::vector<float>& _vertices, const std::vector<float>& _colours);
 
 	virtual ~Lines() = default;
 
 	void createRenderModel(const std::string& _name);
-
-private:
-	//optional requirements:
-	//1. colour_buffer
 };

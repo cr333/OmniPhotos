@@ -1,6 +1,8 @@
 # OmniPhotos: Casual 360° VR Photography
 ### [Project Page](https://richardt.name/publications/omniphotos/) | [Video](https://vimeo.com/456866335) | [Paper](https://richardt.name/publications/omniphotos/OmniPhotos-BertelEtAl-SIGAsia2020-paper.pdf) | [Demo](#demo) | [Data](https://doi.org/10.15125/BATH-00948)
 
+[![Documentation Status](https://readthedocs.org/projects/omniphotos/badge/?version=latest)](https://omniphotos.readthedocs.io/en/latest/?badge=latest)
+
 
 This repository contains the source code for creating and viewing OmniPhotos – a new approach for
 casual 360° VR photography using a consumer 360° video camera.

@@ -1,16 +1,3 @@
-/**************************************************************************
- * @file   VRInterface.hpp
- * @brief  VRI - Virtual Reality Interface. 
- * 
- * This file acts as the layer between the ViewerApp, OpenGL and OpenVR. 
- * Its functionality includes: 
- *	- Initialising the OpenVR environment. 
- *	- handling the user interface in the VR environment. 
- *	- Implementing OpenGL specifically for OpenVR.   
- * 
- * @authors Tobias Bertel, Mingze Yuan, Reuben Lindroos, Christian Richardt
- **************************************************************************/
-
 #pragma once
 
 #include "3rdParty/Eigen.hpp"
@@ -49,7 +36,6 @@ static const char* getTextForControllerEnum(int enumVal)
 	return controller_enum_strings[enumVal];
 }
 
-
 struct ControllerInfo_t
 {
 	~ControllerInfo_t();
@@ -82,33 +68,40 @@ struct FramebufferDesc
 };
 
 
+/**
+ * @brief  VRI - Virtual Reality Interface.
+ *
+ * This file acts as the layer between the ViewerApp, OpenGL and OpenVR.
+ * Its functionality includes:
+ *   - Initialising the OpenVR environment.
+ *   - handling the user interface in the VR environment.
+ *   - Implementing OpenGL specifically for OpenVR.
+ */
 class VRInterface
 {
 public:
 	/**
 	 * Default constructor for the VRI. Calls initOpenVR
 	 * so SteamVR is initialised here.
-	 * 
-	 * @param app the ViewerApp. Passed here such that handleInput 
+	 *
+	 * @param app the ViewerApp. Passed here such that handleInput
 	 * can pass commands back to the application.
 	 */
 	VRInterface(float _eyeNearClip, float _eyeFarClip, Eigen::Matrix4f initRot, ViewerApp* app);
 
 	/**
-	 * Deletes handcontroller, companion window, 
-	 * controllerPlane and other GL programs on exit.
+	 * Deletes handcontroller, companion window, controllerPlane and other GL programs on exit.
 	 */
 	~VRInterface();
 
 	/**
-	 * Initialises the proxy geometry and passes the
-	 * parameters to @fn setupCompanionWindow.
+	 * Initialises the proxy geometry and passes the parameters to setupCompanionWindow.
 	 */
 	void init(const std::string& title, const Eigen::Vector2i& windowDims, GLProgramMaintenance* maintenancePtr, GLFWwindow* parentContext = nullptr);
 
 
 	/**
-	 * companinon window parameters
+	 * companion window parameters
 	 * These need to be public for the ViewerApp to initialise it correctly. 
 	 * TODO: fix this.
 	 */
@@ -138,7 +131,7 @@ public:
 	 * @brief initialises the controller programs + models
 	 * The models will be initialised as spheres. if spheres
 	 * are displayed in the HMD, something has gone wrong in 
-	 * @fn handleInput().
+	 * handleInput().
 	 */
 	void initDefaultControllerPrograms(std::vector<GLProgram*>* _programs);
 	void initRiftControllerPrograms(std::vector<GLProgram*>* _programs);
@@ -189,6 +182,7 @@ private:
 	void renderEye(std::vector<GLProgram*>& _programs, const FramebufferDesc& fb_descr, vr::Hmd_Eye nEye);
 	void renderScene(vr::Hmd_Eye nEye, GLProgram& program, GLRenderModel& sceneModel);
 	void renderCompanionWindow();
+
 	/**
 	* handles iteration through the program. Also passes the uniforms to
 	* the controller meshes in order to update their positions.
@@ -205,11 +199,6 @@ private:
 	// Set true to use controller geometry from OpenVR.
 	bool use_controllers = false;
 
-	/**
-	 * Will initialise the programs needed to render mini versions.
-	 * of the proxy geometries above one of the controllers.
-	 */
-	void initProxySelectionPrograms();
 	void updateControllerPositions();
 	void handleControllerActions();
 	void loadControllers();
@@ -220,10 +209,10 @@ private:
 	void setupCompanionWindow(const std::string& title, const Eigen::Vector2i& windowDims, GLProgramMaintenance* maintenancePtr, GLFWwindow* parentContext = nullptr);
 
 	/**
-	 * @defgroup hmdControls
+	 * hmdControls
 	 * 
 	 * These are the controls being used by 
-	 * the HMD to toggle settings in the CCSVA.
+	 * the HMD to toggle settings in the ViewerApp.
 	 * 
 	 * @{
 	 */

@@ -18,21 +18,11 @@ class GLWindow;
 
 struct Point3D;
 class Lines;
-// The class should be used to abstract OpenGL business w.r.t. camera setup visualization.
 
-/*
-//Thought: We always work with camera setups, this could come from a "IBR" interface class.
-The distribution of viewpoints could be : linear, circular, spherical, cylindrical, unstructured.
-NOTE : It feels very intriguing to look into 360 video captured within small volumes and look into state - of - the - art 3D photography based on MVS.
-	SLAM gives us camera poses and we "now" want to come up with the best possible "dense" reconstruction. "point cloud" first and we fit our sphere against it,
-	then multi - layers.->One SIGGRAPH or two IEEE VR / Eurographics papers.
-*/
 
-/*
-@brief Visualizes a CameraSetup
-@method setDataset A circular camera setup should be just one out of many. 
-@method updateCameraPositions A std::vector of Point3D which encodes the optical centres of the CameraSetup is created to update the corresponding GLRenderModel.
-*/
+/**
+ * Visualizes a CameraSetup in the Viewer.
+ */
 class CameraSetupVisualization
 {
 public:
@@ -40,16 +30,10 @@ public:
 	virtual ~CameraSetupVisualization();
 
 	void initPrograms(GLWindow* gl_window, std::vector<GLProgram*>* _programs);
-
-	//A Visualization holds exactly 1 dataset at a time which the Visualization itself, should never be able to change.
-	//Changes are made "to the dataset" which lives next to the Visualization in the GLApplication.
-	//Updating the visualization requires "Visualization::setDataset(_dataset);"
-	//
+	
 	void setDataset(CameraSetupDataset* _dataset);
-
-	//TODO: Do I like that?
 	void setSettings(DisplaySettings* _settings);
-
+	
 	void updateProgramDisplay();
 
 	void updateModels();
@@ -62,22 +46,23 @@ public:
 
 	// Render model for the camera circle.
 	GLRenderModel* circle_model = nullptr;
-	//Default proxies
+
+	// Default proxies
 	GLRenderModel* cylinder_model = nullptr;
 	GLRenderModel* sphere_model = nullptr;
 
 	GLRenderModel* radial_directions_model = nullptr;
 
 private:
-	//The Visualization is always only "reading" dataset info
+	// The Visualization is always only "reading" dataset info
 	CameraSetupDataset* dataset;
 	const CameraSetupSettings* settings;
 	DisplaySettings* visSettings = nullptr;
 
-	//static for each visualization
+	// static for each visualization
 	void initCoordinateAxes();
 
-	//updates when we switch datasets
+	// updates when we switch datasets
 	void updateCircleModel(int circleResolution);
 	bool pointCloudLoaded = false;
 	void updateWorldPointCloudModel();
@@ -88,10 +73,10 @@ private:
 	GLDefaultProgram* coordinate_axes_prog = nullptr;
 	GLDefaultProgram* camera_geometry_lines_prog = nullptr;
 
-	//coloured points
-	//TODO: could be called "scene_points_prog"?
+	// coloured points
+	// TODO: could be called "scene_points_prog"?
 	GLDefaultProgram* world_points_prog = nullptr;
-	//passUniform is adjusted to colour vertices according to their id.
+	// passUniform is adjusted to colour vertices according to their id.
 	GLPointsProgram* camera_geometry_points_prog = nullptr;
 
 	GLRenderModel* camera_positions_model = nullptr;

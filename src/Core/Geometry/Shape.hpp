@@ -3,9 +3,7 @@
 #include "3rdParty/Eigen.hpp"
 
 
-/*
-@brief Some sort of abstract geometrical shape.
-*/
+/** Some sort of abstract geometrical shape. */
 class Shape
 {
 public:
