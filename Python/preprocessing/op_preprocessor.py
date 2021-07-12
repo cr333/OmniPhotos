@@ -266,19 +266,24 @@ class OpPreprocessor(AbsPreprocessor):
     def openvslam_select_stable_circle(self):
 
         self.show_info("Finding stable circle.")
-        cached_res = os.path.join(self.root_dir, "circlefittingresults.json")
+        cached_res = os.path.join(self.capture_data_dir, "best_intervals.json")
         if os.path.exists(cached_res):
             self.show_info("Found cached results at " + cached_res)
             intervals = circleselector.datatypes.PointDict()
-            intervals.fromJSON(os.path.join(self.root_dir, "circlefittingresults.json"))
+            intervals.fromJSON(cached_res)
 
         else:
             points = circleselector.loader.load_file(
                 os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
             self.show_info("Calculating metrics ... ")
-            intervals = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
-                                                                "pairwise_distribution"]).find_local_minima(len(points))
-
+            data = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
+                                                                "pairwise_distribution"])
+            intervals = data.find_local_minima(len(points))
+            data.toJSON(os.path.join(self.capture_data_dir,"intervals.json"))
+            circleselector.plotting_utils.plot_heatmap(data,len(points),
+                                                       dot_coords=np.array(intervals.get("interval")),
+                                                       show=False,
+                                                       save_to=os.path.join(self.capture_data_dir,"best_intervals.png"))
 
             self.show_info(str(len(intervals)) + " valid intervals found.")
             intervals = circleselector.metrics.calc(points,
@@ -287,8 +292,8 @@ class OpPreprocessor(AbsPreprocessor):
                                                     mp=False,
                                                     dataset_path=self.root_dir,
                                                     rel_input_image_path='trajectory_images')
-            intervals.toJSON(os.path.join(self.root_dir, "circlefittingresults.json"))
-
+            intervals.toJSON(cached_res)
+            intervals.toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
         if len(intervals) == 0:
             self.show_info("No intervals found.","error")
 
@@ -650,7 +655,7 @@ class OpPreprocessor(AbsPreprocessor):
                     idx = int(ovslam_fps * float(row[0]) + 0.5)
                     row[0] = self.op_filename_expression % idx
                     yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
-                    
+
     def openvslam_create_camera_file(self, output_path):
         """
         generate the openvslam cameras.txt file for OmniPhotos
