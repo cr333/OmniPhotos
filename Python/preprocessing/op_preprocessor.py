@@ -91,7 +91,7 @@ class OpPreprocessor(AbsPreprocessor):
         # viewNumber-[full/half/quarter]Res-[nostab/stab]-[DIS/flownet2]
         self.cache_folder_path_flownet2 = None
         self.op_preprocessing_cache_dir = None
-        self.generating_cache_filename()
+
 
 
     def comput_downsample_scalar(self):
@@ -160,7 +160,7 @@ class OpPreprocessor(AbsPreprocessor):
 
         # generate the cache directory name
         # generate the filename for MP cache directory
-        frame_number = str(self.op_frame_number) 
+        frame_number = str(self.image_end_idx - self.image_start_idx)
         self.op_preprocessing_cache_dir = frame_number + "-" + input_image_res_abbr + "-" + of_res_abbr + "-DIS"
         # generate the filename for flownet2 cache directory
         self.cache_folder_path_flownet2 = frame_number + "-" + input_image_res_abbr + "-" + of_res_abbr + "-flownet2"
@@ -175,6 +175,7 @@ class OpPreprocessor(AbsPreprocessor):
         # do this here so we copy only the images we need to the Input image directory.
         if self.find_stable_circle:
             self.openvslam_select_stable_circle()
+        self.generating_cache_filename()
         # 2) move the image from trajectory directory to ready folder
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
@@ -263,7 +264,7 @@ class OpPreprocessor(AbsPreprocessor):
         self.omniphotos_flownet2_init()
 
     def openvslam_select_stable_circle(self):
-        points = circleselector.loader.load_file(os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
+
         self.show_info("Finding stable circle.")
         cached_res = os.path.join(self.root_dir, "circlefittingresults.json")
         if os.path.exists(cached_res):
@@ -272,6 +273,8 @@ class OpPreprocessor(AbsPreprocessor):
             intervals.fromJSON(os.path.join(self.root_dir, "circlefittingresults.json"))
 
         else:
+            points = circleselector.loader.load_file(
+                os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
             self.show_info("Calculating metrics ... ")
             intervals = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
                                                                 "pairwise_distribution"]).find_local_minima(len(points))
@@ -302,7 +305,7 @@ class OpPreprocessor(AbsPreprocessor):
         if self.op_input_frame_height == self.frame_height and self.op_input_frame_width == self.frame_width:
             for idx, val in enumerate(self.trajectory_images_list[self.image_start_idx:self.image_end_idx]):
                 src_image_path = self.traj_input_images_dir / val
-                dest_image_path = self.op_images_dir / self.op_image_list[idx]
+                dest_image_path = self.op_images_dir / val
                 if idx % self.show_infor_interval == 0:
                     self.show_info("Copy image from {} to {}.".format(str(src_image_path), str(dest_image_path)))
                 shutil.copyfile(src_image_path, dest_image_path)
@@ -402,7 +405,7 @@ class OpPreprocessor(AbsPreprocessor):
             stabilization_parameters = {
                 r'\$circle_radius\$': str(self.circle_radius),
                 r'\$dataset_name\$': self.dataset_name,
-                r'\$cameras_number\$': str(self.op_frame_number),
+                r'\$cameras_number\$': str(self.image_end_idx - self.image_start_idx),
                 r'\$process_step\$': "stabilization images",
                 r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
                 r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
@@ -413,7 +416,7 @@ class OpPreprocessor(AbsPreprocessor):
                 r'\$image_width\$': str(self.op_input_frame_width),
                 r'\$image_height\$': str(self.op_input_frame_height),
                 r'\$first_frame\$': str(0),
-                r'\$last_frame\$': str(len(self.image_list)),
+                r'\$last_frame\$': str(self.image_end_idx - self.image_start_idx),
                 r'\$image_fps\$': str(self.frame_fps),
                 r'\$change_basis\$': str(0),
                 r'\$intrinsic_scale\$': str(1.0),
@@ -458,10 +461,10 @@ class OpPreprocessor(AbsPreprocessor):
             r'\$dataset_name\$': self.dataset_name,
             r'\$image_width\$': str(self.op_input_frame_width),
             r'\$image_height\$': str(self.op_input_frame_height),
-            r'\$first_frame\$': str(self.image_start_idx),
-            r'\$last_frame\$': str(self.image_end_idx ),
+            r'\$first_frame\$': str(0),
+            r'\$last_frame\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_fps\$': str(self.frame_fps),
-            r'\$cameras_number\$': str(self.image_end_idx - self.image_start_idx),
+            r'\$cameras_number\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_filename\$': self.op_filename_expression,
             r'\$process_step\$': "stabilization images",
             r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
@@ -642,18 +645,12 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output = csv.writer(yaml_traj_file_handle_output, delimiter=' ',
                                                           quoting=csv.QUOTE_MINIMAL)
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
-            for row in yaml_traj_csv_file_handle:
-                idx = int(ovslam_fps * float(row[0]) + 0.5)
-                if idx < self.image_start_idx or idx > self.image_end_idx:
-                    continue
-                else:
-                    output_counter = output_counter + 1
-                row[0] = self.op_filename_expression % idx
-                yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
-
-        if output_counter <= 0:
-            self.show_info("Camera trajectory csv file is empty", "error")
-
+            for enum,row in enumerate(yaml_traj_csv_file_handle):
+                if self.image_start_idx < enum < self.image_end_idx:
+                    idx = int(ovslam_fps * float(row[0]) + 0.5)
+                    row[0] = self.op_filename_expression % idx
+                    yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
+                    
     def openvslam_create_camera_file(self, output_path):
         """
         generate the openvslam cameras.txt file for OmniPhotos
