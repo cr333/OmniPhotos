@@ -5,8 +5,6 @@ Implement optical flow computation with FlowNet2.
 import os
 import shutil
 
-from flownet2 import flownet2
-
 from abs_preprocessor import AbsPreprocessor
 
 class OfPreprocessor(AbsPreprocessor):
@@ -51,6 +49,7 @@ class OfPreprocessor(AbsPreprocessor):
         compute optical flow for OmniPhotos
         """
         # 0) set-up run-time variables
+        from flownet2 import flownet2
         for idx, dir_term in enumerate(os.listdir(str(self.cache_data_root))):
             if not os.path.isdir(str(self.cache_data_root / dir_term)):
                 continue

@@ -71,8 +71,12 @@ class AbsPreprocessor:
         # the input image index range of OmniPhotos
         self.image_start_idx = self.config["preprocessing.frame_index_start"]
         self.image_end_idx = self.config["preprocessing.frame_index_end"]
+        self.find_stable_circle = self.config["preprocessing.find_stable_circle"]
         if self.image_start_idx < 0 or self.image_start_idx > self.frame_number:
             self.show_info("preprocessing.frame_index_start set error", "error")
+        if self.find_stable_circle:
+            self.image_start_idx = 0
+            self.image_end_idx = -1
 
         if self.image_end_idx == -1:
             self.image_end_idx = self.frame_number - 1

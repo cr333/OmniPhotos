@@ -34,7 +34,7 @@ from flownet2.utils.flow_utils import writeFlow, readFlow
 from flownet2.utils import computeColor
 
 from abs_preprocessor import AbsPreprocessor
-
+import circleselector
 
 class OpPreprocessor(AbsPreprocessor):
     """Class to generate the config files for OmniPhotos.
@@ -91,7 +91,7 @@ class OpPreprocessor(AbsPreprocessor):
         # viewNumber-[full/half/quarter]Res-[nostab/stab]-[DIS/flownet2]
         self.cache_folder_path_flownet2 = None
         self.op_preprocessing_cache_dir = None
-        self.generating_cache_filename()
+
 
 
     def comput_downsample_scalar(self):
@@ -160,7 +160,7 @@ class OpPreprocessor(AbsPreprocessor):
 
         # generate the cache directory name
         # generate the filename for MP cache directory
-        frame_number = str(self.op_frame_number) 
+        frame_number = str(self.image_end_idx - self.image_start_idx)
         self.op_preprocessing_cache_dir = frame_number + "-" + input_image_res_abbr + "-" + of_res_abbr + "-DIS"
         # generate the filename for flownet2 cache directory
         self.cache_folder_path_flownet2 = frame_number + "-" + input_image_res_abbr + "-" + of_res_abbr + "-flownet2"
@@ -170,16 +170,21 @@ class OpPreprocessor(AbsPreprocessor):
         """
         generate the necessary files for OmniPhotos
         """
-        # 1) move the image from trajectory directory to ready folder
+
+        # 1) select the best circle
+        # do this here so we copy only the images we need to the Input image directory.
+        if self.find_stable_circle:
+            self.openvslam_select_stable_circle()
+        self.generating_cache_filename()
+        # 2) move the image from trajectory directory to ready folder
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
         if not self.op_images_dir.exists() or \
-            len(os.listdir(str(self.op_images_dir))) != \
-                len(os.listdir(str(self.traj_input_images_dir))):
+                len(os.listdir(self.op_images_dir))!=self.image_start_idx-self.image_end_idx:
             self.show_info("Generate the input images for OmniPhotos to {}".format(self.op_images_dir))
             self.omniphotos_generate_input_images()
 
-        # 2) convert and generate the trajectory files as OmniPhotos request format
+        # 3) convert and generate the trajectory files as OmniPhotos request format
         self.show_info("Checking necessary file.")
         #  check the OpenVSLAM necessary file
         if self.trajectory_tool == "openvslam" or self.trajectory_tool == "all":
@@ -189,7 +194,6 @@ class OpPreprocessor(AbsPreprocessor):
             openvslam_need_convertion = False
             for term in self.openvslam_essential_file_list:
                 openvslam_need_convertion = openvslam_need_convertion or (not (self.output_directory_path_ovslam / term).exists())
-
             # generate the configuration files for OpenVSLAM
             if openvslam_need_convertion:
                 # check the openvslam output files
@@ -197,8 +201,6 @@ class OpPreprocessor(AbsPreprocessor):
                     if not (self.output_directory_path_ovslam / term).exists():
                         self.show_info("The OpenVSLAM output file {} do not exist.".format(term), "error")
 
-                # select the best circle
-                self.openvslam_select_stable_circle()
                 # convert the openvslam output "frame_trajectory.txt" format
                 self.show_info("Convert the OpenVSLAM result to OmniPhotos configuration files.")
 
@@ -226,7 +228,7 @@ class OpPreprocessor(AbsPreprocessor):
             if file_complete:
                 self.show_info("The OpenVSLAM essentail file do exist.", "error")
 
-        # 3) make the directory & file structure as the OmniPhotos request
+        # 4) make the directory & file structure as the OmniPhotos request
         self.show_info("Backup and copy the trajectory reconstruction.")
         need_file_structure_trim = False
         if self.trajectory_tool == "colmap" or self.trajectory_tool == "all":
@@ -243,11 +245,11 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info("Trimming the trajectory files structure as OmniPhotos request")
             self.file_structure_trim()
 
-        # 4) generate the config file and images for OmniPhotos
+        # 5) generate the config file and images for OmniPhotos
         self.show_info("Genera the config files for OmniPhotos viewer & preprocessing.", "info")
         self.omniphotos_generate_viewer_config()
 
-        # 5) run the OmniPhotos pre-processing, generate *.flo, *.json and *.conf in Cache folder
+        # 6) run the OmniPhotos pre-processing, generate *.flo, *.json and *.conf in Cache folder
         if not os.path.exists(str(self.cache_dir / self.op_preprocessing_cache_dir)):
             # if Cache folder is empty, run OmniPhotos preprocessor
             self.show_info("Run the pre-processing step of OmniPhotos.")
@@ -257,17 +259,45 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info(
                 "The {} folder is not empty, skipping the OmniPhotos preprocessing step.".format(str(self.cache_dir)))
 
-        # 6) initial flownet2 run-time environment
+        # 7) initial flownet2 run-time environment
         self.show_info("Initial the Flownet2 run-time environment.")
         self.omniphotos_flownet2_init()
 
     def openvslam_select_stable_circle(self):
-        """
-        if do not specify the start and end index of the single camera circle.
-        automatically select the most stable circle for openvslam result.
-        """
-        self.show_info("The automatically select stable camera circle do not implement.")
 
+        self.show_info("Finding stable circle.")
+        cached_res = os.path.join(self.capture_data_dir, "best_intervals.json")
+        if os.path.exists(cached_res):
+            self.show_info("Found cached results at " + cached_res)
+            intervals = circleselector.datatypes.PointDict()
+            intervals.fromJSON(cached_res)
+
+        else:
+            points = circleselector.loader.load_file(
+                os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
+            self.show_info("Calculating metrics ... ")
+            data = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
+                                                                "pairwise_distribution"])
+            intervals = data.find_local_minima(len(points))
+            circleselector.plotting_utils.plot_heatmap(data,len(points),
+                                                       dot_coords=np.array(intervals.get("interval")),
+                                                       show=False,
+                                                       save_to=os.path.join(self.capture_data_dir,"best_intervals.png"))
+
+            self.show_info(str(len(intervals)) + " valid intervals found.")
+            intervals = circleselector.metrics.calc(points,
+                                                    point_dcts=intervals,
+                                                    errors=["ssim","psnr"],
+                                                    mp=False,
+                                                    dataset_path=self.root_dir,
+                                                    rel_input_image_path='trajectory_images')
+            intervals.toJSON(cached_res)
+            intervals.split_interval().toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
+        if len(intervals) == 0:
+            self.show_info("No intervals found.","error")
+
+        stable_circle = intervals.find_best_interval()["interval"]
+        self.image_start_idx, self.image_end_idx = stable_circle[0], stable_circle[1]
     def omniphotos_generate_input_images(self):
         """
         generate the images for OmniPhotos input.
@@ -277,9 +307,9 @@ class OpPreprocessor(AbsPreprocessor):
         self.dir_make(self.op_images_dir)
 
         if self.op_input_frame_height == self.frame_height and self.op_input_frame_width == self.frame_width:
-            for idx, val in enumerate(self.trajectory_images_list):
+            for idx, val in enumerate(self.trajectory_images_list[self.image_start_idx:self.image_end_idx]):
                 src_image_path = self.traj_input_images_dir / val
-                dest_image_path = self.op_images_dir / self.op_image_list[idx]
+                dest_image_path = self.op_images_dir / val
                 if idx % self.show_infor_interval == 0:
                     self.show_info("Copy image from {} to {}.".format(str(src_image_path), str(dest_image_path)))
                 shutil.copyfile(src_image_path, dest_image_path)
@@ -379,7 +409,7 @@ class OpPreprocessor(AbsPreprocessor):
             stabilization_parameters = {
                 r'\$circle_radius\$': str(self.circle_radius),
                 r'\$dataset_name\$': self.dataset_name,
-                r'\$cameras_number\$': str(self.op_frame_number),
+                r'\$cameras_number\$': str(self.image_end_idx - self.image_start_idx),
                 r'\$process_step\$': "stabilization images",
                 r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
                 r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
@@ -390,7 +420,7 @@ class OpPreprocessor(AbsPreprocessor):
                 r'\$image_width\$': str(self.op_input_frame_width),
                 r'\$image_height\$': str(self.op_input_frame_height),
                 r'\$first_frame\$': str(0),
-                r'\$last_frame\$': str(len(self.image_list)),
+                r'\$last_frame\$': str(self.image_end_idx - self.image_start_idx),
                 r'\$image_fps\$': str(self.frame_fps),
                 r'\$change_basis\$': str(0),
                 r'\$intrinsic_scale\$': str(1.0),
@@ -436,9 +466,9 @@ class OpPreprocessor(AbsPreprocessor):
             r'\$image_width\$': str(self.op_input_frame_width),
             r'\$image_height\$': str(self.op_input_frame_height),
             r'\$first_frame\$': str(0),
-            r'\$last_frame\$': str(len(self.image_list)),
+            r'\$last_frame\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_fps\$': str(self.frame_fps),
-            r'\$cameras_number\$': str(self.op_frame_number),
+            r'\$cameras_number\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_filename\$': self.op_filename_expression,
             r'\$process_step\$': "stabilization images",
             r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
@@ -619,17 +649,11 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output = csv.writer(yaml_traj_file_handle_output, delimiter=' ',
                                                           quoting=csv.QUOTE_MINIMAL)
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
-            for row in yaml_traj_csv_file_handle:
-                idx = int(ovslam_fps * float(row[0]) + 0.5)
-                if idx < self.image_start_idx or idx > self.image_end_idx:
-                    continue
-                else:
-                    output_counter = output_counter + 1
-                row[0] = self.op_filename_expression % idx
-                yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
-
-        if output_counter <= 0:
-            self.show_info("Camera trajectory csv file is empty", "error")
+            for enum,row in enumerate(yaml_traj_csv_file_handle):
+                if self.image_start_idx < enum < self.image_end_idx:
+                    idx = int(ovslam_fps * float(row[0]) + 0.5)
+                    row[0] = self.op_filename_expression % idx
+                    yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
 
     def openvslam_create_camera_file(self, output_path):
         """
