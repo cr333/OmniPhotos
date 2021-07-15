@@ -24,6 +24,18 @@ class PointDict(list):
                 lst.append(str(dct[key]))
             output.append(', '.join(lst))
         return '\n'.join(output)
+    def split_interval(self):
+        """
+        Returns a point dict with the keys: interval_start, interval_end, errors
+        :return: PointDict
+        """
+        intervals = self.get("interval")
+        data = PointDict()
+        data.set("interval_start",[interval[0] for interval in intervals])
+        data.set("interval_end", [interval[1] for interval in intervals])
+        for key in self.keys[1:]:
+            data.set(key,self.get(key))
+        return data
 
     def toCSV(self, filename):
         self.keys = self[0].keys()
@@ -32,18 +44,6 @@ class PointDict(list):
             dict_writer.writeheader()
             dict_writer.writerows(self)
 
-    def fromCSV(self,filename):
-        """
-        Warning: ICE
-        :param filename:
-        :return:
-        """
-        with open(filename,'r') as ifile:
-            reader = csv.reader(ifile)
-            lst = [row for row in reader]
-        self.keys = lst[0]
-        for enum,key in enumerate(self.keys):
-            self.set(key,[row[enum] for row in lst[1:]])
     def toJSON(self,filename):
         with open(filename, 'w') as fout:
             json.dump(self, fout)
@@ -71,20 +71,10 @@ class PointDict(list):
             self.keys.append(key)
         if len(self) == 0:
             for val in vals:
-                if key == "interval" and type(val) == str:
-                    val = val.replace("(",'')
-                    val = val.replace(")",'')
-                    self.append({key:tuple(map(int,val.split(', ')))})
-                else:
-                    self.append({key:float(val)})
+                self.append({key:float(val)})
             return
         for idx in range(len(self)):
-            if key == "interval" and type(vals[idx]) == str:
-                val = vals[idx].replace("(", '')
-                val = val.replace(")", '')
-                self.append({key: tuple(map(int, val.split(', ')))})
-            else:
-                self[idx][key]=float(vals[idx])
+            self[idx][key]=float(vals[idx])
 
     def find_local_minima(self, numpoints=None, errors:list=None,save_sum=True):
         """
@@ -128,8 +118,11 @@ class PointDict(list):
         for item in ["ssim","psnr"]:
             if item not in self.keys:
                 raise Exception(item + " not found in keys.")
-
-        self.sort(key=lambda dct: dct["ssim"] + dct["psnr"],reverse=True)
+        combined_cv_error = []
+        for item in self:
+            combined_cv_error.append(item["ssim"] + item["psnr"]/100)
+        self.set("combined_cv_error",combined_cv_error)
+        self.sort(key=lambda dct: dct["combined_cv_error"],reverse=True)
         return self[0]
 
 class CameraCenters(list):

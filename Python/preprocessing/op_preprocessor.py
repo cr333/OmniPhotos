@@ -279,7 +279,6 @@ class OpPreprocessor(AbsPreprocessor):
             data = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
                                                                 "pairwise_distribution"])
             intervals = data.find_local_minima(len(points))
-            data.toJSON(os.path.join(self.capture_data_dir,"intervals.json"))
             circleselector.plotting_utils.plot_heatmap(data,len(points),
                                                        dot_coords=np.array(intervals.get("interval")),
                                                        show=False,
@@ -293,7 +292,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                     dataset_path=self.root_dir,
                                                     rel_input_image_path='trajectory_images')
             intervals.toJSON(cached_res)
-            intervals.toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
+            intervals.split_interval().toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
         if len(intervals) == 0:
             self.show_info("No intervals found.","error")
 

@@ -4,7 +4,7 @@ import time
 import os
 from mathutils import Quaternion
 import math
-from .datatypes import PointDict
+from .datatypes import PointDict, CameraCenters
 import circleselector.cv_utils as cv_utils
 class Metrics(object):
     """
@@ -190,7 +190,7 @@ class Metrics(object):
         return "\n".join(parameters)
     
 def decorator(Metrics):
-    def calc(points:list,
+    def calc(points: CameraCenters,
              point_dcts=None,
              errors=None,
              verbose=False,
@@ -203,7 +203,8 @@ def decorator(Metrics):
         Calculates the metrics on the given points. By default will perform all metrics on all the possible intervals
         in the camera path provided. WARNING: this will take a long time.
 
-        :param points: array like. ~1K camera centers in a camera path
+        :param points: array like. ~1K camera centers in a camera path. NOTE: ssim and psnr calculations will fail
+        if camera orientations not provided. (type CameraCenters from loader.load)
         :param point_dcts: listof(dict). If this parameter is passed the
         metrics will be calculated on only the intervals present in this dict.
         :param errors: list. names of metrics that should be calculated.
