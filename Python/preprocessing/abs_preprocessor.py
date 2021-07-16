@@ -88,7 +88,9 @@ class AbsPreprocessor:
 
         # create the images list
         self.original_filename_expression = self.config["preprocessing.original_filename_expression"]
-        self.op_filename_expression = self.config["preprocessing.op_filename_expression"]
+
+        # used to be this: self.op_filename_expression = self.config["preprocessing.op_filename_expression"]
+        self.op_filename_expression = self.original_filename_expression
 
         self.trajectory_images_list = [] # used to storage the processed original image file name
         self.op_image_list = [] # used to storage the mp ready image file name

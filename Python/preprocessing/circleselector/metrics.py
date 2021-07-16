@@ -119,6 +119,34 @@ class Metrics(object):
         if self.point_dcts is None or len(self.point_dcts) == 0:
             pairs = self.create_pairs()
             self.point_dcts = [dict(interval=pair) for pair in pairs]
+    def generate_time_estimate(self):
+        if len(self.point_dcts)<1000:
+            # THis estimate is only useful for very large point dicts (e.g 200 k)
+            return
+        subselection = []
+        for enum,dct in enumerate(self.point_dcts):
+            if enum%100 == 0:
+                subselection.append(dct)
+        print(len(subselection))
+        trial_run = Metrics(self.points,
+                            point_dcts=None,
+                            errors=self.errors,
+                            verbose=False,
+                            dataset_path=self.dataset_path)
+        start = time.time()
+        trial_run.run_on_pair_lst(subselection)
+        end = time.time()
+        time_taken = end - start
+
+        multiplier = len(self.point_dcts)/(mp.cpu_count() * len(subselection))
+        estimate = time_taken * multiplier
+
+        print(time_taken)
+        print("estimate",estimate)
+        print("multiplier",multiplier)
+        print("factor", mp.cpu_count() * len(subselection))
+        print("Calculation started at", time.ctime())
+        print("Estimated time of completion", time.ctime(time.time() + estimate))
 
     def run(self):
         if self.__save_of__:
@@ -130,7 +158,7 @@ class Metrics(object):
         interval = len(self.point_dcts) // mp.cpu_count()
         inmax = 0
         pair_subdiv = []
-
+        self.generate_time_estimate()
         while inmax < len(self.point_dcts):
             pair_subdiv.append(self.point_dcts[inmax:min(inmax + interval, len(self.point_dcts))])
             inmax += interval
