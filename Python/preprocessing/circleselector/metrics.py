@@ -119,15 +119,15 @@ class Metrics(object):
         if self.point_dcts is None or len(self.point_dcts) == 0:
             pairs = self.create_pairs()
             self.point_dcts = [dict(interval=pair) for pair in pairs]
-    def generate_time_estimate(self):
+    def generate_time_estimate(self) -> str:
+        self.init_data()
         if len(self.point_dcts)<1000:
             # THis estimate is only useful for very large point dicts (e.g 200 k)
             return
         subselection = []
         for enum,dct in enumerate(self.point_dcts):
-            if enum%100 == 0:
+            if enum%1000 == 0:
                 subselection.append(dct)
-        print(len(subselection))
         trial_run = Metrics(self.points,
                             point_dcts=None,
                             errors=self.errors,
@@ -138,15 +138,12 @@ class Metrics(object):
         end = time.time()
         time_taken = end - start
 
-        multiplier = len(self.point_dcts)/(mp.cpu_count() * len(subselection))
+        multiplier = len(self.point_dcts)/((mp.cpu_count()/2) * len(subselection)) # ignores "hyperthreading"
         estimate = time_taken * multiplier
-
-        print(time_taken)
-        print("estimate",estimate)
-        print("multiplier",multiplier)
-        print("factor", mp.cpu_count() * len(subselection))
-        print("Calculation started at", time.ctime())
-        print("Estimated time of completion", time.ctime(time.time() + estimate))
+        output = []
+        output.append("Calculation started at " + time.ctime())
+        output.append("Estimated time of completion " + time.ctime(time.time() + estimate))
+        return '\n'.join(output)
 
     def run(self):
         if self.__save_of__:
@@ -162,7 +159,8 @@ class Metrics(object):
         while inmax < len(self.point_dcts):
             pair_subdiv.append(self.point_dcts[inmax:min(inmax + interval, len(self.point_dcts))])
             inmax += interval
-
+        if self.verbose:
+            print(self.generate_time_estimate())
         pool = mp.Pool(mp.cpu_count())
         if self.verbose:
             print("time started", time.ctime(time.time()))

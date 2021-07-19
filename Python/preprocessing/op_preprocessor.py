@@ -275,9 +275,13 @@ class OpPreprocessor(AbsPreprocessor):
         else:
             points = circleselector.loader.load_file(
                 os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
-            self.show_info("Calculating metrics ... ")
-            data = circleselector.metrics.calc(points, errors = ["endpoint_error", "perimeter_error", "flatness_error",
+            metrics = circleselector.metrics.Metrics(points,errors=["endpoint_error", "perimeter_error", "flatness_error",
                                                                 "pairwise_distribution"])
+            self.show_info(metrics.generate_time_estimate())
+            metrics.run()
+            import time
+            self.show_info("actual time of completion was " + time.ctime())
+            data = circleselector.datatypes.PointDict(metrics.point_dcts)
             intervals = data.find_local_minima(len(points))
             circleselector.plotting_utils.plot_heatmap(data,len(points),
                                                        dot_coords=np.array(intervals.get("interval")),
