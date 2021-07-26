@@ -24,8 +24,6 @@ preprocessing.input_path: VID_20190402_123936_00_032.mp4
 # the original images file name expression, if input is video it is the name expression of extracted image filename
 # the extracted images will as source of images in Input directory (OmniPhotos)
 preprocessing.original_filename_expression: image-%04d.jpg
-# the output images file name expression,the filename suffix should be *.jpg or *.png
-preprocessing.op_filename_expression: panoramic-%04d.jpg
 # use the Euler angle rotation to the image, format is [phi, theta] of spherical coordinates with Euler angle degree
 # the rotated output image directory is $preprocessing.root_directory$/Input
 preprocessing.image_rotation: [0.0, 0.0]
@@ -33,6 +31,9 @@ preprocessing.image_rotation: [0.0, 0.0]
 preprocessing.frame_index_start: 180
 # the last frame of reconstruction (include this frame), last frame of video is -1
 preprocessing.frame_index_end: 265
+# uses the circleselector module to find a stable circle in the camera path. This will override the behaviour of frame_index_start and frame_index_end.
+# (all frames will be extracted)
+preprocessing.find_stable_circle: True
 # specify how much frames in the final output, extract all frames with -1
 # the number specifies the frames selected by the python script, not OmniPhotos preprocessing step.
 preprocessing.frame_fixed_number: -1
