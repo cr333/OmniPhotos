@@ -1,19 +1,23 @@
 import unittest
 import circleselector
+from circleselector.datatypes import PointDict
 import numpy as np
 import os
 class TestCircleSelector(unittest.TestCase):
     def setUp(self) -> None:
         self.ovslam_csv = "C:\\Setup\\python_projects\\CircleFitting\\data\\BathAbbey1\\openvslam_result\\BathAbbey1_traj.csv"
+        self.npy_loader_data = "C:\\Setup\\python_projects\\CircleFitting\\results\\metrics2.0\\BathAbbey1_loader_data.npy"
         self.npy_dataset = "C:\\Setup\\python_projects\\CircleFitting\\results\\metrics2.0\\BathAbbey1.npy"
         self.npy_result = "C:\\Setup\\python_projects\\CircleFitting\\results\\metrics2.0\\BathAbbey1_intervals.npy"
         self.npy_result_cv = "C:\\Setup\\python_projects\\CircleFitting\\results\\metrics2.0\\BathAbbey1_intervals_cv.npy"
 
     def test_loader(self):
         if not os.path.exists(self.ovslam_csv):
-            self.skipTest(self.npy_dataset + " npy dataset not found")
-        self.assertIsNotNone(circleselector.loader.load_file(self.ovslam_csv))
-
+            self.skipTest(self.ovslam_csv + " not found")
+        test = circleselector.loader.load_file(self.ovslam_csv)
+        comp = np.load(self.npy_loader_data,allow_pickle=True).tolist()
+        for enum,item in enumerate(test):
+            self.assertListEqual(item.tolist(),comp[enum])
     def test_calc(self):
         points = circleselector.loader.load_file(self.ovslam_csv)[:100]
         self.assertIsNotNone(circleselector.metrics.calc(points,
