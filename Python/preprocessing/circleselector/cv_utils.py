@@ -147,19 +147,6 @@ def calculate_metrics_lst(point_dicts:[dict],dataset_path:str) -> [dict]:
         dct["inv_ssim"], dct["inv_psnr"] = 1/ssim, 1/psnr
     return point_dicts
 
-def slice_eq_unittest():
-    """
-    :return:
-    """
-    dimx = 1920
-    dimy = 1920
-    im_half1 = np.stack((np.ones((dimx,dimy)),np.zeros((dimx,dimy)),np.zeros((dimx,dimy))),axis=2)
-    im_half2 = np.stack((np.zeros((dimx,dimy)),np.zeros((dimx,dimy)),np.zeros((dimx,dimy))),axis=2)
-    img = np.hstack((im_half1,im_half2))
-    sliced_img = slice_eqimage(img,np.pi/8)
-    plt.imshow(sliced_img)
-    plt.show()
-    plt.close()
 def crop_poles(img):
     margin = round(0.05*img.shape[0])
     return img[margin:img.shape[0]-margin]
