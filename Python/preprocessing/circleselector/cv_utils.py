@@ -1,10 +1,13 @@
-import numpy as np
-import cv2
-import circleselector.computeColor as computeColor
 import os
 from os.path import join as pjoin
-from skimage.metrics import structural_similarity
+
+import cv2
+import numpy as np
 from matplotlib import pyplot as plt
+from skimage.metrics import structural_similarity
+
+import flownet2.utils.computeColor as computeColor
+
 
 def resize(img,scale_percent,verbose=False):
     if verbose:
@@ -129,8 +132,6 @@ def calculate_metrics(interval:tuple, dataset_path:str,savedir:str=None, rel_inp
     remap1, remap2 = warp_images(img1, img2,savedir,lookatang)
     img1, img2 = slice_eqimage(resize(img1, 50),lookatang), slice_eqimage(resize(img2, 50),lookatang)
     remap1,remap2,img1,img2 = crop_poles(remap1),crop_poles(remap2),crop_poles(img1),crop_poles(img2)
-    # plt.imshow(np.flip(img1,axis=2))
-    # plt.show()
     ssim = (calculate_ssim(img1,remap2) + calculate_ssim(img2,remap1))/2
     psnr = (calculate_psnr(img1,remap2) + calculate_psnr(img2,remap1))/2
 

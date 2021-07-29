@@ -1,11 +1,15 @@
-import numpy as np
-import multiprocessing as mp
-import time
-import os
-from mathutils import Quaternion
 import math
-from .datatypes import PointDict, CameraCenters
+import multiprocessing as mp
+import os
+import time
+
+import numpy as np
+from mathutils import Quaternion
+
 import circleselector.cv_utils as cv_utils
+from .datatypes import PointDict, CameraCenters
+
+
 class Metrics(object):
     """
     class that can :
@@ -50,7 +54,6 @@ class Metrics(object):
         std = None
         path_length = None
 
-
         if "perimeter_error" in self.errors:
             radius = sum([np.linalg.norm(point - centroid) for point in sub_arr]) / len(sub_arr)
             exp_perimeter = 2 * np.pi * radius
@@ -70,7 +73,6 @@ class Metrics(object):
             if path_length is None:
                 path_length = self.find_path_length(interval)[0]
 
-
             endpoint_gap = np.linalg.norm(sub_arr[0] - sub_arr[-1])
             point_dict["endpoint_error"] = endpoint_gap / path_length
 
@@ -78,18 +80,20 @@ class Metrics(object):
         savedir = None
         lookatang = None
         if self.__save_of__:
-            savedir = os.path.join(self.dataset_path, "CircleFittingResults", "interval_"+ str(interval))
+            savedir = os.path.join(self.dataset_path, "CircleFittingResults", "interval_" + str(interval))
             os.makedirs(savedir)
         if "ssim" in self.errors:
-            lookatang = self.calculate_angle(centroid,interval)
-            ssim, psnr = cv_utils.calculate_metrics(interval, self.dataset_path,savedir,self.rel_input_image_path,lookatang)
+            lookatang = self.calculate_angle(centroid, interval)
+            ssim, psnr = cv_utils.calculate_metrics(interval, self.dataset_path, savedir, self.rel_input_image_path,
+                                                    lookatang)
             point_dict["ssim"] = ssim
 
         if "psnr" in self.errors:
             if lookatang is None:
-                lookatang = self.calculate_angle(centroid,interval)
+                lookatang = self.calculate_angle(centroid, interval)
             if psnr is None:
-                _, psnr = cv_utils.calculate_metrics(interval, self.dataset_path, savedir,self.rel_input_image_path,lookatang)
+                _, psnr = cv_utils.calculate_metrics(interval, self.dataset_path, savedir, self.rel_input_image_path,
+                                                     lookatang)
             point_dict["psnr"] = psnr
 
         return point_dict
@@ -119,14 +123,15 @@ class Metrics(object):
         if self.point_dcts is None or len(self.point_dcts) == 0:
             pairs = self.create_pairs()
             self.point_dcts = [dict(interval=pair) for pair in pairs]
+
     def generate_time_estimate(self) -> str:
         self.init_data()
-        if len(self.point_dcts)<1000:
+        if len(self.point_dcts) < 1000:
             # THis estimate is only useful for very large point dicts (e.g 200 k)
             return
         subselection = []
-        for enum,dct in enumerate(self.point_dcts):
-            if enum%1000 == 0:
+        for enum, dct in enumerate(self.point_dcts):
+            if enum % 1000 == 0:
                 subselection.append(dct)
         trial_run = Metrics(self.points,
                             point_dcts=None,
@@ -138,7 +143,7 @@ class Metrics(object):
         end = time.time()
         time_taken = end - start
 
-        multiplier = len(self.point_dcts)/((mp.cpu_count()/2) * len(subselection)) # ignores "hyperthreading"
+        multiplier = len(self.point_dcts) / ((mp.cpu_count() / 2) * len(subselection))  # ignores "hyperthreading"
         estimate = time_taken * multiplier
         output = []
         output.append("Calculation started at " + time.ctime())
@@ -194,7 +199,8 @@ class Metrics(object):
         norms.append(np.linalg.norm(points[0] - points[-1]))
 
         return np.sum(norms), np.std(norms)
-    def calculate_angle(self,centroid:np.array,interval:tuple) -> float:
+
+    def calculate_angle(self, centroid: np.array, interval: tuple) -> float:
         angs = []
         orientations = self.points.orientations
         for idx in interval:
@@ -204,8 +210,9 @@ class Metrics(object):
             ang = math.atan2(proj_c[0], proj_c[2])
             angs.append(ang)
         return np.mean(angs)
-    def calculate_centroid(self,arr:np.array):
-        return np.mean(arr,axis=0)
+
+    def calculate_centroid(self, arr: np.array):
+        return np.mean(arr, axis=0)
 
     def __str__(self):
         parameters = []
@@ -214,7 +221,8 @@ class Metrics(object):
         parameters.append("len point dict: " + str(len(self.point_dcts)))
         parameters.append("len points:     " + str(len(self.points)))
         return "\n".join(parameters)
-    
+
+
 def decorator(Metrics):
     def calc(points: CameraCenters,
              point_dcts=None,
@@ -224,7 +232,7 @@ def decorator(Metrics):
              rel_input_image_path='Input',
              mp=True,
              interval=None,
-             save_of = False) -> [dict]:
+             save_of=False) -> [dict]:
         """
         Calculates the metrics on the given points. By default will perform all metrics on all the possible intervals
         in the camera path provided. WARNING: this will take a long time.
@@ -259,6 +267,8 @@ def decorator(Metrics):
         if verbose:
             print(metrics)
         return PointDict(metrics.point_dcts)
+
     return calc
+
 
 calc = decorator(Metrics)

@@ -1,9 +1,10 @@
-from matplotlib import pyplot as plt
 import numpy as np
-from skimage.feature import peak_local_max
+from matplotlib import pyplot as plt
 from scipy import ndimage as ndi
+from skimage.feature import peak_local_max
 
-def plot_heatmap(point_dicts, n_points, show=True, error="summed_errors",dot_coords=None,save_to=None):
+
+def plot_heatmap(point_dicts, n_points, show=True, error="summed_errors", dot_coords=None, save_to=None):
     """
 
     :param point_dicts: listof(dicts)
@@ -27,6 +28,7 @@ def plot_heatmap(point_dicts, n_points, show=True, error="summed_errors",dot_coo
     if save_to:
         plt.savefig(save_to)
         return
+
 
 def plot_points(list, show=True, save_to=None):
     fig = plt.figure()
@@ -61,7 +63,7 @@ def plot_points(list, show=True, save_to=None):
     maxval = max(max(xx), max(yy), max(zz))
 
     points = np.array(list)
-    centroid = np.mean(points,axis=0)
+    centroid = np.mean(points, axis=0)
     ax.set_xlim(centroid[0] + maxval, centroid[0] - maxval)
     ax.set_ylim(centroid[1] + maxval, centroid[1] - maxval)
     ax.set_zlim(centroid[2] + maxval, centroid[2] - maxval)
@@ -72,14 +74,14 @@ def plot_points(list, show=True, save_to=None):
     if show:
         plt.show()
 
-def plot_minima(im,show=True,save_to=None):
 
+def plot_minima(im, show=True, save_to=None):
     # image_max is the dilation of im with a 20*20 structuring element
     # It is used within peak_local_max function
     image_max = ndi.maximum_filter(im, size=20, mode='constant')
 
     # Comparison between image_max and im to find the coordinates of local maxima
-    coordinates = peak_local_max(im, min_distance=10,threshold_rel=0.1)
+    coordinates = peak_local_max(im, min_distance=10, threshold_rel=0.1)
 
     # display results
     fig, axes = plt.subplots(1, 3, figsize=(8, 3), sharex=True, sharey=True)

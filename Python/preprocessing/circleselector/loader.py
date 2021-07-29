@@ -1,6 +1,9 @@
-from .datatypes import CameraCenters
 from decimal import Decimal
+
 import numpy as np
+
+from .datatypes import CameraCenters
+
 
 def load_file(path) -> CameraCenters:
     """
@@ -19,13 +22,11 @@ def load_file(path) -> CameraCenters:
     current_frame_idx = -1
 
     for frame_tra in frame_tra_all:
-
         frame_tra_list = frame_tra.split(' ')
         quats.append((Decimal(frame_tra_list[7]),
-                                       Decimal(frame_tra_list[4]),
-                                       Decimal(frame_tra_list[5]),
-                                       Decimal(frame_tra_list[6])))
-
+                      Decimal(frame_tra_list[4]),
+                      Decimal(frame_tra_list[5]),
+                      Decimal(frame_tra_list[6])))
 
         location_x = float(
             frame_tra_list[1])
