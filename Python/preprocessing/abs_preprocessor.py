@@ -126,7 +126,7 @@ class AbsPreprocessor:
 
     def load_config(self, args):
         """
-        load configuration from *.yaml file and CLI
+        Loads configuration from a YAML file and CLI.
         :param args: CLI input options
         """
         # load YAML config file
