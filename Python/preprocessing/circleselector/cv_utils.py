@@ -1,5 +1,4 @@
 import os
-from os.path import join as pjoin
 
 import cv2
 import numpy as np
@@ -79,15 +78,15 @@ def warp_images(img1,img2,savedir:str=None,lookatang:float=0):
     unpadded_prvs = prvs_img[:,padding//2:prvs_img.shape[1]-padding//2]
 
     if savedir is not None:
-        plt.imsave(pjoin(savedir, "forward_flow.jpg"),
+        plt.imsave(os.path.join(savedir, "forward_flow.jpg"),
                    computeColor.computeImg(flow_forward)[:, padding:nxt_img.shape[1]-(padding)])
-        plt.imsave(pjoin(savedir, "backward_flow.jpg"),
+        plt.imsave(os.path.join(savedir, "backward_flow.jpg"),
                    computeColor.computeImg(flow_backward)[:, padding:nxt_img.shape[1]-(padding)])
-        plt.imsave(pjoin(savedir, "2_output2.jpg"), np.flip(unpadded_prvs,axis=2))
-        plt.imsave(pjoin(savedir, "4_output1.jpg"), np.flip(unpadded_nxt, axis=2))
-        plt.imsave(pjoin(savedir, "1_input_img1.jpg"),
+        plt.imsave(os.path.join(savedir, "2_output2.jpg"), np.flip(unpadded_prvs,axis=2))
+        plt.imsave(os.path.join(savedir, "4_output1.jpg"), np.flip(unpadded_nxt, axis=2))
+        plt.imsave(os.path.join(savedir, "1_input_img1.jpg"),
                    np.flip(output_im1[:,padding//2:nxt_img.shape[1]-padding//2], axis=2))
-        plt.imsave(pjoin(savedir, "3_input_img2.jpg"),
+        plt.imsave(os.path.join(savedir, "3_input_img2.jpg"),
                    np.flip(output_im2[:,padding//2:prvs_img.shape[1]-padding//2], axis=2))
     return unpadded_nxt, unpadded_prvs
 def slice_eqimage(img:np.array,lookatang:float,padding:int=0):
@@ -115,13 +114,13 @@ def calculate_metrics(interval:tuple, dataset_path:str,savedir:str=None, rel_inp
     :return: ssim, psnr
     """
 
-    input_path = pjoin(dataset_path,rel_input_image_path)
+    input_path = os.path.join(dataset_path,rel_input_image_path)
     images = os.listdir(input_path)
     for filename in images:
         if os.path.splitext(filename)[-1] not in [".png",".jpg"]:
             images.remove(filename)
-    path1 = pjoin(input_path,images[interval[0]])
-    path2 = pjoin(input_path,images[interval[1]])
+    path1 = os.path.join(input_path,images[interval[0]])
+    path2 = os.path.join(input_path,images[interval[1]])
     img1 = cv2.imread(path1,1)
     img2 = cv2.imread(path2,1)
 
