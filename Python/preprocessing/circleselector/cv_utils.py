@@ -124,8 +124,12 @@ def calculate_metrics(interval: tuple, dataset_path: str, savedir: str = None, r
     :return: ssim, psnr
     """
 
+    # read in the images according to the indexes in the interval
+    # NOTE: the code assumes all the images are listed, in order, in the image directory.
     input_path = os.path.join(dataset_path, rel_input_image_path)
     images = os.listdir(input_path)
+
+    # remove any file that are not images from the list.
     for filename in images:
         if os.path.splitext(filename)[-1] not in [".png", ".jpg"]:
             images.remove(filename)
@@ -139,8 +143,15 @@ def calculate_metrics(interval: tuple, dataset_path: str, savedir: str = None, r
             raise FileNotFoundError("array was empty for " + [path1, path2][enum])
 
     remap1, remap2 = warp_images(img1, img2, savedir, look_at_angle)
-    img1, img2 = slice_eqimage(resize(img1, 50), look_at_angle), slice_eqimage(resize(img2, 50), look_at_angle)
-    remap1, remap2, img1, img2 = crop_poles(remap1), crop_poles(remap2), crop_poles(img1), crop_poles(img2)
+    img1 = slice_eqimage(resize(img1, 50), look_at_angle)
+    img2 = slice_eqimage(resize(img2, 50), look_at_angle)
+
+    # crop poles to remove distortions
+    remap1 = crop_poles(remap1),
+    remap2 = crop_poles(remap2)
+    img1 = crop_poles(img1)
+    img2 = crop_poles(img2)
+
     ssim = (calculate_ssim(img1, remap2) + calculate_ssim(img2, remap1)) / 2
     psnr = (calculate_psnr(img1, remap2) + calculate_psnr(img2, remap1)) / 2
 
