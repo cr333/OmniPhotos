@@ -420,7 +420,7 @@ class OpPreprocessor(AbsPreprocessor):
                 r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
                 r'\$sfm_file_name\$': modelfiles,
                 r'\$load_3d_points\$': str(1),
-                r'\$image_filename\$': self.op_filename_expression,
+                r'\$image_filename\$': self.orignal_filename_expression,
                 r'\$load_sparse_point_cloud\$': str(1),
                 r'\$image_width\$': str(self.op_input_frame_width),
                 r'\$image_height\$': str(self.op_input_frame_height),
@@ -474,7 +474,7 @@ class OpPreprocessor(AbsPreprocessor):
             r'\$last_frame\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_fps\$': str(self.frame_fps),
             r'\$cameras_number\$': str(self.image_end_idx-self.image_start_idx),
-            r'\$image_filename\$': self.op_filename_expression,
+            r'\$image_filename\$': self.orignal_filename_expression,
             r'\$process_step\$': "stabilization images",
             r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
             r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
@@ -657,7 +657,7 @@ class OpPreprocessor(AbsPreprocessor):
             for enum,row in enumerate(yaml_traj_csv_file_handle):
                 if self.image_start_idx < enum < self.image_end_idx:
                     idx = int(ovslam_fps * float(row[0]) + 0.5)
-                    row[0] = self.op_filename_expression % idx
+                    row[0] = self.orignal_filename_expression % idx
                     yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
 
     def openvslam_create_camera_file(self, output_path):
