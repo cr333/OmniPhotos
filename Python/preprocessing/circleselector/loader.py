@@ -28,12 +28,9 @@ def load_file(path) -> CameraCenters:
                       Decimal(frame_tra_list[5]),
                       Decimal(frame_tra_list[6])))
 
-        location_x = float(
-            frame_tra_list[1])
-        location_y = float(
-            frame_tra_list[2])
-        location_z = float(
-            frame_tra_list[3])
+        location_x = float(frame_tra_list[1])
+        location_y = float(frame_tra_list[2])
+        location_z = float(frame_tra_list[3])
         xx.append(location_x)
         yy.append(location_y)
         zz.append(location_z)
