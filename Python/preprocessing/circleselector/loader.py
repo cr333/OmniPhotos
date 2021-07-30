@@ -17,9 +17,8 @@ def load_file(path) -> CameraCenters:
     zz = []
     quats = []
 
-    f = open(path)
-    frame_tra_all = f.read().splitlines()
-    current_frame_idx = -1
+    with open(path) as f:
+        frame_tra_all = f.read().splitlines()
 
     for frame_tra in frame_tra_all:
         frame_tra_list = frame_tra.split(' ')
@@ -38,5 +37,4 @@ def load_file(path) -> CameraCenters:
     n = len(xx)
     res = CameraCenters([np.array((xx[i], yy[i], zz[i])) for i in range(n)])
     res.orientations = quats
-    f.close()
     return res

@@ -179,8 +179,9 @@ class OpPreprocessor(AbsPreprocessor):
         # 2) move the image from trajectory directory to ready folder
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
-        if not self.op_images_dir.exists() or \
-                len(os.listdir(self.op_images_dir))!=self.image_start_idx-self.image_end_idx:
+        expected_length = self.image_start_idx-self.image_end_idx
+        actual_length = len(os.listdir(self.op_images_dir))
+        if not self.op_images_dir.exists() or expected_length!=actual_length:
             self.show_info("Generate the input images for OmniPhotos to {}".format(self.op_images_dir))
             self.omniphotos_generate_input_images()
 
@@ -279,7 +280,6 @@ class OpPreprocessor(AbsPreprocessor):
                                                                 "pairwise_distribution"])
             self.show_info(metrics.generate_time_estimate())
             metrics.run()
-            import time
             self.show_info("actual time of completion was " + time.ctime())
             data = circleselector.datatypes.PointDict(metrics.point_dcts)
             intervals = data.find_local_minima(len(points))
@@ -302,6 +302,7 @@ class OpPreprocessor(AbsPreprocessor):
 
         stable_circle = intervals.find_best_interval()["interval"]
         self.image_start_idx, self.image_end_idx = stable_circle[0], stable_circle[1]
+
     def omniphotos_generate_input_images(self):
         """
         generate the images for OmniPhotos input.
@@ -311,9 +312,9 @@ class OpPreprocessor(AbsPreprocessor):
         self.dir_make(self.op_images_dir)
 
         if self.op_input_frame_height == self.frame_height and self.op_input_frame_width == self.frame_width:
-            for idx, val in enumerate(self.trajectory_images_list[self.image_start_idx:self.image_end_idx]):
-                src_image_path = self.traj_input_images_dir / val
-                dest_image_path = self.op_images_dir / val
+            for idx, image_filename in enumerate(self.trajectory_images_list[self.image_start_idx:self.image_end_idx]):
+                src_image_path = self.traj_input_images_dir / image_filename
+                dest_image_path = self.op_images_dir / image_filename
                 if idx % self.show_infor_interval == 0:
                     self.show_info("Copy image from {} to {}.".format(str(src_image_path), str(dest_image_path)))
                 shutil.copyfile(src_image_path, dest_image_path)

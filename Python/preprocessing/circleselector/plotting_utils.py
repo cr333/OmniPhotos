@@ -33,10 +33,9 @@ def plot_heatmap(point_dicts, n_points, show=True, error="summed_errors", dot_co
 def plot_points(list, show=True, save_to=None):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    """
-    set all the coordinates in seperate lists
-    and exclude the endpoints
-    """
+
+    # set all the coordinates in seperate lists
+    # and exclude the endpoints
     xx = [arr[0] for arr in list[1:-1]]
     yy = [arr[1] for arr in list[1:-1]]
     zz = [arr[2] for arr in list[1:-1]]
@@ -44,10 +43,9 @@ def plot_points(list, show=True, save_to=None):
     yy_end = [list[0][1], list[-1][1]]
     zz_end = [list[0][2], list[-1][2]]
 
-    """
-    plot the previously excluded endpoints in 
-    a different colour.
-    """
+    # plot the previously excluded endpoints in
+    # a different colour.
+
     ax.scatter(xx_end, yy_end, zz_end, color='r')
 
     ax.set_xlabel("X")
@@ -55,11 +53,9 @@ def plot_points(list, show=True, save_to=None):
     ax.set_zlabel("Z")
     ax.scatter(xx, yy, zz)
 
-    """
-    Set the axis limits so that the points
-    are centered and the axes are correctly 
-    scaled.
-    """
+    # Set the axis limits so that the points
+    # are centered and the axes are correctly
+    # scaled.
     maxval = max(max(xx), max(yy), max(zz))
 
     points = np.array(list)

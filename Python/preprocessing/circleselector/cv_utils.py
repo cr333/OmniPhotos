@@ -157,20 +157,6 @@ def calculate_metrics(interval: tuple, dataset_path: str, savedir: str = None, r
 
     return ssim, psnr
 
-
-def calculate_metrics_lst(point_dicts: [dict], dataset_path: str) -> [dict]:
-    """
-
-    :param point_dicts: list of intervals wanting to calcuate metrics on
-    :param dataset_path: path to dataset folder (e.g path/to/GenoaCathedral)
-    """
-    for enum, dct in enumerate(point_dicts):
-        print(enum, "/", len(point_dicts))
-        ssim, psnr = calculate_metrics(dct["interval"], dataset_path)
-        dct["inv_ssim"], dct["inv_psnr"] = 1 / ssim, 1 / psnr
-    return point_dicts
-
-
 def crop_poles(img):
     margin = round(0.05 * img.shape[0])
     return img[margin:img.shape[0] - margin]

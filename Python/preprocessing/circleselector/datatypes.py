@@ -60,7 +60,7 @@ class PointDict(list):
 
     def get(self, key: str) -> list:
         """
-        will return a list of the specified error if found in
+        will return a list of the specified error if found in self.keys
         :param key: one of errors in point dict (check self.keys)
         :return: lst
         """
