@@ -28,9 +28,9 @@ preprocessing.original_filename_expression: image-%04d.jpg
 # the rotated output image directory is $preprocessing.root_directory$/Input
 preprocessing.image_rotation: [0.0, 0.0]
 # the first frame of reconstruction (include this frame), first frame is 0
-preprocessing.frame_index_start: 180
+preprocessing.frame_index_start: 0
 # the last frame of reconstruction (include this frame), last frame of video is -1
-preprocessing.frame_index_end: 265
+preprocessing.frame_index_end: -1
 # uses the circleselector module to find a stable circle in the camera path. This will override the behaviour of frame_index_start and frame_index_end.
 # (all frames will be extracted)
 preprocessing.find_stable_circle: True
