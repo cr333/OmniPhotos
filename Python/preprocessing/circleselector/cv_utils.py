@@ -147,7 +147,7 @@ def calculate_metrics(interval: tuple, dataset_path: str, savedir: str = None, r
     img2 = slice_eqimage(resize(img2, 50), look_at_angle)
 
     # crop poles to remove distortions
-    remap1 = crop_poles(remap1),
+    remap1 = crop_poles(remap1)
     remap2 = crop_poles(remap2)
     img1 = crop_poles(img1)
     img2 = crop_poles(img2)
