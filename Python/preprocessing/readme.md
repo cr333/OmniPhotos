@@ -39,6 +39,14 @@ python3_7_omniphotos_preprocessing\Scripts\activate
 python -m pip install -r ./requirements.txt
 ```
 
+Alternatively, Anaconda can be used in order to install the packages. The Anaconda distribution for Windows can be installed from [here](https://www.anaconda.com/products/individual#windows). Once it is installed, launch the Anaconda Prompt and run the following commands.
+
+```
+conda create --name py375 python=3.7.5
+conda activate py375
+pip install -r ./requirements.txt
+```
+
 
 ## 1.3. OpenVSLAM
 
@@ -184,13 +192,18 @@ For configuration of FlowNet2, please reference the `preprocessing.of.*` options
 This section only applies to camera trajectories reconstructed with OpenVSLAM.
 
 In most cases, the captured video contains multi-circle camera motion.
-Before continuing with the preprocessing, we need to select the best camera motion circle. There are two options for doing this:
+Before continuing with the preprocessing, we need to select the best camera motion circle. 
+There are two options for doing this:
 
-### 2.2.1 Selecting the best circle automatically (Recommended)
+### 2.2.1 Selecting the circle automatically (Recommended)
 
-To select the best circle automatically, the option `preprocessing.find_stable_circle` should be set to `True`. The script will then find the `frame_trajectory.txt` file, select the best circle in the camera path and continue with the next step of the preprocessing. The script will generate some files in the `Capture\` subdirectory of the dataset. These include a heatmap showing the errors of different intervals where the location of the best circles are shown as red dots. The values for these intervals can be found in the `best_intervals.csv` file. If the automatic circle selection has failed, set the `preprocessing.find_stable_circle` option to `False` and follow the manual method below (2.2.2).     
+To select the best circle automatically, the option `preprocessing.find_stable_circle` should be set to `True`. 
+The script will then find the `frame_trajectory.txt` file, select the best circle in the camera path and continue with the next step of the preprocessing. The script will generate some files in the `Capture\` subdirectory of the dataset. 
+These include a heatmap showing the errors of different intervals where the location of the best circles are shown as red dots. 
+The values for these intervals can be found in the `best_intervals.csv` file. 
+If the automatic circle selection has failed, set the `preprocessing.find_stable_circle` option to `False` and follow the manual method below (2.2.2).     
 
-### 2.2.2 Selecting the best circle manually (Optional)
+### 2.2.2 Selecting the circle manually (Optional)
 
 To select the best stable cycle from the OpenVSLAM camera trajectory manually, use the `rander_traj.blend` file to visualise the reconstructed result.
 
