@@ -35,7 +35,7 @@ from flownet2.utils import computeColor
 
 from abs_preprocessor import AbsPreprocessor
 import circleselector
-
+import time
 class OpPreprocessor(AbsPreprocessor):
     """Class to generate the config files for OmniPhotos.
     """
@@ -266,7 +266,8 @@ class OpPreprocessor(AbsPreprocessor):
 
     def openvslam_select_stable_circle(self):
 
-        self.show_info("Finding stable circle.")
+        self.show_info("Finding stable circle. This may take a few minutes.")
+        self.show_info("Time started was " + time.ctime())
         cached_res = os.path.join(self.capture_data_dir, "best_intervals.json")
         if os.path.exists(cached_res):
             self.show_info("Found cached results at " + cached_res)
@@ -278,9 +279,8 @@ class OpPreprocessor(AbsPreprocessor):
                 os.path.join(self.output_directory_path_ovslam, "frame_trajectory.txt"))
             metrics = circleselector.metrics.Metrics(points,errors=["endpoint_error", "perimeter_error", "flatness_error",
                                                                 "pairwise_distribution"])
-            self.show_info(metrics.generate_time_estimate())
             metrics.run()
-            self.show_info("actual time of completion was " + time.ctime())
+            self.show_info("Time of completion was " + time.ctime())
             data = circleselector.datatypes.PointDict(metrics.point_dcts)
             intervals = data.find_local_minima(len(points))
             circleselector.plotting_utils.plot_heatmap(data,len(points),
@@ -420,7 +420,7 @@ class OpPreprocessor(AbsPreprocessor):
                 r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
                 r'\$sfm_file_name\$': modelfiles,
                 r'\$load_3d_points\$': str(1),
-                r'\$image_filename\$': self.orignal_filename_expression,
+                r'\$image_filename\$': self.original_filename_expression,
                 r'\$load_sparse_point_cloud\$': str(1),
                 r'\$image_width\$': str(self.op_input_frame_width),
                 r'\$image_height\$': str(self.op_input_frame_height),
@@ -474,7 +474,7 @@ class OpPreprocessor(AbsPreprocessor):
             r'\$last_frame\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_fps\$': str(self.frame_fps),
             r'\$cameras_number\$': str(self.image_end_idx-self.image_start_idx),
-            r'\$image_filename\$': self.orignal_filename_expression,
+            r'\$image_filename\$': self.original_filename_expression,
             r'\$process_step\$': "stabilization images",
             r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
             r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
@@ -657,7 +657,7 @@ class OpPreprocessor(AbsPreprocessor):
             for enum,row in enumerate(yaml_traj_csv_file_handle):
                 if self.image_start_idx < enum < self.image_end_idx:
                     idx = int(ovslam_fps * float(row[0]) + 0.5)
-                    row[0] = self.orignal_filename_expression % idx
+                    row[0] = self.original_filename_expression % idx
                     yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
 
     def openvslam_create_camera_file(self, output_path):

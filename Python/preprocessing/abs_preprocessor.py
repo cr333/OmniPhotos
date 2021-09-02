@@ -94,7 +94,7 @@ class AbsPreprocessor:
 
         for idx in range(self.image_start_idx, self.image_end_idx + 1):
             self.trajectory_images_list.append(self.original_filename_expression % idx)
-            self.op_image_list.append(self.orignal_filename_expression % idx)
+            self.op_image_list.append(self.original_filename_expression % idx)
 
         self.image_list = self.op_image_list
 

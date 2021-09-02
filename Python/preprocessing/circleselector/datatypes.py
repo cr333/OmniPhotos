@@ -6,6 +6,9 @@ from skimage.feature import peak_local_max
 
 
 class PointDict(list):
+    """
+    A class to contain the calculated data from Metrics.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.keys = []
@@ -61,6 +64,7 @@ class PointDict(list):
     def get(self, key: str) -> list:
         """
         will return a list of the specified error if found in self.keys
+
         :param key: one of errors in point dict (check self.keys)
         :return: lst
         """
@@ -69,6 +73,7 @@ class PointDict(list):
     def set(self, key: str, vals: list):
         """
         will assign the values given in vals to the keys in self
+
         :param key: interval,endpoint_error,...etc
         :param vals: list of vals (floats)
         :return: None
@@ -84,18 +89,22 @@ class PointDict(list):
 
     def find_local_minima(self, numpoints=None, errors: list = None, save_sum=True):
         """
+        Will find the intervals in the data that score best on the metrics calculated on run_on_interval method
+        in the Metrics class.
+
         :param numpoints: ~1k points in path. if None, will calculate it by iterating through the point dict and finding
         the max value in "intervals".
         :param errors: what errors to include
         :param save_sum: will save the sum under "summed_errors" in the list
-        :return:
+        :return: PointDict
         """
+        # find the total number of cameras in the camera path (e.g when the frame_trajectory.txt file is unavailable).
         if numpoints is None:
             numpoints = 0
             for dct in self:
                 numpoints = max((dct["interval"][0], dct['interval'][1], numpoints)) + 1
         if errors is None:
-            errors = list(self.keys)[1:]
+            errors = list(self.keys)[1:]  # ignores the 'interval' key.
         lst = []
         for dct in self:
             lst.append(sum([dct[error] for error in errors]))
@@ -119,7 +128,7 @@ class PointDict(list):
         """
         Should only be called once the cv metrics have been run.
 
-        :return: the point dict that has lowest ssim + psnr
+        :return: the dict that has lowest ssim + psnr
         """
 
         for item in ["ssim", "psnr"]:
@@ -134,6 +143,9 @@ class PointDict(list):
 
 
 class CameraCenters(list):
+    """
+    A list that contains the orientations of each camera (in Quats).
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.orientations = []
