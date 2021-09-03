@@ -36,6 +36,7 @@ from flownet2.utils import computeColor
 from abs_preprocessor import AbsPreprocessor
 import circleselector
 import time
+
 class OpPreprocessor(AbsPreprocessor):
     """Class to generate the config files for OmniPhotos.
     """

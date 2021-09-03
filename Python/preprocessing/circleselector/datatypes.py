@@ -14,7 +14,6 @@ class PointDict(list):
         self.keys = []
         if len(self) > 0:
             self.keys = list(self[0].keys())
-        self.arr = None
 
     def __str__(self):
         output = []
@@ -103,25 +102,36 @@ class PointDict(list):
             numpoints = 0
             for dct in self:
                 numpoints = max((dct["interval"][0], dct['interval'][1], numpoints)) + 1
+
         if errors is None:
             errors = list(self.keys)[1:]  # ignores the 'interval' key.
+
+        # generate a list of summed errors
         lst = []
         for dct in self:
             lst.append(sum([dct[error] for error in errors]))
         if save_sum:
             self.set("summed_errors", lst)
+
+        # generate the heatmap
         arr = np.zeros((numpoints, numpoints))
         for enum, dct in enumerate(self):
             arr[dct["interval"][0], dct["interval"][1]] = 1 / lst[enum]
-        self.arr = arr
+
+        # get the coordinates of the local maxima
         coords = peak_local_max(arr, min_distance=10, threshold_rel=0.5)
+
+        # set up a boolean array to speed up finding what interval the local maxima
+        # correspond to.
         bool_arr = np.zeros(arr.shape)
         for coord in coords:
             bool_arr[coord[0], coord[1]] = 1
+
         intervals = []
         for dct in self:
             if bool_arr[dct["interval"][0], dct["interval"][1]]:
                 intervals.append(dct)
+
         return PointDict(intervals)
 
     def find_best_interval(self) -> dict:
@@ -134,17 +144,21 @@ class PointDict(list):
         for item in ["ssim", "psnr"]:
             if item not in self.keys:
                 raise Exception(item + " not found in keys.")
+
         combined_cv_error = []
         for item in self:
             combined_cv_error.append(item["ssim"] + item["psnr"] / 100)
+
         self.set("combined_cv_error", combined_cv_error)
         self.sort(key=lambda dct: dct["combined_cv_error"], reverse=True)
+
         return self[0]
 
 
 class CameraCenters(list):
     """
-    A list that contains the orientations of each camera (in Quats).
+    A list of 3d array-like values representing the locations
+    of the camera centers with their orientations (in Quats).
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -39,7 +39,9 @@ python3_7_omniphotos_preprocessing\Scripts\activate
 python -m pip install -r ./requirements.txt
 ```
 
-Alternatively, Anaconda can be used in order to install the packages. The Anaconda distribution for Windows can be installed from [here](https://www.anaconda.com/products/individual#windows). Once it is installed, launch the Anaconda Prompt and run the following commands.
+Alternatively, Anaconda can be used in order to install the packages.
+The Anaconda distribution for Windows can be installed from [here](https://www.anaconda.com/products/individual#windows).
+Once it is installed, launch the Anaconda Prompt and run the following commands:
 
 ```
 conda create --name py375 python=3.7.5
