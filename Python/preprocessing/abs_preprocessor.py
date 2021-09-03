@@ -71,8 +71,12 @@ class AbsPreprocessor:
         # the input image index range of OmniPhotos
         self.image_start_idx = self.config["preprocessing.frame_index_start"]
         self.image_end_idx = self.config["preprocessing.frame_index_end"]
+        self.find_stable_circle = self.config["preprocessing.find_stable_circle"]
         if self.image_start_idx < 0 or self.image_start_idx > self.frame_number:
             self.show_info("preprocessing.frame_index_start set error", "error")
+        if self.find_stable_circle:
+            self.image_start_idx = 0
+            self.image_end_idx = -1
 
         if self.image_end_idx == -1:
             self.image_end_idx = self.frame_number - 1
@@ -84,14 +88,13 @@ class AbsPreprocessor:
 
         # create the images list
         self.original_filename_expression = self.config["preprocessing.original_filename_expression"]
-        self.op_filename_expression = self.config["preprocessing.op_filename_expression"]
 
         self.trajectory_images_list = [] # used to storage the processed original image file name
         self.op_image_list = [] # used to storage the mp ready image file name
 
         for idx in range(self.image_start_idx, self.image_end_idx + 1):
             self.trajectory_images_list.append(self.original_filename_expression % idx)
-            self.op_image_list.append(self.op_filename_expression % idx)
+            self.op_image_list.append(self.original_filename_expression % idx)
 
         self.image_list = self.op_image_list
 

@@ -9,12 +9,14 @@ import pathlib
 import os
 import sys
 import inspect
+
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 import preprocessor
 from colmap import ScriptingColmap
+
 
 class TestPreprocessor(unittest.TestCase):
 
@@ -25,7 +27,7 @@ class TestPreprocessor(unittest.TestCase):
 
         self.preprocessor.root_dir = \
             pathlib.Path("D:/workdata/testDatasets/circular/KyotoShrines_test")
-        self.preprocessor.image_output_path= \
+        self.preprocessor.image_output_path = \
             pathlib.Path("D:/workdata/testDatasets/circular/KyotoShrines_test/Input")
         self.preprocessor.FPS = 50
         self.preprocessor.omniphotos_config_template_path = \
@@ -52,6 +54,7 @@ class TestPreprocessor(unittest.TestCase):
     def test_file_structure_trim(self):
         print("test_file_structure_trim")
         self.preprocessor.file_structure_trim()
+
 
 if __name__ == '__main__':
     unittest.main()
