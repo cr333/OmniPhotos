@@ -95,13 +95,13 @@ class DataPreprocessor(AbsPreprocessor):
         :return : weather rotated images
         """
         if [0.0, 0.0] == self.rotation:
-            return False
+            return data
 
         phi_roll_numb = self.rotation[0] / 360.0 * np.shape(data)[2]
         if phi_roll_numb == int(phi_roll_numb) and self.rotation[1] == 0.0:
             # do not need to interpolate, use numpy roll operation
             data[:] = np.roll(data, int(phi_roll_numb), axis=2)
-            return True
+            return data
 
         # interpolate (rotate) with skylibs
         return self.rotate_image(data)
@@ -113,7 +113,7 @@ class DataPreprocessor(AbsPreprocessor):
         :return : weather rotated the images
         """
         if [0.0, 0.0] == self.rotation:
-            return False
+            return data
 
         rotation_matrix = np.zeros([3, 3])
         self.spherical2dcm(self.rotation, rotation_matrix)
@@ -126,7 +126,7 @@ class DataPreprocessor(AbsPreprocessor):
             new_image = envmap.rotate("DCM", rotation_matrix).data
             new_image = new_image.astype(np.uint8)
             data[i] = new_image
-        return True
+        return data
 
     def extract_perspective_image(self, frame_data):
         """
@@ -252,7 +252,7 @@ class DataPreprocessor(AbsPreprocessor):
             self.show_info("The trajection input folder {} do not exist or empty, do not extract images."\
                 .format(str(self.traj_input_images_dir)))
             return
-        
+
         # extract all the frames
         ouput_path = os.path.join(self.traj_input_images_dir, self.original_filename_expression)
         ffmpeg.input(video_path).output(ouput_path,start_number=0).run(capture_stdout=True)
@@ -270,7 +270,10 @@ class DataPreprocessor(AbsPreprocessor):
         # remove the unwanted images
         for enum, image_name in enumerate(os.listdir(self.traj_input_images_dir)):
             if enum not in frame_idx_list:
-                os.remove(self.traj_input_images_dir / image_name)
+                os.remove(os.path.join(self.traj_input_images_dir, image_name))
+
+        # rotate the images
+        self.preprocess_image(self.traj_input_images_dir)
 
     def preprocess_images(self, directory_path):
         """
@@ -297,4 +300,4 @@ class DataPreprocessor(AbsPreprocessor):
         :return:
         """
         dcm[:] = R.from_euler("xyz", [spherical_coordinate[1], \
-            spherical_coordinate[0], 0], degrees=True).as_dcm()
+                                      spherical_coordinate[0], 0], degrees=True).as_matrix()
