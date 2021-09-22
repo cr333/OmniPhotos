@@ -254,7 +254,7 @@ class DataPreprocessor(AbsPreprocessor):
             return
 
         # extract all the frames
-        ouput_path = os.path.join(self.traj_input_images_dir, self.original_filename_expression)
+        ouput_path = os.path.join(self.traj_input_images_dir, os.path.splitext(self.original_filename_expression)[0]+".png")
         ffmpeg.input(video_path).output(ouput_path,start_number=0).run(capture_stdout=True)
 
         # generate the list of desired frame indices
@@ -272,8 +272,19 @@ class DataPreprocessor(AbsPreprocessor):
             if enum not in frame_idx_list:
                 os.remove(os.path.join(self.traj_input_images_dir, image_name))
 
-        # rotate the images
+        # rotate the images and convert to jpeg
+        self.convert_png_to_jpeg(self.traj_input_images_dir)
         self.preprocess_image(self.traj_input_images_dir)
+
+    def convert_png_to_jpeg(self,image_dir):
+        for image_path in os.listdir(image_dir):
+            if os.path.splitext(image_path)[1] in [".png"]:
+                full_image_path = os.path.join(image_dir,image_path)
+                frame_data = np.asarray(imageio.imread(full_image_path))
+                image = PIL.Image.fromarray(frame_data)
+                image.save(os.path.splitext(full_image_path)[0] + ".jpg", quality=95)
+                os.remove(full_image_path)
+
 
     def preprocess_images(self, directory_path):
         """
