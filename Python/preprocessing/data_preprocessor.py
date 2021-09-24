@@ -254,8 +254,8 @@ class DataPreprocessor(AbsPreprocessor):
             return
 
         # extract all the frames
-        ouput_path = os.path.join(self.traj_input_images_dir, os.path.splitext(self.original_filename_expression)[0]+".png")
-        ffmpeg.input(video_path).output(ouput_path,start_number=0).run(capture_stdout=True)
+        ouput_path = os.path.join(self.traj_input_images_dir, os.path.splitext(self.original_filename_expression)[0]+".jpg")
+        ffmpeg.input(video_path).output(ouput_path,start_number=0,**{'qscale:v': 2}).run(capture_stdout=True)
 
         # generate the list of desired frame indices
         if self.frame_fixed_number <= 0:
@@ -273,7 +273,7 @@ class DataPreprocessor(AbsPreprocessor):
                 os.remove(os.path.join(self.traj_input_images_dir, image_name))
 
         # rotate the images and convert to jpeg
-        self.convert_png_to_jpeg(self.traj_input_images_dir)
+        #self.convert_png_to_jpeg(self.traj_input_images_dir)
         self.preprocess_image(self.traj_input_images_dir)
 
     def convert_png_to_jpeg(self,image_dir):
