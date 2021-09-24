@@ -276,16 +276,6 @@ class DataPreprocessor(AbsPreprocessor):
         #self.convert_png_to_jpeg(self.traj_input_images_dir)
         self.preprocess_image(self.traj_input_images_dir)
 
-    def convert_png_to_jpeg(self,image_dir):
-        for image_path in os.listdir(image_dir):
-            if os.path.splitext(image_path)[1] in [".png"]:
-                full_image_path = os.path.join(image_dir,image_path)
-                frame_data = np.asarray(imageio.imread(full_image_path))
-                image = PIL.Image.fromarray(frame_data)
-                image.save(os.path.splitext(full_image_path)[0] + ".jpg", quality=95)
-                os.remove(full_image_path)
-
-
     def preprocess_images(self, directory_path):
         """
         load images to the memory
