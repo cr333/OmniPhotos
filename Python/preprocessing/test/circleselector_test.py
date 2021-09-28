@@ -22,6 +22,8 @@ class TestCircleSelector(unittest.TestCase):
             self.assertListEqual(item.tolist(), comp[enum])
 
     def test_calc(self):
+        if not os.path.exists(self.ovslam_csv):
+            self.skipTest(self.ovslam_csv + " csv file not found")
         points = circleselector.loader.load_file(self.ovslam_csv)[:100]
         self.assertIsNotNone(circleselector.metrics.calc(points,
                                                          errors=["endpoint_error", "flatness_error",
@@ -38,6 +40,8 @@ class TestCircleSelector(unittest.TestCase):
         self.assertEqual(testres, compres)
 
     def test_cv(self):
+        if not os.path.exists(self.ovslam_csv):
+            self.skipTest(self.ovslam_csv + " csv file not found")
         points = circleselector.loader.load_file(self.ovslam_csv)
         intervals = circleselector.datatypes.PointDict(np.load(self.npy_result, allow_pickle=True).tolist())
         if not os.path.exists(self.npy_dataset):
