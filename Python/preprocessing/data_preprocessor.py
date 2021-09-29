@@ -254,8 +254,9 @@ class DataPreprocessor(AbsPreprocessor):
             return
 
         # extract all the frames
-        ouput_path = os.path.join(self.traj_input_images_dir, os.path.splitext(self.original_filename_expression)[0]+".jpg")
-        ffmpeg.input(video_path).output(ouput_path,start_number=0,**{'qscale:v': 2}).run(capture_stdout=True)
+        filename = os.path.splitext(self.original_filename_expression)[0]+".jpg"
+        output_path = os.path.join(self.traj_input_images_dir, filename)
+        ffmpeg.input(video_path).output(output_path,start_number=0,**{'qscale:v': 2}).run(capture_stdout=True)
 
         # generate the list of desired frame indices
         if self.frame_fixed_number <= 0:
@@ -268,12 +269,13 @@ class DataPreprocessor(AbsPreprocessor):
             frame_idx_list = list(frame_idx_list.astype(int))
 
         # remove the unwanted images
-        for enum, image_name in enumerate(os.listdir(self.traj_input_images_dir)):
-            if enum not in frame_idx_list:
+        filename_list = [output_path % frame for frame in frame_idx_list]  # files to keep
+        filename_list = [os.path.basename(f) for f in filename_list]  # filenames to keep
+        for image_name in os.listdir(self.traj_input_images_dir):
+            if image_name not in filename_list:
                 os.remove(os.path.join(self.traj_input_images_dir, image_name))
 
-        # rotate the images and convert to jpeg
-        #self.convert_png_to_jpeg(self.traj_input_images_dir)
+        # rotate the images
         self.preprocess_image(self.traj_input_images_dir)
 
     def preprocess_images(self, directory_path):
