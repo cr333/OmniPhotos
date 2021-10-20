@@ -49,7 +49,7 @@ class OpPreprocessor(AbsPreprocessor):
         super().__init__(args)
         # OmniPhotos configuration file template
         self.omniphotos_config_template_path = \
-            self.current_dir + '/template/config.template.yaml'
+            os.path.dirname(__file__) + '/template/config.template.yaml'
 
         self.dataset_name = os.path.basename(str(self.root_dir))
 
