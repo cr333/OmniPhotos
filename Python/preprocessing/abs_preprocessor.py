@@ -16,6 +16,7 @@ import re
 
 import PIL
 import yaml
+import numpy as np
 
 import ffmpeg
 from abs_ui import AbsUI
@@ -45,12 +46,12 @@ class AbsPreprocessor:
             os.path.abspath(inspect.getfile(inspect.currentframe())))  # current directory
 
         # the image folder
-        #self.original_images_dir = self.root_dir / "original_images"
+        # self.original_images_dir = self.root_dir / "original_images"
         # the trajectory reconstruction input images (rotated, selected)
         self.traj_input_images_dir = self.root_dir / "trajectory_images"
         # OmniPhotos ready images from traj_input_images_dir folder
         self.op_images_dir = self.root_dir / "Input"
-        self.original_image_list = [] # storing all original image filenames
+        self.original_image_list = []  # storing all original image filenames
 
         self.input_path = self.root_dir / self.config["preprocessing.input_path"]
         # check input data type
@@ -86,15 +87,17 @@ class AbsPreprocessor:
         if self.image_start_idx > self.image_end_idx:
             self.show_info("image_start_id is larger than image_end_idx", "error")
 
-        # create the images list
         self.original_filename_expression = self.config["preprocessing.original_filename_expression"]
 
-        self.trajectory_images_list = [] # used to storage the processed original image file name
-        self.op_image_list = [] # used to storage the mp ready image file name
+        # create the images list and keep copy of desired indices for generation of
+        # config files for later
+        self.set_trajectory_images_list(self.original_filename_expression,
+                                        self.config["preprocessing.frame_fixed_number"], self.image_start_idx,
+                                        self.image_end_idx)
 
-        for idx in range(self.image_start_idx, self.image_end_idx + 1):
-            self.trajectory_images_list.append(self.original_filename_expression % idx)
-            self.op_image_list.append(self.original_filename_expression % idx)
+
+        # NOTE: op_image_list gets overwritten by op_preprocessor if preprocessing.find_stable_cirle is True
+        self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
 
         self.image_list = self.op_image_list
 
@@ -122,10 +125,28 @@ class AbsPreprocessor:
         self.colmap_essential_file_list = ["points3D.txt", "images.txt", "cameras.txt", "full_model_ba_points3D.ply"]
 
         # default settting
-        self.ffmpeg_thread_number = 3 # multi-thread thread number configuration
+        self.ffmpeg_thread_number = 3  # multi-thread thread number configuration
         self.cache_folder_name = None
 
         self.check_config()
+
+    def set_trajectory_images_list(self, filename_expression,
+                                   frame_fixed_number,
+                                   image_start_idx,
+                                   image_end_idx):
+        # generate the list of desired frame indices
+        if frame_fixed_number <= 0:
+            vframes_size = 1  # NOTE : should be 1
+            frame_idx_list = list(range(image_start_idx, image_end_idx + 1, vframes_size))
+        else:
+            frame_idx_list = \
+                np.linspace(start=image_start_idx, \
+                            stop=image_end_idx + 1, num=frame_fixed_number)
+            frame_idx_list = list(frame_idx_list.astype(int))
+        self.desired_frame_indices = frame_idx_list
+        # remove the unwanted images
+        self.trajectory_images_list = [filename_expression % frame for frame in frame_idx_list]  # files to keep
+        self.trajectory_images_list = [os.path.basename(f) for f in self.trajectory_images_list]  # filenames to keep
 
     def load_config(self, args):
         """
@@ -170,7 +191,7 @@ class AbsPreprocessor:
             elif term_key.find('directory') != -1:
                 term_value = pathlib.Path(term_value)
                 if not term_value.exists() or not term_value.is_dir():
-                    msg = 'Directory {} : {} is not exist'.\
+                    msg = 'Directory {} : {} is not exist'. \
                         format(term_key, str(term_value))
 
             if msg != "":
@@ -181,13 +202,13 @@ class AbsPreprocessor:
         Check the setting of variables, and set the default value.
         """
         # check the config, if not set, use the default value
-        setting_list = {"preprocessing.ffmpeg_thread_number": self.ffmpeg_thread_number, "preprocessing.cache_folder_name" : self.cache_folder_name}
+        setting_list = {"preprocessing.ffmpeg_thread_number": self.ffmpeg_thread_number,
+                        "preprocessing.cache_folder_name": self.cache_folder_name}
         for key in setting_list:
             try:
                 item = self.config[key]
             except KeyError:
                 self.show_info("{} not set, use default setting {}".format(key, setting_list[key]))
-
 
     def load_origin_data_info(self):
         """
@@ -197,8 +218,8 @@ class AbsPreprocessor:
         if self.input_type == 'video':
             # get video information
             probe = ffmpeg.probe(str(self.input_path))
-            video_stream = next((stream for stream in probe['streams']\
-                if stream['codec_type'] == 'video'), None)
+            video_stream = next((stream for stream in probe['streams'] \
+                                 if stream['codec_type'] == 'video'), None)
             self.frame_width = int(video_stream['width'])
             self.frame_height = int(video_stream['height'])
             self.frame_fps = int(eval(video_stream['r_frame_rate']))
@@ -206,7 +227,7 @@ class AbsPreprocessor:
         elif self.input_type == 'image':
             if not self.input_path.is_dir():
                 msg = "The images input path {} is not a folder.".format(self.input_path)
-                raise  RuntimeError(msg)
+                raise RuntimeError(msg)
             self.get_image_file_list(self.input_path, self.original_image_list)
             self.frame_width, self.frame_height = \
                 PIL.Image.open(str(self.input_path / self.original_image_list[0])).size
@@ -216,10 +237,9 @@ class AbsPreprocessor:
             self.show_info(msg, "error")
 
         msg = 'Input data type is {}. {}: width is {}, height is {}, FPS is {}, Frame number is {}'
-        msg = msg.format(self.input_type, self.input_path, self.frame_width,\
-            self.frame_height, self.frame_fps, self.frame_number)
+        msg = msg.format(self.input_type, self.input_path, self.frame_width, \
+                         self.frame_height, self.frame_fps, self.frame_number)
         self.show_info(msg)
-
 
     # def get_image_file_list(self, image_directory=None, image_file_list=None):
     def get_image_file_list(self, image_directory, image_file_list):
@@ -238,8 +258,8 @@ class AbsPreprocessor:
         file_list = []
         for (_, _, files) in os.walk(image_directory):
             for filename in files:
-                if filename.endswith('.png') or filename.endswith('.jpg')\
-                    or filename.endswith('.jpeg'):
+                if filename.endswith('.png') or filename.endswith('.jpg') \
+                        or filename.endswith('.jpeg'):
                     file_list.append(filename)
         if len(file_list) == 0:
             msg = "There do not have images in {}".format(image_directory)
@@ -266,7 +286,7 @@ class AbsPreprocessor:
             self.show_info(msg, "error")
             return
         if not directory_path.exists():
-            msg = "Reconstruction output directory {} do not exist, and make a new output directory"\
+            msg = "Reconstruction output directory {} do not exist, and make a new output directory" \
                 .format(directory)
             directory_path.mkdir()
             self.show_info(msg)
