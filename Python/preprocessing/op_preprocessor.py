@@ -178,13 +178,13 @@ class OpPreprocessor(AbsPreprocessor):
             self.openvslam_select_stable_circle()
         self.generating_cache_filename()
 
-        # create folder for downsample input images
+        # create folder for downsampled input images
         self.dir_make(self.op_images_dir)
 
-        expected_length = self.image_start_idx-self.image_end_idx
+        expected_length = len(self.op_image_list)
         actual_length = len(os.listdir(self.op_images_dir))
 
-        # 2) move the image from trajectory directory to ready folder
+        # 2) move the image from trajectory directory to the Input directory
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
         if expected_length!=actual_length:

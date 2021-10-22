@@ -97,7 +97,7 @@ class AbsPreprocessor:
 
 
         # NOTE: op_image_list gets overwritten by op_preprocessor if preprocessing.find_stable_cirle is True
-        self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
+        self.op_image_list = self.trajectory_images_list
 
         self.image_list = self.op_image_list
 
