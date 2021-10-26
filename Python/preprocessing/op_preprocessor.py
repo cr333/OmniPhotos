@@ -177,12 +177,17 @@ class OpPreprocessor(AbsPreprocessor):
         if self.find_stable_circle:
             self.openvslam_select_stable_circle()
         self.generating_cache_filename()
-        # 2) move the image from trajectory directory to ready folder
+
+        # create folder for downsampled input images
+        self.dir_make(self.op_images_dir)
+
+        expected_length = len(self.op_image_list)
+        actual_length = len(os.listdir(self.op_images_dir))
+
+        # 2) move the image from trajectory directory to the Input directory
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
-        expected_length = self.image_start_idx-self.image_end_idx
-        actual_length = len(os.listdir(self.op_images_dir))
-        if not self.op_images_dir.exists() or expected_length!=actual_length:
+        if expected_length!=actual_length:
             self.show_info("Generate the input images for OmniPhotos to {}".format(self.op_images_dir))
             self.omniphotos_generate_input_images()
 
@@ -303,17 +308,16 @@ class OpPreprocessor(AbsPreprocessor):
 
         stable_circle = intervals.find_best_interval()["interval"]
         self.image_start_idx, self.image_end_idx = stable_circle[0], stable_circle[1]
+        self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
 
     def omniphotos_generate_input_images(self):
         """
         generate the images for OmniPhotos input.
         copy & downsample the image from traj_input_images_dir to op_images_dir
         """
-        # create folder for downsample input images
-        self.dir_make(self.op_images_dir)
 
         if self.op_input_frame_height == self.frame_height and self.op_input_frame_width == self.frame_width:
-            for idx, image_filename in enumerate(self.trajectory_images_list[self.image_start_idx:self.image_end_idx]):
+            for idx, image_filename in enumerate(self.op_image_list):
                 src_image_path = self.traj_input_images_dir / image_filename
                 dest_image_path = self.op_images_dir / image_filename
                 if idx % self.show_infor_interval == 0:
@@ -655,9 +659,21 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output = csv.writer(yaml_traj_file_handle_output, delimiter=' ',
                                                           quoting=csv.QUOTE_MINIMAL)
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
+
+            if self.config["preprocessing.find_stable_circle"]:
+                # since image start_idx and end_idx will have been updated by circleselector by this point.
+                desired_frame_indices = self.desired_frame_indices[self.image_start_idx:self.image_end_idx]
+            else:
+                desired_frame_indices = self.desired_frame_indices
+
+            # need to establish what row in the csv each frame we have extracted corresponds to
+            # if frame_fixed_number != -1
+            desired_row_indices = []
+            for idx in desired_frame_indices:
+                desired_row_indices.append(idx - desired_frame_indices[0] + self.image_start_idx)
             for enum,row in enumerate(yaml_traj_csv_file_handle):
-                if self.image_start_idx < enum < self.image_end_idx:
-                    idx = int(ovslam_fps * float(row[0]) + 0.5)
+                if enum in desired_row_indices:
+                    idx = enum - self.image_start_idx + desired_frame_indices[0]
                     row[0] = self.original_filename_expression % idx
                     yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
 
