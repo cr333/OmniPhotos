@@ -33,7 +33,7 @@ class TrajPreprocessor(AbsPreprocessor):
         self.dir_make(self.traj_output_directory_path)
 
         # the template of openvslam config file
-        self.openvslam_config_template_file = self.current_dir + '/template/openvslam.template.yaml'
+        self.openvslam_config_template_file = os.path.dirname(__file__) + '/template/openvslam.template.yaml'
         self.openvslam_program_path = self.config["preprocessing.openvslam.execution_file_path"]
 
 
