@@ -95,13 +95,13 @@ class DataPreprocessor(AbsPreprocessor):
         :return : weather rotated images
         """
         if [0.0, 0.0] == self.rotation:
-            return False
+            return data
 
         phi_roll_numb = self.rotation[0] / 360.0 * np.shape(data)[2]
         if phi_roll_numb == int(phi_roll_numb) and self.rotation[1] == 0.0:
             # do not need to interpolate, use numpy roll operation
             data[:] = np.roll(data, int(phi_roll_numb), axis=2)
-            return True
+            return data
 
         # interpolate (rotate) with skylibs
         return self.rotate_image(data)
@@ -113,7 +113,7 @@ class DataPreprocessor(AbsPreprocessor):
         :return : weather rotated the images
         """
         if [0.0, 0.0] == self.rotation:
-            return False
+            return data
 
         rotation_matrix = np.zeros([3, 3])
         self.spherical2dcm(self.rotation, rotation_matrix)
@@ -126,7 +126,7 @@ class DataPreprocessor(AbsPreprocessor):
             new_image = envmap.rotate("DCM", rotation_matrix).data
             new_image = new_image.astype(np.uint8)
             data[i] = new_image
-        return True
+        return data
 
     def extract_perspective_image(self, frame_data):
         """
@@ -253,7 +253,12 @@ class DataPreprocessor(AbsPreprocessor):
                 .format(str(self.traj_input_images_dir)))
             return
 
-        # preprocess data frame-by-frame
+        # extract all the frames
+        filename = os.path.splitext(self.original_filename_expression)[0]+".jpg"
+        output_path = os.path.join(self.traj_input_images_dir, filename)
+        ffmpeg.input(video_path).output(output_path,start_number=0,**{'qscale:v': 2}).run(capture_stdout=True)
+
+        # generate the list of desired frame indices
         if self.frame_fixed_number <= 0:
             vframes_size = 1  # NOTE : should be 1
             frame_idx_list = list(range(self.image_start_idx, self.image_end_idx + 1, vframes_size))
@@ -263,53 +268,15 @@ class DataPreprocessor(AbsPreprocessor):
                     stop=self.image_end_idx + 1, num=self.frame_fixed_number)
             frame_idx_list = list(frame_idx_list.astype(int))
 
-        # with concurrent.futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.ffmpeg_thread_number) as executor:
-            def process_images(video_path, frame_info):
-                frame_idx_list = frame_info[0]
-                frame_list_idx = frame_info[1]
-                # 1) load 1 frame data from video
-                frame_start_idx = frame_idx_list[frame_list_idx]
-                frame_interval = 1
-                out, _ = (
-                    ffmpeg \
-                        .input(video_path) \
-                        .filter('select', 'gte(n,{})'.format(frame_start_idx)) \
-                        .output('pipe:', format='rawvideo', pix_fmt='rgb24', vframes=frame_interval) \
-                        .run(capture_stdout=True)
-                )
-                frame_data = np.zeros((frame_interval, self.frame_height, self.frame_width, 3), dtype=np.uint8)
-                frame_data[:] = (
-                    np \
-                        .frombuffer(out, np.uint8) \
-                        .reshape([frame_interval, self.frame_height, self.frame_width, 3])
-                )
+        # remove the unwanted images
+        filename_list = [output_path % frame for frame in frame_idx_list]  # files to keep
+        filename_list = [os.path.basename(f) for f in filename_list]  # filenames to keep
+        for image_name in os.listdir(self.traj_input_images_dir):
+            if image_name not in filename_list:
+                os.remove(os.path.join(self.traj_input_images_dir, image_name))
 
-                # 2) rotate image
-                self.rotate_image_fast(frame_data)
-
-                # 3) save images
-                for i in range(0, np.shape(frame_data)[0]):
-                    # 3-1) save original data
-                    file_name = self.original_filename_expression % (frame_start_idx + i)
-                    self.save_images([self.traj_input_images_dir / file_name], \
-                        frame_data[i][np.newaxis, :])
-                    # 3-2) extract & save perspective image data for colmap panoramic images
-                    if self.image_type == "panoramic" and (self.trajectory_tool == "all" or self.trajectory_tool == "colmap"):
-                        frame_data_persp = self.extract_perspective_image(frame_data[i][np.newaxis, :])
-                        self.save_images([self.image_perspective_output_path / file_name], frame_data_persp)
-
-                # 4) show result
-                if frame_start_idx >= 0 and frame_start_idx % self.show_infor_interval == 0:
-                    self.show_info("Extracted frame index is {}.".format(frame_start_idx))
-                    self.show_image(frame_data[0, :])
-
-            return_results = {executor.submit(\
-                process_images, video_path, [frame_idx_list, frame_list_idx])\
-                    :frame_list_idx for frame_list_idx in range(0, len(frame_idx_list))}
-            for future in concurrent.futures.as_completed(return_results):
-                if not future.done():
-                    self.show_info("Image processing error in function preprocess_video.", "error")
+        # rotate the images
+        self.preprocess_image(self.traj_input_images_dir)
 
     def preprocess_images(self, directory_path):
         """
@@ -336,4 +303,4 @@ class DataPreprocessor(AbsPreprocessor):
         :return:
         """
         dcm[:] = R.from_euler("xyz", [spherical_coordinate[1], \
-            spherical_coordinate[0], 0], degrees=True).as_dcm()
+                                      spherical_coordinate[0], 0], degrees=True).as_matrix()
