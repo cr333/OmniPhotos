@@ -58,7 +58,7 @@ class OpPreprocessor(AbsPreprocessor):
         self.dir_make(self.output_config_file_path)
 
         # the path & parameters of OmniPhotos executable file
-        self.omniphotos_path = self.config["preprocessing.omniphotos.execution_file_path"]
+        self.omniphotos_path = os.path.join(os.path.dirname(__file__) , self.config["preprocessing.omniphotos.execution_file_path"])
         self.op_frame_number = self.config["preprocessing.frame_fixed_number"]
         if self.op_frame_number == -1:
             self.op_frame_number = len(self.op_image_list)
