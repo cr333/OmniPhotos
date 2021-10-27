@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Define the OpPreprocessor class.
 
-The module use to define the class OpPreprocessor.
+The module used to define the class OpPreprocessor.
 
   Typical usage example:
 
@@ -104,12 +104,12 @@ class AbsPreprocessor:
         # check the type of input data type, input image & trajectory reconstruction tool
         self.image_type = self.config["preprocessing.colmap.input_camera_type"]
         if not self.image_type in self.image_type_list:
-            msg = "Reconstruction tool is {}, which is not supported.".format(self.image_type)
+            msg = "Image type is {}, which is not supported.".format(self.image_type)
             self.show_info(msg, "error")
 
         self.trajectory_tool = self.config["preprocessing.trajectory_tool"].lower()
         if not self.trajectory_tool in self.trajectory_tool_list:
-            msg = "Reconstruction tool is {}, which is not support now.".format(self.trajectory_tool)
+            msg = "Reconstruction tool is {}, which is not supported.".format(self.trajectory_tool)
             self.show_info(msg, "error")
 
         # set-up trajectory reconstruction run-time environment
@@ -262,7 +262,7 @@ class AbsPreprocessor:
                         or filename.endswith('.jpeg'):
                     file_list.append(filename)
         if len(file_list) == 0:
-            msg = "There do not have images in {}".format(image_directory)
+            msg = "There are no images in {}".format(image_directory)
             self.show_info(msg, "error")
         file_list.sort()
 
@@ -286,7 +286,7 @@ class AbsPreprocessor:
             self.show_info(msg, "error")
             return
         if not directory_path.exists():
-            msg = "Reconstruction output directory {} do not exist, and make a new output directory" \
+            msg = "Directory {} does not exist, making a new directory" \
                 .format(directory)
             directory_path.mkdir()
             self.show_info(msg)
