@@ -175,7 +175,7 @@ class AbsPreprocessor:
         # get config from CLI parameters, to replace the same one in YAML file
         for term_key, term_value in args.items():
             if not term_value is None:
-                self.show_info("Value {} are not set".format(term_key))
+                self.show_info("Value {} is not set".format(term_key))
                 continue
             self.config["preprocessing." + term_key] = term_value
 
@@ -184,16 +184,6 @@ class AbsPreprocessor:
             msg = ""
             if term_value is None:
                 msg = 'Variable {} : {} is not set'.format(term_key, str(term_value))
-            elif term_key.find('path') != -1:
-                term_value = pathlib.Path(term_value)
-                if not term_value.exists():
-                    msg = 'File {} : {} is not exist'.format(term_key, str(term_value))
-            elif term_key.find('directory') != -1:
-                term_value = pathlib.Path(term_value)
-                if not term_value.exists() or not term_value.is_dir():
-                    msg = 'Directory {} : {} is not exist'. \
-                        format(term_key, str(term_value))
-
             if msg != "":
                 self.show_info(msg, "info")
 
@@ -208,7 +198,7 @@ class AbsPreprocessor:
             try:
                 item = self.config[key]
             except KeyError:
-                self.show_info("{} not set, use default setting {}".format(key, setting_list[key]))
+                self.show_info("{} not set, using default setting {}".format(key, setting_list[key]))
 
     def load_origin_data_info(self):
         """

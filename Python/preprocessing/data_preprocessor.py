@@ -249,7 +249,7 @@ class DataPreprocessor(AbsPreprocessor):
         :return :
         """
         if self.traj_input_images_dir.exists() and len(os.listdir(str(self.traj_input_images_dir))) != 0 :
-            self.show_info("The trajectory input folder {} already exist and is not empty. Image extraction skipped."\
+            self.show_info("The trajectory input folder {} already exists and is not empty. Image extraction skipped."\
                 .format(str(self.traj_input_images_dir)))
             return
 
