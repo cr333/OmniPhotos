@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 from mathutils import Quaternion
+import tqdm
 
 import circleselector.cv_utils as cv_utils
 from .datatypes import PointDict, CameraCenters
@@ -124,6 +125,13 @@ class Metrics(object):
             pairs = self.create_pairs()
             self.point_dcts = [dict(interval=pair) for pair in pairs]
 
+    def run_map(self,dct):
+        """
+        Used by imap_async (multiprocessing)
+        """
+        dct.update(self.run_on_interval(dct["interval"]))
+        return dct
+
     def run(self):
         if self.__save_of__:
             path = os.path.join(self.dataset_path, "CircleFittingResults")
@@ -131,32 +139,25 @@ class Metrics(object):
                 os.makedirs(path)
         self.init_data()
 
-        interval = len(self.point_dcts) // mp.cpu_count()
-        inmax = 0
-        pair_subdiv = []
-        while inmax < len(self.point_dcts):
-            pair_subdiv.append(self.point_dcts[inmax:min(inmax + interval, len(self.point_dcts))])
-            inmax += interval
         pool = mp.Pool(mp.cpu_count())
         if self.verbose:
             print("time started", time.ctime(time.time()))
-        pd_lst = []
-        for enum, sub_lst in enumerate(pair_subdiv):
-            pd_lst.append(pool.apply_async(self.run_on_pair_lst, args=([sub_lst])))
+
+        res = []
+        # create a progress bar and update it every 1% of the iterations.
+        for iter in tqdm.tqdm(pool.imap(self.run_map, self.point_dcts,chunksize=len(self.point_dcts)//100), total=len(self.point_dcts)):
+            res.append(iter)
 
         pool.close()
         pool.join()
+
         if self.verbose:
             print("time ended", time.ctime(time.time()))
 
-        point_dicts = []
-        for lst in pd_lst:
-            point_dicts.extend(lst.get())
-        self.point_dcts = point_dicts
+        self.point_dcts = PointDict(res)
 
     def find_path_length(self, interval: tuple) -> (float, float):
         """
-
         :param interval: tuple, interval on self.points
         :return: float,float
         """
@@ -172,6 +173,9 @@ class Metrics(object):
         return np.sum(norms), np.std(norms)
 
     def calculate_angle(self, centroid: np.array, interval: tuple) -> float:
+        """
+        Calculates the mean of the outward looking angle for the first and last camera in the path.
+        """
         angs = []
         orientations = self.points.orientations
         for idx in interval:
