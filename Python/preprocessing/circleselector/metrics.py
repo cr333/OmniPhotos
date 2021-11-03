@@ -45,7 +45,7 @@ class Metrics(object):
 
         point_dict = {"interval": interval}
         sub_arr = np.array(self.points[interval[0]:interval[1]])
-        centroid = self.calculate_centroid(sub_arr)
+        centroid = np.array(self.calculate_centroid(sub_arr))
         if "flatness_error" in self.errors:
             points_centered = sub_arr - centroid
             u, sigma, _ = np.linalg.svd(points_centered.T)
@@ -56,7 +56,7 @@ class Metrics(object):
         path_length = None
 
         if "perimeter_error" in self.errors:
-            radius = sum([np.linalg.norm(point - centroid) for point in sub_arr]) / len(sub_arr)
+            radius = np.sum(np.linalg.norm([point - centroid for point in sub_arr],axis=1)) / len(sub_arr)
             exp_perimeter = 2 * np.pi * radius
             path_length, std = self.find_path_length(interval)
 
@@ -155,20 +155,21 @@ class Metrics(object):
             print("time ended", time.ctime(time.time()))
 
         self.point_dcts = PointDict(res)
-
     def find_path_length(self, interval: tuple) -> (float, float):
         """
         :param interval: tuple, interval on self.points
         :return: float,float
         """
 
-        norms = []
+        diffs = []
         points = self.points[interval[0]:interval[1]]
         for idx in range(len(points) - 1):
-            norms.append(np.linalg.norm(points[idx] - points[idx + 1]))
+            diffs.append(points[idx] - points[idx + 1])
 
         # wrap around
-        norms.append(np.linalg.norm(points[0] - points[-1]))
+        diffs.append(points[0] - points[-1])
+
+        norms = np.linalg.norm(diffs,axis=1)
 
         return np.sum(norms), np.std(norms)
 
@@ -196,7 +197,6 @@ class Metrics(object):
         parameters.append("len point dict: " + str(len(self.point_dcts)))
         parameters.append("len points:     " + str(len(self.points)))
         return "\n".join(parameters)
-
 
 def decorator(Metrics):
     def calc(points: CameraCenters,
