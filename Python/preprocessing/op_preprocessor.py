@@ -130,7 +130,7 @@ class OpPreprocessor(AbsPreprocessor):
         The name compose with "ImagesNumber-InputImageResolution-OpticalFlowResolution-FlowMethod".
         """
         if self.cache_folder_name is None:
-            self.show_info("cache folder name do not set, genreate the cache file name base on the image resolution.")
+            self.show_info("Cache folder name is not set, generating the cache file name based on the image resolution.")
         else:
             self.cache_folder_path_flownet2 = cache_folder_prefix + "-flownet2"
             self.op_preprocessing_cache_dir = cache_folder_prefix + "-DIS"
@@ -188,11 +188,11 @@ class OpPreprocessor(AbsPreprocessor):
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
         if expected_length!=actual_length:
-            self.show_info("Generate the input images for OmniPhotos to {}".format(self.op_images_dir))
+            self.show_info("Generating the input images for OmniPhotos in directory {}.".format(self.op_images_dir))
             self.omniphotos_generate_input_images()
 
         # 3) convert and generate the trajectory files as OmniPhotos request format
-        self.show_info("Checking necessary file.")
+        self.show_info("Checking for necessary files.")
         #  check the OpenVSLAM necessary file
         if self.trajectory_tool == "openvslam" or self.trajectory_tool == "all":
             self.dir_make(self.output_directory_path_ovslam)
@@ -206,10 +206,10 @@ class OpPreprocessor(AbsPreprocessor):
                 # check the openvslam output files
                 for term in self.openvslam_output_file_list:
                     if not (self.output_directory_path_ovslam / term).exists():
-                        self.show_info("The OpenVSLAM output file {} do not exist.".format(term), "error")
+                        self.show_info("The OpenVSLAM output file {} does not exist.".format(term), "error")
 
                 # convert the openvslam output "frame_trajectory.txt" format
-                self.show_info("Convert the OpenVSLAM result to OmniPhotos configuration files.")
+                self.show_info("Converting the OpenVSLAM YAML file to an OmniPhotos compatible data file.")
 
                 self.openvslam_convert_traj_file(
                     str(self.output_directory_path_ovslam), str(self.openvslam_config_file))
@@ -224,7 +224,7 @@ class OpPreprocessor(AbsPreprocessor):
                 shutil.copyfile(str(self.openvslam_config_file), str(
                     self.output_directory_path_ovslam / "config.yaml"))
             else:
-                self.show_info("The OpenVSLAM essentail file exist. Skip OpenVSLAM file convertion.")
+                self.show_info("The OpenVSLAM essential file already exists. Skipping OpenVSLAM file conversion.")
 
         # check the colmap necessary file complete
         if self.trajectory_tool == "colmap" or self.trajectory_tool == "all":
@@ -233,10 +233,10 @@ class OpPreprocessor(AbsPreprocessor):
                 file_complete = file_complete or not (self.output_directory_path_colmap / term).exists()
 
             if file_complete:
-                self.show_info("The OpenVSLAM essentail file do exist.", "error")
+                self.show_info("The OpenVSLAM essential files are missing.", "error")
 
         # 4) make the directory & file structure as the OmniPhotos request
-        self.show_info("Backup and copy the trajectory reconstruction.")
+        self.show_info("Backing up and copying the trajectory reconstruction files.")
         need_file_structure_trim = False
         if self.trajectory_tool == "colmap" or self.trajectory_tool == "all":
             if len(os.listdir(str(self.output_directory_path_colmap))) > len(self.colmap_essential_file_list):
@@ -249,17 +249,17 @@ class OpPreprocessor(AbsPreprocessor):
             elif len(os.listdir(str(self.output_directory_path_ovslam))) < len(self.openvslam_essential_file_list):
                 self.show_info("The OpenVSLAM essential files are not complete.", "error")
         if need_file_structure_trim:
-            self.show_info("Trimming the trajectory files structure as OmniPhotos request")
+            self.show_info("Trimming the trajectory file structure.")
             self.file_structure_trim()
 
         # 5) generate the config file and images for OmniPhotos
-        self.show_info("Genera the config files for OmniPhotos viewer & preprocessing.", "info")
+        self.show_info("Generating the config files for OmniPhotos viewer & preprocessing.", "info")
         self.omniphotos_generate_viewer_config()
 
         # 6) run the OmniPhotos pre-processing, generate *.flo, *.json and *.conf in Cache folder
         if not os.path.exists(str(self.cache_dir / self.op_preprocessing_cache_dir)):
             # if Cache folder is empty, run OmniPhotos preprocessor
-            self.show_info("Run the pre-processing step of OmniPhotos.")
+            self.show_info("Running the Omniphotos Pre-processing.")
             self.omniphotos_preprocess()
         else:
             # if the result exist skip
@@ -325,7 +325,7 @@ class OpPreprocessor(AbsPreprocessor):
                 shutil.copyfile(src_image_path, dest_image_path)
         else:
             self.show_info(\
-                "Downsample the input images to {} x {}".format(self.op_input_frame_height, self.op_input_frame_width))
+                "Downsampling the input images to {} x {}".format(self.op_input_frame_height, self.op_input_frame_width))
             self.omniphotos_downsample_input_images()
 
     def omniphotos_downsample_input_images(self):
@@ -368,7 +368,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                (self.op_input_frame_height, self.op_input_frame_width, 3), self.op_images_dir]): frame_list_idx for frame_list_idx in range(0, len(self.trajectory_images_list))}
             for future in concurrent.futures.as_completed(return_results):
                 if not future.done():
-                    self.show_info("Images downsample processing error.", "error")
+                    self.show_info("Image downsampling error.", "error")
 
     def omniphotos_logging(self):
         """
@@ -447,14 +447,14 @@ class OpPreprocessor(AbsPreprocessor):
 
         # 2) call OmniPhotos to do preprocess
         if not os.path.exists(self.omniphotos_path):
-            self.show_info("OmniPhotos program {} not found".format(self.omniphotos_path), "error")
+            self.show_info("OmniPhotos Preprocessing binary {} not found.".format(self.omniphotos_path), "error")
 
         try:
             output = subprocess.run(
                 [self.omniphotos_path, "-f", self.op_exe_config_file], check=True)
             output.check_returncode()
         except subprocess.CalledProcessError:
-            self.show_info("Starting up OmniPhotos program fail. {}".format(self.omniphotos_path))
+            self.show_info("Starting up the OmniPhotos binary failed. {}".format(self.omniphotos_path))
 
         # 3) output log to cache file
         log_str = self.omniphotos_logging()
@@ -589,7 +589,7 @@ class OpPreprocessor(AbsPreprocessor):
         """
         # 1) create the backup directories
         if self.capture_data_backup_dir.exists():
-            self.show_info("Triming file structure trim, but the backup directory {} exist"\
+            self.show_info("The backup directory {} already exists"\
                 .format(str(self.capture_data_backup_dir)))
         self.dir_make(self.capture_data_backup_dir)
 
@@ -629,9 +629,10 @@ class OpPreprocessor(AbsPreprocessor):
         :param openvslam_config_file_path: *.yaml config file for openvslam
         """
         if not os.path.exists(openvslam_output_directory):
-            self.show_info("The folder {} do not exist.".format(openvslam_output_directory), "error")
+            self.show_info("The folder {} does not exist.".format(openvslam_output_directory), "error")
         if not os.path.exists(openvslam_config_file_path):
-            self.show_info("The openvslam config file {} do not exist, please put it on the root folder of the dataset."\
+            self.show_info("The openvslam config file {} does not exist, please put it in the root folder of the "
+                           "dataset."\
                 .format(openvslam_config_file_path), "error")
 
         openvslam_output_directory_path = pathlib.Path(

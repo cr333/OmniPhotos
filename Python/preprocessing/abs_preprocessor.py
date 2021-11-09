@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Define the OpPreprocessor class.
 
-The module use to define the class OpPreprocessor.
+The module used to define the class OpPreprocessor.
 
   Typical usage example:
 
@@ -104,12 +104,12 @@ class AbsPreprocessor:
         # check the type of input data type, input image & trajectory reconstruction tool
         self.image_type = self.config["preprocessing.colmap.input_camera_type"]
         if not self.image_type in self.image_type_list:
-            msg = "Reconstruction tool is {}, which is not supported.".format(self.image_type)
+            msg = "Image type is {}, which is not supported.".format(self.image_type)
             self.show_info(msg, "error")
 
         self.trajectory_tool = self.config["preprocessing.trajectory_tool"].lower()
         if not self.trajectory_tool in self.trajectory_tool_list:
-            msg = "Reconstruction tool is {}, which is not support now.".format(self.trajectory_tool)
+            msg = "Reconstruction tool is {}, which is not supported.".format(self.trajectory_tool)
             self.show_info(msg, "error")
 
         # set-up trajectory reconstruction run-time environment
@@ -150,7 +150,7 @@ class AbsPreprocessor:
 
     def load_config(self, args):
         """
-        load configuration from *.yaml file and CLI
+        Loads configuration from a YAML file and CLI.
         :param args: CLI input options
         """
         # load YAML config file
@@ -175,7 +175,7 @@ class AbsPreprocessor:
         # get config from CLI parameters, to replace the same one in YAML file
         for term_key, term_value in args.items():
             if not term_value is None:
-                self.show_info("Value {} are not set".format(term_key))
+                self.show_info("Value {} is not set".format(term_key))
                 continue
             self.config["preprocessing." + term_key] = term_value
 
@@ -184,16 +184,6 @@ class AbsPreprocessor:
             msg = ""
             if term_value is None:
                 msg = 'Variable {} : {} is not set'.format(term_key, str(term_value))
-            elif term_key.find('path') != -1:
-                term_value = pathlib.Path(term_value)
-                if not term_value.exists():
-                    msg = 'File {} : {} is not exist'.format(term_key, str(term_value))
-            elif term_key.find('directory') != -1:
-                term_value = pathlib.Path(term_value)
-                if not term_value.exists() or not term_value.is_dir():
-                    msg = 'Directory {} : {} is not exist'. \
-                        format(term_key, str(term_value))
-
             if msg != "":
                 self.show_info(msg, "info")
 
@@ -208,7 +198,7 @@ class AbsPreprocessor:
             try:
                 item = self.config[key]
             except KeyError:
-                self.show_info("{} not set, use default setting {}".format(key, setting_list[key]))
+                self.show_info("{} not set, using default setting {}".format(key, setting_list[key]))
 
     def load_origin_data_info(self):
         """
@@ -262,7 +252,7 @@ class AbsPreprocessor:
                         or filename.endswith('.jpeg'):
                     file_list.append(filename)
         if len(file_list) == 0:
-            msg = "There do not have images in {}".format(image_directory)
+            msg = "There are no images in {}".format(image_directory)
             self.show_info(msg, "error")
         file_list.sort()
 
@@ -286,7 +276,7 @@ class AbsPreprocessor:
             self.show_info(msg, "error")
             return
         if not directory_path.exists():
-            msg = "Reconstruction output directory {} do not exist, and make a new output directory" \
+            msg = "Directory {} does not exist, making a new directory" \
                 .format(directory)
             directory_path.mkdir()
             self.show_info(msg)

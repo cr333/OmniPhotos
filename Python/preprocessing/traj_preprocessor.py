@@ -82,7 +82,7 @@ class TrajPreprocessor(AbsPreprocessor):
                 need_reconstruction = True
 
             if not need_reconstruction:
-                self.show_info("the openvslam essential data file exist in the folder {}"\
+                self.show_info("The openvslam essential data file already exists in the folder {}."\
                     .format(str(self.output_directory_path_ovslam)), "info")
                 return
 

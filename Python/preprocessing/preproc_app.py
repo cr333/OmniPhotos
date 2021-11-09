@@ -2,9 +2,9 @@
 """
 The preprocessing main module.
 """
-import threading
 import datetime
 import sys
+import threading
 
 from abs_preprocessor import AbsPreprocessor
 from data_preprocessor import DataPreprocessor
@@ -52,15 +52,15 @@ class PreprocAPP:
         show the time now on interface, with format "yyyy-mm-dd, hh-mm-ss"
         """
         datetime_now = datetime.datetime.now()
-        time_delta = datetime_now - self.time_recoder
-        msg = datetime.datetime.now().isoformat() + " elapsed from the previous record: " + str(
-            time_delta.total_seconds()) + "seconds"
+        time_delta = (datetime_now - self.time_recoder).total_seconds()
+        msg = datetime.datetime.now().isoformat(' ', timespec='seconds') + \
+              f" -- Time elapsed since previous message: {time_delta:.3f} seconds"
         self.interface.show_info(msg)
         self.time_recoder = datetime_now
 
     def method(self):
         """
-        the preprocessing core method
+        The core preprocessing method.
         """
         self.show_time_now()
 
@@ -70,21 +70,21 @@ class PreprocAPP:
             step_end = 4
 
         preprocessor_flow = {
-            1: ["preprocessing the data with rotation, extraction and saving",\
-                self.data_preproc.preprocess_data],
-            2: ["reconstructing camera trajectory ", self.traj_preproc.trajectory_reconstruct],
-            3: ["generate config file for OmniPhotos", self.op_preproc.generating_config_files],
-            4: ["computing optical flow", self.of_preproc.compute_of]}
+            1: ["Extracting and preprocessing video frames", self.data_preproc.preprocess_data],
+            2: ["Reconstructing the camera trajectory", self.traj_preproc.trajectory_reconstruct],
+            3: ["Generating config file for OmniPhotos", self.op_preproc.generating_config_files],
+            4: ["Computing FlowNet2 optical flow", self.of_preproc.compute_of]
+        }
+
         for step_idx, step_data in preprocessor_flow.items():
-            self.interface.show_info("----step {}: {}----".format(step_idx, step_data[0]))
+            self.interface.show_info(f"----[ Step {step_idx}: {step_data[0]} ]----")
             if step_begin <= step_idx <= step_end:
-                self.interface.show_info("run")
                 self.show_time_now()
                 step_data[1]()
                 self.show_time_now()
-                self.interface.show_info("----step {}: finished".format(step_idx))
+                self.interface.show_info(f"----[ Step {step_idx}: finished ]----")
             else:
-                self.interface.show_info("--skip")
+                self.interface.show_info("(skipped)")
 
     def run(self):
         """
