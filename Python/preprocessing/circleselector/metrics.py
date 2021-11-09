@@ -155,16 +155,17 @@ class Metrics(object):
             print("time ended", time.ctime(time.time()))
 
         self.point_dcts = PointDict(res)
+    
     def find_path_length(self, interval: tuple) -> (float, float):
         """
         :param interval: tuple, interval on self.points
         :return: float,float
         """
 
-        diffs = []
+        # select what set of points we want
         points = self.points[interval[0]:interval[1]]
-        for idx in range(len(points) - 1):
-            diffs.append(points[idx] - points[idx + 1])
+
+        diffs = np.diff(points,axis=0).tolist()
 
         # wrap around
         diffs.append(points[0] - points[-1])
