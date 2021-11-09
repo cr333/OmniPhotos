@@ -45,7 +45,7 @@ class Metrics(object):
 
         point_dict = {"interval": interval}
         sub_arr = np.array(self.points[interval[0]:interval[1]])
-        centroid = np.array(self.calculate_centroid(sub_arr))
+        centroid = np.mean(sub_arr,axis=0)
         if "flatness_error" in self.errors:
             points_centered = sub_arr - centroid
             u, sigma, _ = np.linalg.svd(points_centered.T)
@@ -56,7 +56,8 @@ class Metrics(object):
         path_length = None
 
         if "perimeter_error" in self.errors:
-            radius = np.sum(np.linalg.norm([point - centroid for point in sub_arr],axis=1)) / len(sub_arr)
+            # calculate radius as average distance of all points to the COM
+            radius = np.sum(np.linalg.norm(sub_arr - centroid,axis=1)) / len(sub_arr)
             exp_perimeter = 2 * np.pi * radius
             path_length, std = self.find_path_length(interval)
 
