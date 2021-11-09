@@ -249,7 +249,7 @@ class OpPreprocessor(AbsPreprocessor):
             elif len(os.listdir(str(self.output_directory_path_ovslam))) < len(self.openvslam_essential_file_list):
                 self.show_info("The OpenVSLAM essential files are not complete.", "error")
         if need_file_structure_trim:
-            self.show_info("Trimming the trajectory file structure")
+            self.show_info("Trimming the trajectory file structure.")
             self.file_structure_trim()
 
         # 5) generate the config file and images for OmniPhotos
