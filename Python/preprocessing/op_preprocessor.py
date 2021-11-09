@@ -188,7 +188,7 @@ class OpPreprocessor(AbsPreprocessor):
         #  downsample the input image with the setting \
         # "preprocessing.omniphotos.downsample_scalar"
         if expected_length!=actual_length:
-            self.show_info("Generating the input images for OmniPhotos in directory {}".format(self.op_images_dir))
+            self.show_info("Generating the input images for OmniPhotos in directory {}.".format(self.op_images_dir))
             self.omniphotos_generate_input_images()
 
         # 3) convert and generate the trajectory files as OmniPhotos request format
