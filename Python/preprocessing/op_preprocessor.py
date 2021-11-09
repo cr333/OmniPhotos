@@ -209,7 +209,7 @@ class OpPreprocessor(AbsPreprocessor):
                         self.show_info("The OpenVSLAM output file {} does not exist.".format(term), "error")
 
                 # convert the openvslam output "frame_trajectory.txt" format
-                self.show_info("Converting the OpenVSLAM yaml file to a OmniPhotos compatible data file.")
+                self.show_info("Converting the OpenVSLAM YAML file to an OmniPhotos compatible data file.")
 
                 self.openvslam_convert_traj_file(
                     str(self.output_directory_path_ovslam), str(self.openvslam_config_file))
