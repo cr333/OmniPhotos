@@ -447,7 +447,7 @@ class OpPreprocessor(AbsPreprocessor):
 
         # 2) call OmniPhotos to do preprocess
         if not os.path.exists(self.omniphotos_path):
-            self.show_info("OmniPhotos binary {} not found".format(self.omniphotos_path), "error")
+            self.show_info("OmniPhotos Preprocessing binary {} not found.".format(self.omniphotos_path), "error")
 
         try:
             output = subprocess.run(
