@@ -368,7 +368,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                (self.op_input_frame_height, self.op_input_frame_width, 3), self.op_images_dir]): frame_list_idx for frame_list_idx in range(0, len(self.trajectory_images_list))}
             for future in concurrent.futures.as_completed(return_results):
                 if not future.done():
-                    self.show_info("Image processing error.", "error")
+                    self.show_info("Image downsampling error.", "error")
 
     def omniphotos_logging(self):
         """
