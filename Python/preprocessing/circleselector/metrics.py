@@ -141,12 +141,17 @@ class Metrics(object):
         self.init_data()
 
         pool = mp.Pool(mp.cpu_count())
+        start = time.time()
         if self.verbose:
             print("time started", time.ctime(time.time()))
 
         res = []
-        # create a progress bar and update it every 1% of the iterations.
-        for iter in tqdm.tqdm(pool.imap(self.run_map, self.point_dcts,chunksize=len(self.point_dcts)//100), total=len(self.point_dcts)):
+
+        # Note: pool.map_async(self.run_map, self.point_dcts), supposedly the most optimised asyncronous mapping,
+        # is only marginally faster than the call below.
+        
+        # create a progress bar and update it every 10% of the iterations.
+        for iter in tqdm.tqdm(pool.imap(self.run_map, self.point_dcts,chunksize=len(self.point_dcts)//10), total=len(self.point_dcts)):
             res.append(iter)
 
         pool.close()
@@ -154,9 +159,11 @@ class Metrics(object):
 
         if self.verbose:
             print("time ended", time.ctime(time.time()))
-
+        end = time.time()
         self.point_dcts = PointDict(res)
-    
+        print(end - start)
+        raise Exception("derp")
+
     def find_path_length(self, interval: tuple) -> (float, float):
         """
         :param interval: tuple, interval on self.points
