@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 from mathutils import Quaternion
+import tqdm
 
 import circleselector.cv_utils as cv_utils
 from .datatypes import PointDict, CameraCenters
@@ -44,7 +45,7 @@ class Metrics(object):
 
         point_dict = {"interval": interval}
         sub_arr = np.array(self.points[interval[0]:interval[1]])
-        centroid = self.calculate_centroid(sub_arr)
+        centroid = np.mean(sub_arr,axis=0)
         if "flatness_error" in self.errors:
             points_centered = sub_arr - centroid
             u, sigma, _ = np.linalg.svd(points_centered.T)
@@ -55,7 +56,8 @@ class Metrics(object):
         path_length = None
 
         if "perimeter_error" in self.errors:
-            radius = sum([np.linalg.norm(point - centroid) for point in sub_arr]) / len(sub_arr)
+            # calculate radius as average distance of all points to the COM
+            radius = np.sum(np.linalg.norm(sub_arr - centroid,axis=1)) / len(sub_arr)
             exp_perimeter = 2 * np.pi * radius
             path_length, std = self.find_path_length(interval)
 
@@ -124,6 +126,13 @@ class Metrics(object):
             pairs = self.create_pairs()
             self.point_dcts = [dict(interval=pair) for pair in pairs]
 
+    def run_map(self,dct):
+        """
+        Used by imap_async (multiprocessing)
+        """
+        dct.update(self.run_on_interval(dct["interval"]))
+        return dct
+
     def run(self):
         if self.__save_of__:
             path = os.path.join(self.dataset_path, "CircleFittingResults")
@@ -131,47 +140,49 @@ class Metrics(object):
                 os.makedirs(path)
         self.init_data()
 
-        interval = len(self.point_dcts) // mp.cpu_count()
-        inmax = 0
-        pair_subdiv = []
-        while inmax < len(self.point_dcts):
-            pair_subdiv.append(self.point_dcts[inmax:min(inmax + interval, len(self.point_dcts))])
-            inmax += interval
         pool = mp.Pool(mp.cpu_count())
         if self.verbose:
             print("time started", time.ctime(time.time()))
-        pd_lst = []
-        for enum, sub_lst in enumerate(pair_subdiv):
-            pd_lst.append(pool.apply_async(self.run_on_pair_lst, args=([sub_lst])))
+
+        res = []
+
+        # Note: pool.map_async(self.run_map, self.point_dcts), supposedly the most optimised asyncronous mapping,
+        # is only marginally faster than the call below.
+        
+        # create a progress bar and update it every 10% of the iterations.
+        for iter in tqdm.tqdm(pool.imap(self.run_map, self.point_dcts,chunksize=len(self.point_dcts)//10), total=len(self.point_dcts)):
+            res.append(iter)
 
         pool.close()
         pool.join()
+
         if self.verbose:
             print("time ended", time.ctime(time.time()))
+        self.point_dcts = PointDict(res)
 
-        point_dicts = []
-        for lst in pd_lst:
-            point_dicts.extend(lst.get())
-        self.point_dcts = point_dicts
 
     def find_path_length(self, interval: tuple) -> (float, float):
         """
-
         :param interval: tuple, interval on self.points
         :return: float,float
         """
 
-        norms = []
+        # select what set of points we want
         points = self.points[interval[0]:interval[1]]
-        for idx in range(len(points) - 1):
-            norms.append(np.linalg.norm(points[idx] - points[idx + 1]))
+
+        diffs = np.diff(points,axis=0).tolist()
 
         # wrap around
-        norms.append(np.linalg.norm(points[0] - points[-1]))
+        diffs.append(points[0] - points[-1])
+
+        norms = np.linalg.norm(diffs,axis=1)
 
         return np.sum(norms), np.std(norms)
 
     def calculate_angle(self, centroid: np.array, interval: tuple) -> float:
+        """
+        Calculates the mean of the outward looking angle for the first and last camera in the path.
+        """
         angs = []
         orientations = self.points.orientations
         for idx in interval:
@@ -192,7 +203,6 @@ class Metrics(object):
         parameters.append("len point dict: " + str(len(self.point_dcts)))
         parameters.append("len points:     " + str(len(self.points)))
         return "\n".join(parameters)
-
 
 def decorator(Metrics):
     def calc(points: CameraCenters,
@@ -215,7 +225,7 @@ def decorator(Metrics):
         :param errors: list. names of metrics that should be calculated.
         :param verbose:
         :param dataset_path: path to rootdir of dataset. eg. path/to/GenoaCathedral
-        :param mp: calculated in parallel (using threads) or not
+        :param mp: calculated in parallel (using multiprocessing) or not
         :param rel_input_image_path: path to images for cv relative to dataset_path
         :param interval: overrides all other behaviour and will calculate on given interval of points.
         :param: save_of: will save the Optical Flow results to dataset_path/CircleFittingResults

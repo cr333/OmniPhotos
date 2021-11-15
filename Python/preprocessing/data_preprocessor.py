@@ -76,7 +76,7 @@ class DataPreprocessor(AbsPreprocessor):
         :type data: numpy
         """
         if len(output_path_list) != np.shape(data)[0]:
-            self.show_info("The output data size no right.", "error")
+            self.show_info("The output data size is not correct.", "error")
 
         if not isinstance(output_path_list[0], pathlib.Path):
             self.show_info("The path type should be pathlib.", "error")
@@ -119,7 +119,7 @@ class DataPreprocessor(AbsPreprocessor):
         self.spherical2dcm(self.rotation, rotation_matrix)
         for i in range(0, np.shape(data)[0]):
             if i % self.show_infor_interval == 0:
-                self.show_info("Rotation image with 'rotate_image' function, index is {}.".format(i))
+                self.show_info("Rotating image with 'rotate_image' function, index is {}.".format(i))
             # show_image(image)
             image = data[i]
             envmap = EnvironmentMap(image, format_='latlong')
@@ -165,7 +165,7 @@ class DataPreprocessor(AbsPreprocessor):
         preprocess data from video or images
         """
         if not self.input_path.exists():
-            msg = "Preprocessing.input_path do not exist: {}.".format(str(self.input_path))
+            msg = "preprocessing.input_path does not exist: {}.".format(str(self.input_path))
             self.show_info(msg, "error")
 
         self.show_info(("Preprocessing {}, the input data is :{}."\
@@ -186,9 +186,9 @@ class DataPreprocessor(AbsPreprocessor):
         :param images_path: the input images path
         :return :
         """
-        self.show_info("Start preporcessing the image data.")
+        self.show_info("Starting the pre-processing of the image data.")
         if self.image_type != "panoramic":
-            self.show_info("The input images are not panoramic images, {} do nothing."\
+            self.show_info("The input images are not panoramic images, {}. Skipping."\
                 .format(self.__class__.__name__))
             return
 
@@ -211,7 +211,7 @@ class DataPreprocessor(AbsPreprocessor):
 
                 # check image resolution 
                 if frame_data.shape[1] != frame_data.shape[0] * 2:
-                    self.show_info("The column number is not the 2 time of row number,\
+                    self.show_info("The column number is not twice the row number,\
                          crop the image {}.".format(image_path), "warning")
                     if frame_data.shape[1] > frame_data.shape[0] * 2:
                         frame_data = frame_data[:, 0:frame_data.shape[0]*2, :]
@@ -249,7 +249,7 @@ class DataPreprocessor(AbsPreprocessor):
         :return :
         """
         if self.traj_input_images_dir.exists() and len(os.listdir(str(self.traj_input_images_dir))) != 0 :
-            self.show_info("The trajection input folder {} do not exist or empty, do not extract images."\
+            self.show_info("The trajectory input folder {} already exists and is not empty. Image extraction skipped."\
                 .format(str(self.traj_input_images_dir)))
             return
 

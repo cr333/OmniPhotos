@@ -33,9 +33,10 @@ class TrajPreprocessor(AbsPreprocessor):
         self.dir_make(self.traj_output_directory_path)
 
         # the template of openvslam config file
-        self.openvslam_config_template_file = self.current_dir + '/template/openvslam.template.yaml'
-        self.openvslam_program_path = self.config["preprocessing.openvslam.execution_file_path"]
-
+        dist_dir = os.path.dirname(__file__)
+        self.openvslam_config_template_file = dist_dir + '/template/openvslam.template.yaml'
+        self.openvslam_program_path = os.path.join(dist_dir, self.config["preprocessing.openvslam.execution_file_path"])
+        self.openvslam_vocab_path = os.path.join(dist_dir,self.config["preprocessing.openvslam.dbow2_file_path"])
 
     def trajectory_reconstruct(self):
         """
@@ -82,7 +83,7 @@ class TrajPreprocessor(AbsPreprocessor):
                 need_reconstruction = True
 
             if not need_reconstruction:
-                self.show_info("the openvslam essential data file exist in the folder {}"\
+                self.show_info("The openvslam essential data file already exists in the folder {}."\
                     .format(str(self.output_directory_path_ovslam)), "info")
                 return
 
@@ -106,8 +107,8 @@ class TrajPreprocessor(AbsPreprocessor):
 
             # call openvslam reconstruction
             self.trajectory_reconstruct_openvslam(
-                self.config["preprocessing.openvslam.execution_file_path"],
-                self.config["preprocessing.openvslam.dbow2_file_path"],
+                self.openvslam_program_path,
+                self.openvslam_vocab_path,
                 str(self.openvslam_config_file),
                 str(self.traj_input_images_dir),
                 str(self.output_directory_path_ovslam / "map.msg"),
