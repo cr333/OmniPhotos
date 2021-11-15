@@ -84,9 +84,9 @@ class OpPreprocessor(AbsPreprocessor):
         # the folder as convention
         self.cache_dir = self.root_dir / "Cache"
         self.dir_make(self.cache_dir)
-        self.cache_backup_dir = self.root_dir / "Cache_backup"
+        self.cache_backup_dir = self.temp_dir / "Cache_backup"
         self.capture_data_dir = self.root_dir / "Capture"
-        self.capture_data_backup_dir = self.root_dir / "Capture_backup"
+        self.capture_data_backup_dir = self.temp_dir / "Capture_backup"
 
         # cache folder naming convention
         # viewNumber-[full/half/quarter]Res-[nostab/stab]-[DIS/flownet2]
@@ -300,7 +300,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                     errors=["ssim","psnr"],
                                                     mp=False,
                                                     dataset_path=self.root_dir,
-                                                    rel_input_image_path='trajectory_images')
+                                                    rel_input_image_path=os.path.join(self.temp_dir,'trajectory_images'))
             intervals.toJSON(cached_res)
             intervals.split_interval().toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
         if len(intervals) == 0:

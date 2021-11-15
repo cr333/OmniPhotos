@@ -36,6 +36,7 @@ class AbsPreprocessor:
         self.config = None
         self.show_infor_interval = 10  # the interval of output information & show images
         self.root_dir = None  # set the root directory as the root folder of config_omniphotos.yaml
+        self.temp_dir = None
         self.load_config(args)
 
         self.input_type_list = ["image", "video"]
@@ -48,7 +49,8 @@ class AbsPreprocessor:
         # the image folder
         # self.original_images_dir = self.root_dir / "original_images"
         # the trajectory reconstruction input images (rotated, selected)
-        self.traj_input_images_dir = self.root_dir / "trajectory_images"
+        self.traj_input_images_dir = self.temp_dir / "trajectory_images"
+
         # OmniPhotos ready images from traj_input_images_dir folder
         self.op_images_dir = self.root_dir / "Input"
         self.original_image_list = []  # storing all original image filenames
@@ -162,6 +164,8 @@ class AbsPreprocessor:
 
         # set the root folder
         self.root_dir = config_file_path.parents[0]
+        self.temp_dir = self.root_dir / "temp"
+        self.dir_make(self.temp_dir)
 
         with open(config_file_path, "r") as yaml_config_file_handle:
             config_str = yaml_config_file_handle.read()
