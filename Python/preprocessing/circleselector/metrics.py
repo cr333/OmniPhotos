@@ -141,7 +141,6 @@ class Metrics(object):
         self.init_data()
 
         pool = mp.Pool(mp.cpu_count())
-        start = time.time()
         if self.verbose:
             print("time started", time.ctime(time.time()))
 
@@ -159,10 +158,8 @@ class Metrics(object):
 
         if self.verbose:
             print("time ended", time.ctime(time.time()))
-        end = time.time()
         self.point_dcts = PointDict(res)
-        print(end - start)
-        raise Exception("derp")
+
 
     def find_path_length(self, interval: tuple) -> (float, float):
         """
@@ -228,7 +225,7 @@ def decorator(Metrics):
         :param errors: list. names of metrics that should be calculated.
         :param verbose:
         :param dataset_path: path to rootdir of dataset. eg. path/to/GenoaCathedral
-        :param mp: calculated in parallel (using threads) or not
+        :param mp: calculated in parallel (using multiprocessing) or not
         :param rel_input_image_path: path to images for cv relative to dataset_path
         :param interval: overrides all other behaviour and will calculate on given interval of points.
         :param: save_of: will save the Optical Flow results to dataset_path/CircleFittingResults
