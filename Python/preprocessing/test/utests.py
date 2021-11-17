@@ -2,7 +2,7 @@ import unittest
 from circleselector.datatypes import PointDict
 import os
 
-class UTestDatatypes(unittest.TestCase):
+class UTestPreprocessing(unittest.TestCase):
     """
     Unit tests for datatypes module in circleselector.
     """
@@ -43,7 +43,9 @@ class UTestDatatypes(unittest.TestCase):
         # need to generate the data again
         self.data.toJSON(self.save_path)
 
+        # generate the object
         expected = PointDict()
+        # update it using the data we just generated
         expected.fromJSON(self.save_path)
         self.assertEqual(expected,PointDict(from_file=self.save_path))
 
