@@ -50,17 +50,5 @@ class TestCircleSelector(unittest.TestCase):
         self.assertEqual(comp,test)
 
 
-
-
-    # def test_cv(self):
-    #     if not os.path.exists(self.best_intervals_json):
-    #         self.skipTest(self.best_intervals_json + " not found.")
-    #     if not os.path.exists(self.data_json):
-    #         self.skipTest(self.data_json + " not found.")
-    #
-    #     data = PointDict(from_file=self.data_json)
-    #     points = circleselector.loader.load_file(self.ovslam_csv)
-    #     test = circleselector.metrics.calc(points,data.find_local_minima(),errors=["ssim","psnr"])
-
 if __name__ == '__main__':
     unittest.main()
