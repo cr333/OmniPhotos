@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 from scipy import ndimage as ndi
 from skimage.feature import peak_local_max

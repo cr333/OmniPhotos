@@ -1,1 +1,1 @@
-{"test_data_root_dir": "C:\\Setup\\test_data\\testDatasets\\circular\\Hilltop", "relative_path_frame_trajectory_csv": "Capture/openvslam/frame_trajectory.txt", "relative_path_best_intervals_test": "Capture/best_intervals_test.json"}
+{"test_data_root_dir": "C:\\Setup\\test_data\\testDatasets\\circular\\Hilltop", "relative_path_frame_trajectory_csv": "Capture/openvslam/frame_trajectory.txt", "relative_path_best_intervals_test": "Capture/best_intervals.json"}

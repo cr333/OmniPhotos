@@ -1,9 +1,22 @@
 import unittest
 import circleselector
 from circleselector.datatypes import PointDict
-import numpy as np
+from preproc_app import PreprocAPP
 import os
 import json
+
+class TestPreprocessing(unittest.TestCase):
+    def setUp(self) -> None:
+        self.currdir = os.path.dirname(__file__)
+        with open(os.path.join(self.currdir,"paths.json"),"r") as ifile:
+            dct = json.load(ifile)
+        self.config_filepath = os.path.join(dct["test_data_root_dir"],
+                                            "python-config.yaml")
+    def test_main(self):
+        app = PreprocAPP({"config_file":self.config_filepath,
+                          "headless":True})
+        app.run()
+        self.assertTrue(True, "Integration test passed with no exceptions.")
 
 class TestCircleSelector(unittest.TestCase):
     def setUp(self) -> None:
@@ -37,18 +50,6 @@ class TestCircleSelector(unittest.TestCase):
         self.assertIsNotNone(circleselector.metrics.calc(points,
                                                          errors=["endpoint_error", "flatness_error",
                                                                  "perimeter_error","pairwise_distribution"]))
-
-    def test_sort(self):
-        if not os.path.exists(self.best_intervals_json):
-            self.skipTest(self.best_intervals_json + " not found.")
-        if not os.path.exists(self.data_json):
-            self.skipTest(self.data_json + " not found.")
-        data = PointDict(from_file=self.data_json)
-        test = data.find_local_minima().get("interval")
-        comp = PointDict(from_file=self.best_intervals_json).get("interval")
-
-        self.assertEqual(comp,test)
-
 
 if __name__ == '__main__':
     unittest.main()

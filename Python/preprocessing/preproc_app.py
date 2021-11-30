@@ -12,7 +12,7 @@ from traj_preprocessor import TrajPreprocessor
 from op_preprocessor import OpPreprocessor
 from of_preprocessor import OfPreprocessor
 from graph_ui import GraphUI
-#from cl_ui import ClUI
+from cl_ui import ClUI
 
 
 class PreprocAPP:
@@ -28,9 +28,10 @@ class PreprocAPP:
         self.args = args
         self.time_recoder = datetime.datetime.now()
         self.method_thread = None
-
-        #self.interface = ClUI()
-        self.interface = GraphUI("OmniPhotos Preprocessing")
+        if args["headless"]:
+            self.interface = ClUI()
+        else:
+            self.interface = GraphUI("OmniPhotos Preprocessing")
         # register the callback function
         self.interface.before_exit = self.callback_exit
         AbsPreprocessor.abs_ui = self.interface  # register UI
