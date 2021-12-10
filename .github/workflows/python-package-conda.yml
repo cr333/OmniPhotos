@@ -45,6 +45,7 @@ jobs:
     
     - name: Run tests
       run: |
-        set OP_TEST_ROOT_DIR=${{github.workspace}}/testDatasets/Hilltop/
         python Python/preprocessing/test/main.py
+      env:
+        OP_TEST_ROOT_DIR: ${{github.workspace}}/testDatasets/Hilltop/
         
