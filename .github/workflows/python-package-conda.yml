@@ -35,6 +35,7 @@ jobs:
       run: |
         pip uninstall -y skylibs
         git clone https://github.com/reubenlindroos/skylibs.git
+        cd skylibs
         python skylibs/setup.py install
         
     - name: Download test data
