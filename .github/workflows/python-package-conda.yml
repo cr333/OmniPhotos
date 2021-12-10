@@ -29,7 +29,7 @@ jobs:
 #         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
+        pip install -r Python/preprocessing/requirements.txt
     
     - name: Download test data
       run: |
