@@ -31,6 +31,12 @@ jobs:
       run: |
         pip install -r Python/preprocessing/requirements.txt
     
+    - name: Fix skylibs
+      run: |
+        pip uninstall -y skylibs
+        git clone https://github.com/reubenlindroos/skylibs.git
+        python skylibs/setup.py install
+        
     - name: Download test data
       run: |
         curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -o testDatasets.zip -L
