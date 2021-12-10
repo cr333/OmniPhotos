@@ -42,12 +42,9 @@ jobs:
       run: |
         curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -o testDatasets.zip -L
         tar -xf testDatasets.zip -C ${{github.workspace}}
-        
-    - name: Set environment variables
-      run: |
-        set OP_TEST_ROOT_DIR=${{github.workspace}}/testDatasets/Hilltop/
     
     - name: Run tests
       run: |
+        set OP_TEST_ROOT_DIR=${{github.workspace}}/testDatasets/Hilltop/
         python Python/preprocessing/test/main.py
         
