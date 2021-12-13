@@ -15,8 +15,4 @@ from itests import *
 from utests import *
 
 if __name__ == '__main__':
-    #unittest.main()
-    # print(os.environ["OP_TEST_ROOT_DIR"])
-    # print(list(os.environ["OP_TEST_ROOT_DIR"]))
-    app = PreprocAPP({"config_file":os.environ["OP_TEST_ROOT_DIR"],
-                      "headless":True})
+    unittest.main()
