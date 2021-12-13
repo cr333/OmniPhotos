@@ -1,6 +1,5 @@
 import unittest
 import circleselector
-from circleselector.datatypes import PointDict
 from preproc_app import PreprocAPP
 import os
 import json
@@ -47,7 +46,8 @@ class TestCircleSelector(unittest.TestCase):
             self.skipTest(self.ovslam_csv + " not found")
         points = circleselector.loader.load_file(self.ovslam_csv)
         data = circleselector.metrics.calc(points,
-                                           errors=["endpoint_error", "flatness_error",
+                                           errors=["endpoint_error",
+                                                   "flatness_error",
                                                    "perimeter_error"])
         # save data for a later test
         data.toJSON(self.data_json)
