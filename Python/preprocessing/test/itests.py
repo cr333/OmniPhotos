@@ -4,22 +4,6 @@ from preproc_app import PreprocAPP
 import os
 import json
 
-class TestPreprocessing(unittest.TestCase):
-    def setUp(self) -> None:
-        self.curr_dir = os.path.dirname(__file__)
-        self.test_data_root_dir = os.environ["OP_TEST_ROOT_DIR"].replace('"','')
-        self.config_filepath = os.path.join(self.test_data_root_dir,
-                                            "python-config.yaml")
-    def test_main(self):
-        try:
-            app = PreprocAPP({"config_file":self.config_filepath,
-                              "headless":True})
-            app.run()
-        except Exception as error:
-            self.fail("Failed with {}".format(error))
-
-        self.assertTrue(True, "Integration test passed with no exceptions.")
-
 class TestCircleSelector(unittest.TestCase):
     def setUp(self) -> None:
         self.curr_dir = os.path.dirname(__file__)
