@@ -1,0 +1,51 @@
+name: Python Package using Conda
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7.5
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7.5
+#     - name: Add conda to system path
+#       run: |
+#         # $CONDA is an environment variable pointing to the root of the miniconda directory
+#         echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        pip install -r Python/preprocessing/requirements.txt
+    
+    - name: Fix skylibs
+      run: |
+        pip uninstall -y skylibs
+        git clone https://github.com/reubenlindroos/skylibs.git
+        cd skylibs
+        python setup.py install
+        
+    - name: Download test data
+      run: |
+        curl https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-test-data.zip -o testDatasets.zip -L
+        tar -xf testDatasets.zip -C ${{github.workspace}}
+    
+    - name: Run tests
+      run: |
+        python Python/preprocessing/test/main.py
+      env:
+        OP_TEST_ROOT_DIR: ${{github.workspace}}/testDatasets/circular/Hilltop/
+        

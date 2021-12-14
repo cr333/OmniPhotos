@@ -14,6 +14,10 @@ if __name__ == '__main__':
         '-c', '--config_file',
         help='YAML configuration file for the preprocessing pipeline',
         required=True)
+    parser.add_argument(
+        '-hd', '--headless',
+        help = 'run without GUI',
+        default = False)
     args = parser.parse_args()
 
     # start preprocessing

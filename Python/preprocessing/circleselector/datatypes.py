@@ -9,11 +9,13 @@ class PointDict(list):
     """
     A class to contain the calculated data from Metrics.
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, from_file:str = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.keys = []
         if len(self) > 0:
             self.keys = list(self[0].keys())
+        if from_file:
+            self.fromJSON(from_file)
 
     def __str__(self):
         output = []
