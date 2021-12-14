@@ -146,7 +146,6 @@ class AbsPreprocessor:
                             stop=image_end_idx + 1, num=frame_fixed_number)
             frame_idx_list = list(frame_idx_list.astype(int))
         self.desired_frame_indices = frame_idx_list
-        # remove the unwanted images
         self.trajectory_images_list = [filename_expression % frame for frame in frame_idx_list]  # files to keep
         self.trajectory_images_list = [os.path.basename(f) for f in self.trajectory_images_list]  # filenames to keep
 
