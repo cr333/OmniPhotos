@@ -301,7 +301,7 @@ class OpPreprocessor(AbsPreprocessor):
                                                     errors=["ssim","psnr"],
                                                     mp=False,
                                                     dataset_path=self.root_dir,
-                                                    rel_input_image_path=os.path.join(self.temp_dir,'trajectory_images'))
+                                                    rel_input_image_path="temp/trajectory_images")
             intervals.toJSON(cached_res)
             intervals.split_interval().toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
         if len(intervals) == 0:
