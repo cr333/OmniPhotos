@@ -92,7 +92,8 @@ class OpPreprocessor(AbsPreprocessor):
         # viewNumber-[full/half/quarter]Res-[nostab/stab]-[DIS/flownet2]
         self.cache_folder_path_flownet2 = None
         self.op_preprocessing_cache_dir = None
-
+        self.circle_selector_start_idx = 0
+        self.circle_selector_end_idx = -1
 
 
     def comput_downsample_scalar(self):
@@ -307,8 +308,8 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info("No intervals found.","error")
 
         stable_circle = intervals.find_best_interval()["interval"]
-        self.image_start_idx, self.image_end_idx = stable_circle[0], stable_circle[1]
-        self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
+        self.circle_selector_start_idx, self.circle_selector_end_idx= stable_circle[0], stable_circle[1]
+        self.op_image_list = self.trajectory_images_list[self.circle_selector_start_idx:self.circle_selector_end_idx]
 
     def omniphotos_generate_input_images(self):
         """
@@ -662,8 +663,10 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
             if self.config["preprocessing.find_stable_circle"]:
                 # since image start_idx and end_idx will have been updated by circleselector by this point.
-                csv_rows = list(yaml_traj_csv_file_handle)[self.image_start_idx:self.image_end_idx]
-                desired_row_indiced = self.desired_frame_indices[self.image_start_idx:self.image_end_idx]
+                start_idx = self.circle_selector_start_idx
+                end_idx = self.circle_selector_end_idx
+                csv_rows = list(yaml_traj_csv_file_handle)[start_idx:end_idx]
+                desired_row_indiced = self.desired_frame_indices[start_idx:end_idx]
                 for enum,row in enumerate(csv_rows):
                     idx = desired_row_indiced[enum]
                     row[0] = self.original_filename_expression % idx
