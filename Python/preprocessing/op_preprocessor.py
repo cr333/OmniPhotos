@@ -372,7 +372,7 @@ class OpPreprocessor(AbsPreprocessor):
 
     def omniphotos_logging(self):
         """
-        Output preprocessing log file to the cache directory. 
+        Output preprocessing log file to the cache directory.
         The log info including at binary HASH code, commit info, etc.
         """
         logging_str = ""
@@ -660,26 +660,22 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output = csv.writer(yaml_traj_file_handle_output, delimiter=' ',
                                                           quoting=csv.QUOTE_MINIMAL)
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
-
             if self.config["preprocessing.find_stable_circle"]:
                 # since image start_idx and end_idx will have been updated by circleselector by this point.
-                desired_frame_indices = self.desired_frame_indices[self.image_start_idx:self.image_end_idx]
-                # need to establish what row in the csv each frame we have extracted corresponds to
-                # if frame_fixed_number != -1
-                desired_row_indices = []
-                for idx in desired_frame_indices:
-                    desired_row_indices.append(idx - desired_frame_indices[-1] + self.image_start_idx)
-                for enum,row in enumerate(yaml_traj_csv_file_handle):
-                    if enum in desired_row_indices:
-                        idx = enum - self.image_start_idx + desired_frame_indices[-1]
+                csv_rows = list(yaml_traj_csv_file_handle)[self.image_start_idx:self.image_end_idx]
+                desired_row_indiced = self.desired_frame_indices[self.image_start_idx:self.image_end_idx]
+                for enum,row in enumerate(csv_rows):
+                    idx = desired_row_indiced[enum]
+                    row[0] = self.original_filename_expression % idx
+                    yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
+
+            else:
+                csv_rows = list(yaml_traj_csv_file_handle)
+                for enum,idx in enumerate(self.desired_frame_indices):
+                    if self.image_start_idx < idx < self.image_end_idx:
+                        row = csv_rows[enum]
                         row[0] = self.original_filename_expression % idx
                         yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
-            else:
-                desired_frame_indices = self.desired_frame_indices
-                for enum,row in enumerate(yaml_traj_csv_file_handle):
-                    if enum in desired_frame_indices:
-                        row[0] = self.original_filename_expression % enum
-                        yaml_traj_csv_file_handle_output.writerow([str(enum)] + row)
 
 
 
