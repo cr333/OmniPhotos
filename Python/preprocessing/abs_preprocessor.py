@@ -170,7 +170,7 @@ class AbsPreprocessor:
         config_file = args["config_file"]
         config_file_path = pathlib.Path(config_file)
         if config_file == "" or not config_file_path.exists():
-            msg = "config_file path is wrong: {}".format(args.config_file)
+            msg = "config_file path is wrong: {}".format(args["config_file"])
             self.show_info(msg)
 
         # set the root folder
