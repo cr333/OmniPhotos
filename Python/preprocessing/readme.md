@@ -7,7 +7,32 @@ The preprocessing application's GUI looks as follows. The red box is the preview
 ![Preprocessing GUI](./images/readme_00_ui.jpg)
 
 
-# 1. Run-time environment
+# 1. Exported preprocessing binary
+
+An exported preprocessing binary with all the necessary files can be found [here](release-url).
+This folder contains all the necessary software in order to generate the dataset from a 360 video and view it.
+
+The run-time environment for these binaries, and necessary dependencies, are as follows:
+The default version of runtime 3rd-party software:
+
+- **Platform**: Windows 10 amd64
+- **ffmpeg**: 4.2.1 (see section 2.6 below)
+
+All other depencies should be provided in the exportable folder.
+
+
+In order to run this, first download and extract the preprocessing binary folder.
+Secondly extract the video according to 2.1 below. 
+Thirdly, copy the `python-config` template from the preprocessing binary folder to the same directory as the video, change the `preprocessing.input_path`
+in the config to the name of your video and run:
+
+```
+   path\to\preproc-bin.exe -c path\to\config.yaml
+```
+
+Below are instructions to install and run the package using Python. 
+
+# 2. Run-time environment
 
 The default version of runtime 3rd-party software:
 
@@ -20,7 +45,7 @@ The default version of runtime 3rd-party software:
 - **Blender**: 2.8 or later
 
 
-## 1.1. Insta360 Studio 2019
+## 2.1. Insta360 Studio 2019
 
 Get 'Insta360 Studio 2019' from the [official website](https://www.insta360.com/download/insta360-onex).
 We use Insta360 Studio version **3.4.2**.
@@ -28,7 +53,7 @@ At some point between versions **3.4.2** and **3.4.6**, the `FlowState stabilisa
 To keep the exported video upright, export the video with Insta360 Studio **3.4.2** with `FlowState stabilisation` and without `Direction Lock`.
 
 
-## 1.2. Python
+## 2.2. Python
 
 Download the installer from [Python official website](https://www.python.org/downloads/).
 After setup the python, run the following command to initialise the Python virtual environment and install the necessary packages of the preprocessing script.
@@ -50,7 +75,7 @@ pip install -r ./requirements.txt
 ```
 
 
-## 1.3. OpenVSLAM
+## 2.3. OpenVSLAM
 
 Download the OpenVSLAM source code from the [official website](https://github.com/xdspacelab/openvslam) and set up following the official installation guide in Linux.
 Meanwhile, apply the patches in the `openvslam` folder to the official source code:
@@ -61,12 +86,12 @@ Meanwhile, apply the patches in the `openvslam` folder to the official source co
 If you run OpenVSLAM on Windows you can download the modified OpenVSLAM's pre-built binaries from [openvslam-bin-dd8af1c](https://drive.google.com/file/d/1gQU4SVQqAD3i9jgSNwDvYc1596C27QfE/view?usp=sharing).
 
 
-## 1.4. COLMAP
+## 2.4. COLMAP
 
 Download the pre-built COLMAP `3.6-dev.3` from [GitHub](https://github.com/colmap/colmap/releases), and download the Vocabulary Trees files `Vocabulary tree with 1M visual words` from the [official COLMAP website](https://demuc.de/colmap/).
 
 
-## 1.5. FlowNet2
+## 2.5. FlowNet2
 
 The pre-processing script optionally uses [flownet2-pytorch](https://github.com/NVIDIA/flownet2-pytorch) to compute optical flow.
 The pre-trained models can be downloaded from [GitHub](https://github.com/NVIDIA/flownet2-pytorch#converted-caffe-pre-trained-models).
@@ -85,7 +110,7 @@ Pre-built *.pyd with following environment:
 If you need other versions, please get more information from the [official FlowNet2-PyTorch website](https://github.com/NVIDIA/flownet2-pytorch).
 
 
-## 1.6. FFmpeg
+## 2.6. FFmpeg
 
 The pre-processing script is dependent on the Python interface of FFmpeg (`ffmpeg-python`), which depends on the `ffmpeg.exe` and `ffprob.exe` files.
 
@@ -93,13 +118,13 @@ Please download the FFmpeg windows-x64-static binary package from the [official 
 And add the root folder of ffmpeg.exe to the `PATH` environment variables of Windows.
 
 
-## 1.7. OmniPhotos
+## 2.7. OmniPhotos
 
 This dataset preprocessing script will call the OmniPhotos `Preprocessing` program to generate the sphere fitting mesh, etc.  
 Please download the OmniPhotos binaries or build OmniPhotos from source, and replace the absolute path of `Preprocessing.exe` in **config_omniphotos.yaml** with yours.
 
 
-# 2. Dataset preprocessing
+# 3. Dataset preprocessing
 
 There are two kinds of preprocessing:
 1. The input video captures contains multiple circles/swings, so we need additional steps to select the best circle motion, as described in [Section 2.2](#22-selecting-the-best-circle-openvslam-only).
@@ -107,7 +132,7 @@ There are two kinds of preprocessing:
    The preprocessing steps are described in [Section 2.1](#21-preprocessing-steps).
 
 
-## 2.1. Preprocessing steps
+## 3.1. Preprocessing steps
 
 There are 4 steps in the pre-processing pipeline :
 
@@ -119,7 +144,7 @@ There are 4 steps in the pre-processing pipeline :
 ![Preprocessing Pipline](./images/script_pipline.jpg)
 
 
-### 2.1.1. YAML configuration file
+### 3.1.1. YAML configuration file
 
 The `config_omniphotos.yaml` YAML configuration file controls all pre-processing steps and settings.
 Before running the script, copy the OmniPhotos preprocessor configuration file `config_omniphotos.sample.yaml` from the current folder to the root of the dataset folder, and rename it to `config_omniphotos.yaml`.
@@ -134,7 +159,7 @@ The conventions of `config_omniphotos.yaml`:
 3. The working root folder is the parent directory of `config_omniphotos.yaml`.
 
 
-### 2.1.2. Preparing data
+### 3.1.2. Preparing data
 
 This step will extract/transform video/image sequence to trajectory ready images and OmniPhotos Preprocessing ready files.
 More configuration detail can be found by referencing the `preprocessing.*` options in the `config_omniphotos.sample.yaml` file.
@@ -161,7 +186,7 @@ There are options corresponding to extracting images from the video:
 Store the images in the root and change the corresponding options in the `config_omniphotos.sample.yaml` file.
 
 
-### 2.1.3. Trajectory reconstruction
+### 3.1.3. Trajectory reconstruction
 
 Call COLMAP and/or OpenVSLAM to reconstruct the camera's trajectory from the video/images generated by the previous step.
 Please reference the configuration of `preprocessing.colmap.*` and `preprocessing.openvslam.*` options in the `config_omniphotos.sample.yaml` file.
@@ -172,7 +197,7 @@ When using COLMAP to reconstruct, copy the COLMAP export txt format model to `Ca
 If the COLMAP reconstruction failed, change the variable `frame_interval` and run the second step again.
 
 
-### 2.1.4. OmniPhotos files generation
+### 3.1.4. OmniPhotos files generation
 
 This generates the configuration files for OmniPhotos as described in [Section 3.1.2](#312-omniphotos-ready-folder-structure).
 It converts the OpenVSLAM raw output data to OmniPhotos style.
@@ -181,7 +206,7 @@ Finally, OmniPhotos `Preprocessing` is called to generate the Camera.csv and sph
 For configuration, please refer to the `preprocessing.omniphotos.*` options in the `config_omniphotos.sample.yaml` file.
 
 
-### 2.1.5. Optical flow (FlowNet2)
+### 3.1.5. Optical flow (FlowNet2)
 
 The script will read the `Camera.csv` file and call FlowNet2 to compute the optical flow.
 The optical flow will store to `*.flo` files in the `Cache` folder.
@@ -189,7 +214,7 @@ The optical flow will store to `*.flo` files in the `Cache` folder.
 For configuration of FlowNet2, please reference the `preprocessing.of.*` options in the `config_omniphotos.sample.yaml` file.
 
 
-## 2.2. Selecting the best circle (OpenVSLAM only)
+## 3.2. Selecting the best circle (OpenVSLAM only)
 
 This section only applies to camera trajectories reconstructed with OpenVSLAM.
 
@@ -197,15 +222,15 @@ In most cases, the captured video contains multi-circle camera motion.
 Before continuing with the preprocessing, we need to select the best camera motion circle. 
 There are two options for doing this:
 
-### 2.2.1 Selecting the circle automatically (Recommended)
+### 3.2.1 Selecting the circle automatically (Recommended)
 
 To select the best circle automatically, the option `preprocessing.find_stable_circle` should be set to `True`. 
 The script will then find the `frame_trajectory.txt` file, select the best circle in the camera path and continue with the next step of the preprocessing. The script will generate some files in the `Capture\` subdirectory of the dataset. 
 These include a heatmap showing the errors of different intervals where the location of the best circles are shown as red dots. 
 The values for these intervals can be found in the `best_intervals.csv` file. 
-If the automatic circle selection has failed, set the `preprocessing.find_stable_circle` option to `False` and follow the manual method below (2.2.2).     
+If the automatic circle selection has failed, set the `preprocessing.find_stable_circle` option to `False` and follow the manual method below (3.2.2).     
 
-### 2.2.2 Selecting the circle manually (Optional)
+### 3.2.2 Selecting the circle manually (Optional)
 
 To select the best stable cycle from the OpenVSLAM camera trajectory manually, use the `rander_traj.blend` file to visualise the reconstructed result.
 
@@ -239,12 +264,12 @@ To select the best stable cycle from the OpenVSLAM camera trajectory manually, u
 1. make the cut as hidden as possible, in the least interesting direction of the video (e.g. far-away or uniform textures).
 
 
-## 2.3. OpenVSLAM reconstruction
+## 3.3. OpenVSLAM reconstruction
 
 By default, we use OpenVSLAM to reconstruct the camera pose.
 
 
-### 2.3.1. Reconstructing the camera pose
+### 3.3.1. Reconstructing the camera pose
 
 Run OpenVSLAM to get the camera pose, it will output two files: `map.msg` and `traj.csv`.
 
@@ -290,7 +315,7 @@ run_camera_pose_reconstruction_video.exe \
 -t localization
 ```
 
-### 2.3.2. Data mask (optional)
+### 3.3.2. Data mask (optional)
 
 To remove the photographer and reduce outlier points, we can use a mask image for each frame to ignore points in a given region.
 The mask images should be stored in the same way as the video and named `mask_images`.
@@ -308,17 +333,17 @@ The output files:
 - Mask images: `*.png` format, compress level 9.
 
 
-# 3. Conventions
+# 4. Conventions
 
 The convention of the directory structure and development.
 
 
-## 3.1. Directory structure
+## 4.1. Directory structure
 
 Introducing the folder structure of preprocessing data and processed data.
 
 
-### 3.1.1. Preprocessing folder structure
+### 4.1.1. Preprocessing folder structure
 
 There are 3 kinds of folder in the whole preprocessing program:
 
@@ -404,7 +429,7 @@ KyotoShrines                                         # defines the name of the d
 ```
 
 
-### 3.1.2. OmniPhotos-ready folder structure
+### 4.1.2. OmniPhotos-ready folder structure
 
 The OmniPhotos-ready dataset trimmed the cache and redundant data, and removed unnecessary data.
 
@@ -450,7 +475,7 @@ KyotoShrines                                             # defines the name of t
     └── panoramic-1231.png
 ```
 
-## 3.2. Development
+## 4.2. Development
 
 The coding convention used is the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html).
 
@@ -458,9 +483,9 @@ Variables convention:
 - The index of image start from 0.
 
 
-# 4. FAQs
+# 5. FAQs
 
-## 4.1. Skylibs importing error 
+## 5.1. Skylibs importing error 
 
 **Description:**
 error message "OSError: cannot load library y:\xxxxxxxxxxxx\skylibs\ezexr\libstdc++-6.dll: error 0x7e"
@@ -489,7 +514,7 @@ index cd42332..38929f0 100644
 ```
 
 
-## 4.2. Runtime errors
+## 5.2. Runtime errors
 
 1. **Description:** MSVC14.dll
 
@@ -502,7 +527,7 @@ index cd42332..38929f0 100644
    Add the path of CUDA 9.2 `cudart.dll` to the system path environment variable.
 
 
-## 4.3. Data visualisation
+## 5.3. Data visualisation
 
 **Description:**
 How to open COLMAP `*.bin` files?
@@ -514,7 +539,7 @@ Import *.bin files with COLMAP-GUI:
 `File`->`Import Model`-> Select the *.bin storage folder -> `Select Folder`?
 
 
-## 4.4. MsgPack
+## 5.4. MsgPack
 
 **Description:**
 when load \*.msg file, error " xxxx  exceeds max_bin_len(xxxx) "
