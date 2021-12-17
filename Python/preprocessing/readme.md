@@ -27,8 +27,32 @@ Thirdly, copy the `python-config` template from the preprocessing binary folder 
 in the config to the name of your video and run:
 
 ```
-   path\to\preproc-bin.exe -c path\to\config.yaml
+   path/to/preproc/preproc.exe -c path/to/config.yaml
 ```
+
+## 1.1 Updating the Preproc Binary
+
+In order to generate a new binary from the python code, first set up a python environment according to the instructions below. 
+Following this install pyinstaller with pip:
+
+```
+   pip install pyinstaller
+```
+
+Then run:
+
+```
+   pyinstaller main.py --name preproc
+```
+from this directory.
+This will generate a new `dist/` directory in `preprocessing/` containing the directory `preproc` with all the necessary dlls and binaries. 
+You will need to make a copy of the `template/` directory to the `preproc/` directory as well:
+
+```
+   cp -r template dist/preproc/
+```
+
+The config template provided assumes the openvslam and omniphotos binaries are in the same directory so these should be copied to the `dist/` directory.
 
 Below are instructions to install and run the package using Python. 
 
