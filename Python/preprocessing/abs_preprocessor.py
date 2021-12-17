@@ -94,12 +94,14 @@ class AbsPreprocessor:
         # create the images list and keep copy of desired indices for generation of
         # config files for later
         self.set_trajectory_images_list(self.original_filename_expression,
-                                        self.config["preprocessing.frame_fixed_number"], self.image_start_idx,
-                                        self.image_end_idx)
+                                        self.config["preprocessing.frame_fixed_number"])
 
 
         # NOTE: op_image_list gets overwritten by op_preprocessor if preprocessing.find_stable_cirle is True
-        self.op_image_list = self.trajectory_images_list
+        self.set_op_image_list(self.original_filename_expression,
+                               self.config["preprocessing.frame_fixed_number"], self.image_start_idx,
+                               self.image_end_idx)
+
 
         self.image_list = self.op_image_list
 
@@ -131,22 +133,31 @@ class AbsPreprocessor:
         self.cache_folder_name = None
 
         self.check_config()
+    def set_op_image_list(self,filename_expression,
+                          frame_fixed_number,
+                          image_start_idx,
+                          image_end_idx):
+
+        if frame_fixed_number <= 0:
+            self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
+        else:
+            self.op_image_list = []
+            for enum,idx in enumerate(self.desired_frame_indices):
+                if image_start_idx < idx < image_end_idx:
+                    self.op_image_list.append(self.trajectory_images_list[enum])
 
     def set_trajectory_images_list(self, filename_expression,
-                                   frame_fixed_number,
-                                   image_start_idx,
-                                   image_end_idx):
+                                   frame_fixed_number):
         # generate the list of desired frame indices
         if frame_fixed_number <= 0:
             vframes_size = 1  # NOTE : should be 1
-            frame_idx_list = list(range(image_start_idx, image_end_idx + 1, vframes_size))
+            frame_idx_list = list(range(0, self.frame_number, vframes_size))
         else:
             frame_idx_list = \
-                np.linspace(start=image_start_idx, \
-                            stop=image_end_idx + 1, num=frame_fixed_number)
+                np.linspace(start=0, \
+                            stop=self.frame_number, num=frame_fixed_number)
             frame_idx_list = list(frame_idx_list.astype(int))
         self.desired_frame_indices = frame_idx_list
-        # remove the unwanted images
         self.trajectory_images_list = [filename_expression % frame for frame in frame_idx_list]  # files to keep
         self.trajectory_images_list = [os.path.basename(f) for f in self.trajectory_images_list]  # filenames to keep
 
@@ -159,7 +170,7 @@ class AbsPreprocessor:
         config_file = args["config_file"]
         config_file_path = pathlib.Path(config_file)
         if config_file == "" or not config_file_path.exists():
-            msg = "config_file path is wrong: {}".format(args.config_file)
+            msg = "config_file path is wrong: {}".format(args["config_file"])
             self.show_info(msg)
 
         # set the root folder

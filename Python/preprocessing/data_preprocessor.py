@@ -264,8 +264,8 @@ class DataPreprocessor(AbsPreprocessor):
             frame_idx_list = list(range(self.image_start_idx, self.image_end_idx + 1, vframes_size))
         else:
             frame_idx_list = \
-                np.linspace(start=self.image_start_idx, \
-                    stop=self.image_end_idx + 1, num=self.frame_fixed_number)
+                np.linspace(start=0,
+                    stop=self.frame_number, num=self.frame_fixed_number)
             frame_idx_list = list(frame_idx_list.astype(int))
 
         # remove the unwanted images

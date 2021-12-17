@@ -11,7 +11,7 @@ from preproc_app import PreprocAPP
 # isn't in the root directory the imports don't work.
 
 
-from itests import *
+from itests import TestCircleSelector
 from utests import *
 
 if __name__ == '__main__':

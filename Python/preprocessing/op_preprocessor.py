@@ -92,7 +92,8 @@ class OpPreprocessor(AbsPreprocessor):
         # viewNumber-[full/half/quarter]Res-[nostab/stab]-[DIS/flownet2]
         self.cache_folder_path_flownet2 = None
         self.op_preprocessing_cache_dir = None
-
+        self.circle_selector_start_idx = 0
+        self.circle_selector_end_idx = -1
 
 
     def comput_downsample_scalar(self):
@@ -300,15 +301,15 @@ class OpPreprocessor(AbsPreprocessor):
                                                     errors=["ssim","psnr"],
                                                     mp=False,
                                                     dataset_path=self.root_dir,
-                                                    rel_input_image_path=os.path.join(self.temp_dir,'trajectory_images'))
+                                                    rel_input_image_path="temp/trajectory_images")
             intervals.toJSON(cached_res)
             intervals.split_interval().toCSV(os.path.join(self.capture_data_dir,"best_intervals.csv"))
         if len(intervals) == 0:
             self.show_info("No intervals found.","error")
 
         stable_circle = intervals.find_best_interval()["interval"]
-        self.image_start_idx, self.image_end_idx = stable_circle[0], stable_circle[1]
-        self.op_image_list = self.trajectory_images_list[self.image_start_idx:self.image_end_idx]
+        self.circle_selector_start_idx, self.circle_selector_end_idx= stable_circle[0], stable_circle[1]
+        self.op_image_list = self.trajectory_images_list[self.circle_selector_start_idx:self.circle_selector_end_idx]
 
     def omniphotos_generate_input_images(self):
         """
@@ -372,7 +373,7 @@ class OpPreprocessor(AbsPreprocessor):
 
     def omniphotos_logging(self):
         """
-        Output preprocessing log file to the cache directory. 
+        Output preprocessing log file to the cache directory.
         The log info including at binary HASH code, commit info, etc.
         """
         logging_str = ""
@@ -660,23 +661,26 @@ class OpPreprocessor(AbsPreprocessor):
             yaml_traj_csv_file_handle_output = csv.writer(yaml_traj_file_handle_output, delimiter=' ',
                                                           quoting=csv.QUOTE_MINIMAL)
             yaml_traj_csv_file_handle_output.writerow(output_csv_header)
-
             if self.config["preprocessing.find_stable_circle"]:
                 # since image start_idx and end_idx will have been updated by circleselector by this point.
-                desired_frame_indices = self.desired_frame_indices[self.image_start_idx:self.image_end_idx]
-            else:
-                desired_frame_indices = self.desired_frame_indices
-
-            # need to establish what row in the csv each frame we have extracted corresponds to
-            # if frame_fixed_number != -1
-            desired_row_indices = []
-            for idx in desired_frame_indices:
-                desired_row_indices.append(idx - desired_frame_indices[0] + self.image_start_idx)
-            for enum,row in enumerate(yaml_traj_csv_file_handle):
-                if enum in desired_row_indices:
-                    idx = enum - self.image_start_idx + desired_frame_indices[0]
+                start_idx = self.circle_selector_start_idx
+                end_idx = self.circle_selector_end_idx
+                csv_rows = list(yaml_traj_csv_file_handle)[start_idx:end_idx]
+                desired_row_indiced = self.desired_frame_indices[start_idx:end_idx]
+                for enum,row in enumerate(csv_rows):
+                    idx = desired_row_indiced[enum]
                     row[0] = self.original_filename_expression % idx
                     yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
+
+            else:
+                csv_rows = list(yaml_traj_csv_file_handle)
+                for enum,idx in enumerate(self.desired_frame_indices):
+                    if self.image_start_idx < idx < self.image_end_idx:
+                        row = csv_rows[enum]
+                        row[0] = self.original_filename_expression % idx
+                        yaml_traj_csv_file_handle_output.writerow([str(idx)] + row)
+
+
 
     def openvslam_create_camera_file(self, output_path):
         """
