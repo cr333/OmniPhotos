@@ -7,52 +7,51 @@ The preprocessing application's GUI looks as follows. The red box is the preview
 ![Preprocessing GUI](./images/readme_00_ui.jpg)
 
 
-# 1. Exported preprocessing binary
+# 1. OmniPhotos Preprocessing Tool
 
-An exported preprocessing binary with all the necessary files can be found [here](release-url).
-This folder contains all the necessary software in order to generate the dataset from a 360 video and view it.
+An exported preprocessing binary for creating and viewing OmniPhotos can be downloaded [from the Releases](https://github.com/cr333/OmniPhotos/releases/download/v1.1/OmniPhotos-v1.1-win10-x64.zip).
+This package contains all the necessary binaries and dependencies to generate a dataset from a stitched 360° video, and to view it.
 
-The run-time environment for these binaries, and necessary dependencies, are as follows:
-The default version of runtime 3rd-party software:
+Required run-time environment:
 
-- **Platform**: Windows 10 amd64
-- **ffmpeg**: 4.2.1 (see section 2.6 below)
+- **Platform**: Windows 10 (x64)
+- [**FFmpeg**](https://ffmpeg.org/): version 4.2.1 or newer (see [Section 2.6](#26-ffmpeg) below)
 
-All other depencies should be provided in the exportable folder.
+All other dependencies are provided in the package.
 
+How to use:
 
-In order to run this, first download and extract the preprocessing binary folder.
-Secondly extract the video according to 2.1 below. 
-Thirdly, copy the `python-config` template from the preprocessing binary folder to the same directory as the video, change the `preprocessing.input_path`
-in the config to the name of your video and run:
-
-```
-   path/to/preproc/preproc.exe -c path/to/config.yaml
-```
-
-## 1.1 Updating the Preproc Binary
-
-In order to generate a new binary from the python code, first set up a python environment according to the instructions below. 
-Following this install pyinstaller with pip:
+1. Download and extract the binary package.
+2. Stitch the 360° video according to [Section 2.1](#21-insta360-studio-2019) below.
+3. Copy the `python-config.yaml` template from the preprocessing binary folder to the same directory as the video, update the `preprocessing.input_path` setting in it to the name of your video, and run:
 
 ```
+   ./preproc/preproc.exe -c python-config.yaml
+```
+
+## 1.1 Updating the Preprocessing Tool
+
+To generate a new binary from the Python source code, follow these steps:
+
+1. Set up a Python environment according to the [instructions below](#2-run-time-environment).
+
+2. Install [pyinstaller](https://www.pyinstaller.org/) with pip:
+   ```
    pip install pyinstaller
-```
+   ```
 
-Then run:
-
-```
+3. Then run this command in this directory:
+   ```
    pyinstaller main.py --name preproc
-```
-from this directory.
-This will generate a new `dist/` directory in `preprocessing/` containing the directory `preproc` with all the necessary dlls and binaries. 
-You will need to make a copy of the `template/` directory to the `preproc/` directory as well:
+   ```
+   This will generate a new `dist/` directory containing the directory `preproc` with all the necessary DLLs and binaries.
 
-```
+4. You will also need to copy the `template/` directory to the `preproc/` directory:
+   ```
    cp -r template dist/preproc/
-```
+   ```
 
-The config template provided assumes the openvslam and omniphotos binaries are in the same directory so these should be copied to the `dist/` directory.
+5. The temlate config file `python-config.yaml` provided assumes that the OpenVSLAM and OmniPhotos  binaries are in the same directory, so these should be copied to the `dist/` directory.
 
 Below are instructions to install and run the package using Python. 
 
