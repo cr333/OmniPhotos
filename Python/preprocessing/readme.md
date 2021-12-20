@@ -25,9 +25,9 @@ How to use:
 2. Stitch the 360° video according to [Section 2.1](#21-insta360-studio-2019) below.
 3. Copy the `python-config.yaml` template from the preprocessing binary folder to the same directory as the video, update the `preprocessing.input_path` setting in it to the name of your video, and run:
 
-```
+   ```
    ./preproc/preproc.exe -c python-config.yaml
-```
+   ```
 
 ## 1.1 Updating the Preprocessing Tool
 
@@ -135,10 +135,9 @@ If you need other versions, please get more information from the [official FlowN
 
 ## 2.6. FFmpeg
 
-The pre-processing script is dependent on the Python interface of FFmpeg (`ffmpeg-python`), which depends on the `ffmpeg.exe` and `ffprob.exe` files.
+The preprocessing tool is dependent on the Python interface of FFmpeg (`ffmpeg-python`), which in turn depends on the `ffmpeg.exe` and `ffprob.exe` files.
 
-Please download the FFmpeg windows-x64-static binary package from the [official FFmpeg webside](https://www.ffmpeg.org/download.html).
-And add the root folder of ffmpeg.exe to the `PATH` environment variables of Windows.
+Please download the FFmpeg windows-x64-static binary package from the [official FFmpeg website](https://www.ffmpeg.org/download.html), and add the root folder containing `ffmpeg.exe` to the `PATH` environment variables of Windows.
 
 
 ## 2.7. OmniPhotos
