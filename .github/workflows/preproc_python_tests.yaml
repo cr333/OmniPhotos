@@ -1,4 +1,4 @@
-name: Python Package using Conda
+name: Python Preprocessing Tests
 
 # Controls when the action will run. 
 on:
