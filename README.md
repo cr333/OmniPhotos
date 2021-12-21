@@ -16,9 +16,9 @@ _ACM Transactions on Graphics (SIGGRAPH Asia 2020)_
 
 ## Demo 
 
-The quickest way to try out OmniPhotos is via our [precompiled demo (610 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-Demo-v1.0.2-win10-x64.zip).
+The quickest way to try out OmniPhotos is via our [precompiled demo (970 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.1/OmniPhotos-Demo-v1.1-win10-x64.zip).
 Download and unzip to get started.
-Documentation for the precompiled binaries, which can also be [downloaded separately (25 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.0/OmniPhotos-v1.0.2-win10-x64.zip), can be found [here](docs/demo/README.md).
+Documentation for the precompiled binaries, which can also be [downloaded separately (392 MB)](https://github.com/cr333/OmniPhotos/releases/download/v1.1/OmniPhotos-v1.1-win10-x64.zip), can be found [here](docs/demo/README.md).
 
 For the demo to run smoothly, we recommend a recently updated Windows 10 machine with a discrete GPU.
 
@@ -30,6 +30,7 @@ We provide 31 OmniPhotos for download:
 * [31 unprocessed datasets](https://researchdata.bath.ac.uk/948/6/Unprocessed.zip) with their input videos, camera poses etc.; this includes the 9 preprocessed datasets (17.4 GB zipped, 17.9 GB uncompressed)
 
 **Note:** A few of the .insv files are missing for the 5.7k datasets. If you need to process these from scratch (using the insv files) these files can be found [here](https://www.dropbox.com/sh/uz6lh0e0fbguir9/AABcWBGFy6fdLejOmS0zQioqa?dl=0). 
+
 
 ### How to view OmniPhotos
 
