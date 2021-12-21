@@ -26,7 +26,7 @@ How to use:
 3. Copy the `preproc-config-template.yaml` template from the preprocessing binary folder to the same directory as the video, update the `preprocessing.input_path` setting in it to the name of your video, and run:
 
    ```
-   ./preproc/preproc.exe -c preproc-config.yaml
+   ./preproc/preproc.exe -c preproc-config-template.yaml
    ```
 
 ## 1.1 Updating the Preprocessing Tool
