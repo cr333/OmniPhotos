@@ -129,7 +129,6 @@ class AbsPreprocessor:
         self.colmap_essential_file_list = ["points3D.txt", "images.txt", "cameras.txt", "full_model_ba_points3D.ply"]
 
         # default settting
-        self.ffmpeg_thread_number = 3  # multi-thread thread number configuration
         self.cache_folder_name = None
 
         self.check_config()
@@ -207,8 +206,7 @@ class AbsPreprocessor:
         Check the setting of variables, and set the default value.
         """
         # check the config, if not set, use the default value
-        setting_list = {"preprocessing.ffmpeg_thread_number": self.ffmpeg_thread_number,
-                        "preprocessing.cache_folder_name": self.cache_folder_name}
+        setting_list = {"preprocessing.cache_folder_name": self.cache_folder_name}
         for key in setting_list:
             try:
                 item = self.config[key]

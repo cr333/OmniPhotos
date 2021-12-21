@@ -62,7 +62,6 @@ class OpPreprocessor(AbsPreprocessor):
         self.op_frame_number = self.config["preprocessing.frame_fixed_number"]
         if self.op_frame_number == -1:
             self.op_frame_number = len(self.op_image_list)
-        self.stable_enable = 1 if self.config["preprocessing.omniphotos.stable_enable"] else 0
         self.circle_radius = self.config["preprocessing.omniphotos.circle_radius"]
         if self.circle_radius is None or self.circle_radius <= 0:
             self.show_info("The circle radius {} are wrong.".format(self.circle_radius),"error")
@@ -405,7 +404,7 @@ class OpPreprocessor(AbsPreprocessor):
         """
         OmniPhotos preprocessing program composing with following steps:
         """
-        # 1) generate the configuration file for the stabilized
+        # 1) generate the configuration file for OmniPhotos binary preprocess
         if self.trajectory_tool == "colmap" or self.trajectory_tool == "all":
             modelfiles = "modelFiles.txt"
             self.show_info("OmniPhotos preprocessing with COLMAP trajectory.")
@@ -417,11 +416,10 @@ class OpPreprocessor(AbsPreprocessor):
             self.show_info("Trajectory reconstruction have error.")
 
         if self.op_exe_config_file == "None":
-            stabilization_parameters = {
+            parameters = {
                 r'\$circle_radius\$': str(self.circle_radius),
                 r'\$dataset_name\$': self.dataset_name,
                 r'\$cameras_number\$': str(self.image_end_idx - self.image_start_idx),
-                r'\$process_step\$': "stabilization images",
                 r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
                 r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
                 r'\$sfm_file_name\$': modelfiles,
@@ -435,8 +433,6 @@ class OpPreprocessor(AbsPreprocessor):
                 r'\$image_fps\$': str(self.frame_fps),
                 r'\$change_basis\$': str(0),
                 r'\$intrinsic_scale\$': str(1.0),
-                r'\$stabilize_images\$': str(self.stable_enable),
-                r'\$stabilization_limit\$': str(10000),
                 r'\$downsample_flow\$': str(0) if self.of_downsample_scalar[0] == -1 or self.of_downsample_scalar[0] == 1 else str(1),
                 r'\$compute_optical_flow\$': str(1),
                 r'\$use_point_cloud\$': str(1),
@@ -444,7 +440,7 @@ class OpPreprocessor(AbsPreprocessor):
             self.op_exe_config_file = str(
                 self.output_config_file_path / "config-preprocessing.yaml")
             self.instance_template(self.omniphotos_config_template_path, self.op_exe_config_file,
-                                   stabilization_parameters)
+                                   parameters)
 
         # 2) call OmniPhotos to do preprocess
         if not os.path.exists(self.omniphotos_path):
@@ -481,15 +477,12 @@ class OpPreprocessor(AbsPreprocessor):
             r'\$image_fps\$': str(self.frame_fps),
             r'\$cameras_number\$': str(self.image_end_idx-self.image_start_idx),
             r'\$image_filename\$': self.original_filename_expression,
-            r'\$process_step\$': "stabilization images",
             r'\$cache_folder_dis\$': self.op_preprocessing_cache_dir,
             r'\$cache_folder_flownet2\$': self.cache_folder_path_flownet2,
             r'\$load_3d_points\$': str(1),
             r'\$load_sparse_point_cloud\$': str(1),
             r'\$change_basis\$': str(0),
             r'\$intrinsic_scale\$': str(1.0),
-            r'\$stabilize_images\$': str(self.stable_enable),
-            r'\$stabilization_limit\$': str(10000),
             r'\$downsample_flow\$': str(0) if self.of_downsample_scalar[0] == -1 or self.of_downsample_scalar[0] == 1 else str(1),
             r'\$compute_optical_flow\$': str(0),
             r'\$use_point_cloud\$': str(1),
