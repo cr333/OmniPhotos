@@ -23,7 +23,8 @@ How to use:
 
 1. Download and extract the binary package.
 2. Stitch the 360° video according to [Section 2.1](#21-insta360-studio-2019) below.
-3. Copy the `preproc-config-template.yaml` template from the preprocessing binary folder to the same directory as the video, update the `preprocessing.input_path` setting in it to the name of your video, and run:
+3. Copy the `preproc-config-template.yaml` template from the preprocessing binary folder to the same directory as the video, and update the `preprocessing.input_path` setting in it to the name of your video.
+4. Run this command and wait for completion:
 
    ```
    ./preproc/preproc.exe -c preproc-config-template.yaml
