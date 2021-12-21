@@ -23,10 +23,11 @@ How to use:
 
 1. Download and extract the binary package.
 2. Stitch the 360° video according to [Section 2.1](#21-insta360-studio-2019) below.
-3. Copy the `python-config.yaml` template from the preprocessing binary folder to the same directory as the video, update the `preprocessing.input_path` setting in it to the name of your video, and run:
+3. Copy the `preproc-config-template.yaml` template from the preprocessing binary folder to the same directory as the video, and update the `preprocessing.input_path` setting in it to the name of your video.
+4. Run this command and wait for completion:
 
    ```
-   ./preproc/preproc.exe -c python-config.yaml
+   ./preproc/preproc.exe -c preproc-config-template.yaml
    ```
 
 ## 1.1 Updating the Preprocessing Tool
@@ -79,7 +80,7 @@ To keep the exported video upright, export the video with Insta360 Studio **3.4.
 ## 2.2. Python
 
 Download the installer from [Python official website](https://www.python.org/downloads/).
-After setup the python, run the following command to initialise the Python virtual environment and install the necessary packages of the preprocessing script.
+After setting up the python, run the following command to initialise the Python virtual environment and install the necessary packages of the preprocessing script.
 
 ```
 python -m venv python3_7_omniphotos_preprocessing

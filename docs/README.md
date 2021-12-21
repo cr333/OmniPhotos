@@ -25,6 +25,18 @@ The doxygen binary is then executed in the docs directory and generates files in
 
 The latest generated code documentation is available at https://omniphotos.readthedocs.io/en/latest/.
 
+### Updating the RTD page
+
+In order to set up a new RTD page, you will need to first create a read the docs [account](https://readthedocs.org/accounts/signup/).
+Once this is done, go to "My Projects" and "Import a Project".
+A list of all your projects should appear here. 
+Import the `OmniPhotos` repository you want to generate the documentation for. 
+Make sure to have the correct permissions on the repository in order to be able to create a webhook. 
+
+If this is set up correctly, the RTD virtual machine will read the `.readthedocs.yaml` file in the repository where the instructions on how to build the documentaion are located.
+In our case, we use the Sphinx API in order to call doxygen and generate files. 
+The call to doxygen is located in the `conf.py` file.
+Note that, whilst the `index.rst` file is not being used, sphinx will throw an error if it is not present in the directory. 
 
 # Writing Documentation
 
